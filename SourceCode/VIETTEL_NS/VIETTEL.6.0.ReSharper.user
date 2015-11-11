@@ -1,0 +1,167 @@
+<Configuration>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:DuToan/d:ChungTuChiTiet/f:ChungTuChiTiet_Index_DanhSach_Frame.aspx" caret="9096" fromTop="77" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:QLDA/f:QLDA_TongDuToanModels.cs" caret="12665" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:QLDA/f:QLDA_DanhMucDuAnModels.cs" caret="1743" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Scripts/f:jsBang_DuToan.js" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Controllers/d:QLDA/f:QLDA_CapPhatController.cs" caret="6717" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:Shared/f:NhapNhanh.ascx" caret="76" fromTop="2" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:QLDA/d:CapPhat/f:QLDA_CapPhat_Index.aspx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:QLDA/d:CapPhat/f:QLDA_CapPhat_Dot_Index.aspx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:QLDA/d:CapPhat/f:QLDA_CapPhat_Index_DanhSach.ascx" caret="7470" fromTop="16" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:QLDA/d:CapPhat/f:rptQLDA_ThongTri_CP.aspx" caret="708" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Controllers/d:Shared/f:NhapNhanhController.cs" caret="4018" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:KeToan/d:TongHop/f:rptKTTH_ThongTri.aspx" caret="9349" fromTop="30" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:KeToanTongHop/d:ChungTuChiTiet/f:KeToanTongHop_ChungTu_Detail.aspx" caret="18636" fromTop="25" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:KeToan/d:TongHop/f:rptKeToanTongHop_SoChiTietBQL.aspx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:KeToan/d:TongHop/f:rptKTTH_ChiTietPhaiThu.aspx" caret="8371" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:KeToan/d:TongHop/f:rptKTTongHop_ThongTri_PhongBanController.cs" caret="13136" fromTop="16" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:DungChung/f:DonViModels.cs" caret="6835" fromTop="20" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/d:ChungTuChiTiet/f:ThuNopChiTiet_Index_DanhSach_Frame.aspx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/d:ChungTuChiTiet/f:ThuNop_ChungTuChiTiet_Index_DanhSach.ascx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/d:ChungTuChiTiet/f:ThuNop_ChungTuChiTiet_Index.aspx" caret="978" fromTop="18" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:ThuNop/f:ThuNop_ChungTuModels.cs" caret="1345" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:QLDA/f:rptQLDA_ThongTri_CP.aspx" caret="1288" fromTop="20" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/f:ReportView.aspx" caret="2228" fromTop="15" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_KeHoachNganSach.aspx" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1693" fromTop="18" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:ThuNop/f:ThuNopModels.cs" caret="353" fromTop="14" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Models/d:DungChung/f:PhanHeModels.cs" caret="645" fromTop="16" />
+      <File id="B39000DA-1F04-44C0-A112-668C75A830C8/f:rptQLDAThongTriController.cs" caret="0" fromTop="0" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="4524" fromTop="39" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="11326" fromTop="15" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="7565" fromTop="9" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="8309" fromTop="26" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="7816" fromTop="12" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="8059" fromTop="18" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="4525" fromTop="19" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="3952" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="9185" fromTop="15" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="6365" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="5986" fromTop="8" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="10390" fromTop="14" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="2300" fromTop="21" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="2506" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1776" fromTop="18" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1480" fromTop="16" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="929" fromTop="6" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1295" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1480" fromTop="14" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="1064" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Views/d:ThuNop/f:rptThuNop_ThongTri.aspx" caret="788" fromTop="5" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="287" fromTop="6" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="3142" fromTop="21" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="3400" fromTop="17" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="3207" fromTop="16" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="3666" fromTop="22" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="2285" fromTop="24" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Views/d:ThuNop/f:rptThuNop_InThongTri.aspx" caret="4524" fromTop="6" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="11551" fromTop="22" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="2587" fromTop="10" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="3245" fromTop="19" />
+      <File id="BFEAF2E5-A38B-4642-A1AF-7D7173174964/d:Report_Controllers/d:ThuNop/f:rptThuNopThongTriController.cs" caret="11326" fromTop="15" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="CSharpCodeCompletionContext">
+      <Item value="String`0" priority="314" />
+      <Item value="if" priority="351" />
+      <Item value="else" priority="511" />
+      <Item value="false" priority="31" />
+      <Item value="VIETTEL" priority="31" />
+      <Item value="rptThuNopThongTri" priority="55" />
+      <Item value="rptThuNopThongTriController`0" priority="26" />
+      <Item value="new" priority="63" />
+      <Item value="Request" priority="31" />
+      <Item value="SqlCommand`0" priority="26" />
+      <Item value="SqlCommand" priority="28" />
+      <Item value="SQL" priority="31" />
+      <Item value="cmd" priority="63" />
+      <Item value="ThuNopModels`0" priority="63" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="Substring`0" priority="157" />
+      <Item value="Length" priority="54" />
+      <Item value="Trim`0" priority="27" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@VIETTEL.Models.DuToanModels">
+      <Item value="strDSTruongTienTieuDe_ThuChi" priority="22" />
+    </ItemStatistics>
+    <ItemStatistics item="JavaScriptSpecificContext">
+      <Item value="if" priority="21" />
+      <Item value="var" priority="10" />
+      <Item value="j" priority="10" />
+      <Item value="false" priority="21" />
+      <Item value="else" priority="21" />
+      <Item value="true" priority="10" />
+    </ItemStatistics>
+    <ItemStatistics item="JavaScriptSpecificContextQualified">
+      <Item value="sub" priority="8" />
+      <Item value="substring" priority="17" />
+    </ItemStatistics>
+    <ItemStatistics item="AspCodeCompletionContext">
+      <Item value="td" priority="7" />
+      <Item value="div" priority="21" />
+      <Item value="style" priority="13" />
+      <Item value="margin-top" priority="7" />
+      <Item value="font-weight" priority="7" />
+      <Item value="font-size" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.DataTable">
+      <Item value="Rows" priority="80" />
+      <Item value="NewRow`0" priority="26" />
+      <Item value="Dispose`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.DataRowCollection">
+      <Item value="Count" priority="53" />
+      <Item value="InsertAt`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.SqlClient.SqlCommand">
+      <Item value="Dispose`0" priority="53" />
+      <Item value="Parameters" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="CssCodeCompletionContext">
+      <Item value="margin-top" priority="0" />
+      <Item value="font-weight" priority="0" />
+      <Item value="font-size" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@VIETTEL.Models.ThuNop_ChungTuModels">
+      <Item value="GetChungTu`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="IsNullOrEmpty`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Web.HttpRequest">
+      <Item value="AcceptTypes" priority="26" />
+      <Item value="QueryString" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.SqlClient.SqlParameterCollection">
+      <Item value="Add`0" priority="26" />
+      <Item value="AddWithValue`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@VIETTEL.Models.ThuNopModels">
+      <Item value="iID_MaPhanHe" priority="53" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

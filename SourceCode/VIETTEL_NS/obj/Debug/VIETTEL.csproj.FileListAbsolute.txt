@@ -1,0 +1,107 @@
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\bin\VIETTEL.dll
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\bin\VIETTEL.pdb
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\bin\FlexCel.AspNet.dll
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\bin\FlexCel.dll
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\obj\Debug\VIETTEL.dll
+C:\Users\anhtt67\Documents\Received Files\New folder\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+D:\VIETTEL_NS\obj\Debug\VIETTEL.dll
+D:\VIETTEL_NS\bin\VIETTEL.dll
+D:\VIETTEL_NS\bin\VIETTEL.pdb
+D:\VIETTEL_NS\bin\FlexCel.AspNet.dll
+D:\VIETTEL_NS\bin\FlexCel.dll
+D:\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+E:\Work\VIETTEL_NS\bin\VIETTEL.dll
+E:\Work\VIETTEL_NS\bin\VIETTEL.pdb
+E:\Work\VIETTEL_NS\bin\DomainModel.dll
+E:\Work\VIETTEL_NS\bin\FlexCel.AspNet.dll
+E:\Work\VIETTEL_NS\bin\FlexCel.dll
+E:\Work\VIETTEL_NS\bin\SSO.Client.dll
+E:\Work\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+E:\Work\VIETTEL_NS\obj\Debug\VIETTEL.dll
+E:\Work\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\bin\VIETTEL.dll
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\bin\VIETTEL.pdb
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\bin\FlexCel.AspNet.dll
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\bin\FlexCel.dll
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\obj\Debug\VIETTEL.dll
+C:\VIETTEL\ThuNop_NS\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\Users\nghiepnc\Work\VIETTEL_NS\bin\VIETTEL.dll
+D:\Users\nghiepnc\Work\VIETTEL_NS\bin\VIETTEL.pdb
+D:\Users\nghiepnc\Work\VIETTEL_NS\bin\FlexCel.AspNet.dll
+D:\Users\nghiepnc\Work\VIETTEL_NS\bin\FlexCel.dll
+D:\Users\nghiepnc\Work\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+D:\Users\nghiepnc\Work\VIETTEL_NS\obj\Debug\VIETTEL.dll
+D:\Users\nghiepnc\Work\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+C:\VIETTEL\WORK\VIETTEL_NS\bin\VIETTEL.dll
+C:\VIETTEL\WORK\VIETTEL_NS\bin\VIETTEL.pdb
+C:\VIETTEL\WORK\VIETTEL_NS\bin\FlexCel.AspNet.dll
+C:\VIETTEL\WORK\VIETTEL_NS\bin\FlexCel.dll
+C:\VIETTEL\WORK\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+C:\VIETTEL\WORK\VIETTEL_NS\obj\Debug\VIETTEL.dll
+C:\VIETTEL\WORK\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\Users\nghiepnc\Work\VIETTEL_NS\bin\DomainModel.dll
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\bin\VIETTEL.dll
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\bin\VIETTEL.pdb
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\bin\FlexCel.AspNet.dll
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\bin\FlexCel.dll
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\obj\Debug\VIETTEL.dll
+C:\Users\Minh Tuan.VTIT_TUANNM19\Desktop\CTC\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+E:\07032014\VIETTEL_NS\bin\VIETTEL.dll
+E:\07032014\VIETTEL_NS\bin\VIETTEL.pdb
+E:\07032014\VIETTEL_NS\bin\DomainModel.dll
+E:\07032014\VIETTEL_NS\bin\FlexCel.AspNet.dll
+E:\07032014\VIETTEL_NS\bin\FlexCel.dll
+E:\07032014\VIETTEL_NS\bin\SSO.Client.dll
+E:\07032014\VIETTEL_NS\obj\Debug\VIETTEL.dll
+E:\07032014\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\Work\VIETTEL_NS\bin\VIETTEL.dll
+D:\Work\VIETTEL_NS\bin\VIETTEL.pdb
+D:\Work\VIETTEL_NS\bin\DomainModel.dll
+D:\Work\VIETTEL_NS\bin\FlexCel.AspNet.dll
+D:\Work\VIETTEL_NS\bin\FlexCel.dll
+D:\Work\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+D:\Work\VIETTEL_NS\obj\Debug\VIETTEL.dll
+D:\Work\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+E:\07032014\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+C:\VIETTEL\WORK\VIETTEL_NS\bin\DomainModel.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\VIETTEL.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\VIETTEL.pdb
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\DomainModel.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\FlexCel.AspNet.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\FlexCel.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\bin\SSO.Client.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\obj\Debug\VIETTEL.dll
+D:\MyPham\06. SOURCE\CTC\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\bin\VIETTEL.dll
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\bin\VIETTEL.pdb
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\bin\FlexCel.AspNet.dll
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\bin\FlexCel.dll
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\obj\Debug\ResolveAssemblyReference.cache
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\obj\Debug\VIETTEL.dll
+C:\CTC\COde\VIETTEL_NS\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\CTC\VIETTEL_NS\bin\VIETTEL.dll
+D:\CTC\VIETTEL_NS\bin\VIETTEL.pdb
+D:\CTC\VIETTEL_NS\bin\FlexCel.AspNet.dll
+D:\CTC\VIETTEL_NS\bin\FlexCel.dll
+D:\CTC\VIETTEL_NS\obj\Debug\VIETTEL.dll
+D:\CTC\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\CTC\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+H:\VungNV\CTC\VIETTEL_NS\bin\VIETTEL.dll
+H:\VungNV\CTC\VIETTEL_NS\bin\VIETTEL.pdb
+H:\VungNV\CTC\VIETTEL_NS\bin\FlexCel.AspNet.dll
+H:\VungNV\CTC\VIETTEL_NS\bin\FlexCel.dll
+H:\VungNV\CTC\VIETTEL_NS\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+H:\VungNV\CTC\VIETTEL_NS\obj\Debug\VIETTEL.dll
+H:\VungNV\CTC\VIETTEL_NS\obj\Debug\VIETTEL.pdb
+D:\DO AN\CTC\VIETTEL_NS1\bin\VIETTEL.dll
+D:\DO AN\CTC\VIETTEL_NS1\bin\VIETTEL.pdb
+D:\DO AN\CTC\VIETTEL_NS1\bin\FlexCel.AspNet.dll
+D:\DO AN\CTC\VIETTEL_NS1\bin\FlexCel.dll
+D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.dll
+D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.pdb

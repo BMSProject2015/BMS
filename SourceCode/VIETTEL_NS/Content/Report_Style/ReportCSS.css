@@ -1,0 +1,60 @@
+﻿ul.inlineBlock{
+	        list-style: none inside;			
+        }
+        ul.inlineBlock li{			
+	        /*-webkit-box-shadow: 2px 2px 0 #cecece;
+	        box-shadow: 2px 2px 0 #cecece;	*/	
+	        -webkit-box-shadow: rgba(200, 200, 200, 0.7) 0 4px 10px -1px;
+            box-shadow: rgba(200, 200, 200, 0.7) 0 4px 10px -1px;
+	        padding: 2px 5px;
+	        display: inline-block;
+	        vertical-align: middle; /*Mở comment để xem thuộc tính vertical-align*/
+	        margin-right: 3px;
+	        margin-left: 0px;
+	        font-size: 13px;			
+	        border-radius: 3px;
+	        position: relative;
+	    /*fix for IE 7*/
+	        zoom:1;
+	        *display: inline;		        
+        }
+        ul.inlineBlock li span
+        {
+            padding:2px 1px;   
+        }
+        ul.inlineBlock li p{
+            padding:1px;    
+        }
+        ul.inlineBlock li fieldset{border:1px solid #cecece;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;}
+        ul.inlineBlock li fieldset span{
+            padding:2px 3px 2px 1px;  
+            margin-left:2px;  
+        }
+        select{border:1px solid #dedede;padding:2px;}
+        div.login1
+        {
+            text-align: center;
+            background: transparent url(/Content/Report_Image/login.gif) no-repeat top center;
+        }
+        div.login1 a
+        {
+            color: white;
+            text-decoration: none;
+            font: bold 16px "Museo 700";
+            display: block;
+            width: 50px;
+            height: 20px;
+            line-height: 20px;
+            margin: 0px auto;
+            background: transparent url(/Content/Report_Image/arrow.png) no-repeat 20px 1px;
+            -webkit-border-radius: 2px;
+            border-radius: 2px;
+        }
+        div.login1 a.active
+        {
+            background-position: 20px -29px;
+        }
+        div.login1 a:active, a:focus
+        {
+            outline: none;
+        }

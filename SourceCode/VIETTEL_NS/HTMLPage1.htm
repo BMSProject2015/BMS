@@ -1,0 +1,471 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!-- 
+copyright pavan
+http://fixed-header-using-jquery.blogspot.com/2009/05/scrollable-table-with-fixed-header-and.html 
+-->
+<head>
+    <script type="text/javascript" src="http://jqueryui.com/latest/jquery-1.3.2.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            fnAdjustTable();
+        });
+
+        fnAdjustTable = function () {
+
+            var colCount = $('#firstTr>td').length; //get total number of column
+
+            var m = 0;
+            var n = 0;
+            var brow = 'mozilla';
+
+            jQuery.each(jQuery.browser, function (i, val) {
+                if (val == true) {
+                    brow = i.toString();
+                }
+            });
+
+            $('.tableHeader').each(function (i) {
+                if (m < colCount) {
+                    if (brow == 'mozilla') {
+                        $('#firstTd').css("width", $('.tableFirstCol').innerWidth()); //for adjusting first td
+                        $(this).css('width', $('#table_div td:eq(' + m + ')').innerWidth()); //for assigning width to table Header div
+                    }
+                    else if (brow == 'msie') {
+                        $('#firstTd').css("width", $('.tableFirstCol').width());
+                        $(this).css('width', $('#table_div td:eq(' + m + ')').width() - 2); //In IE there is difference of 2 px
+                    }
+                    else if (brow == 'safari') {
+                        $('#firstTd').css("width", $('.tableFirstCol').width());
+                        $(this).css('width', $('#table_div td:eq(' + m + ')').width());
+                    }
+                    else {
+                        $('#firstTd').css("width", $('.tableFirstCol').width());
+                        $(this).css('width', $('#table_div td:eq(' + m + ')').innerWidth());
+                    }
+                }
+                m++;
+            });
+
+            $('.tableFirstCol').each(function (i) {
+                if (brow == 'mozilla') {
+                    $(this).css('height', $('#table_div td:eq(' + colCount * n + ')').outerHeight()); //for providing height using scrollable table column height
+                }
+                else if (brow == 'msie') {
+                    $(this).css('height', $('#table_div td:eq(' + colCount * n + ')').innerHeight() - 2);
+                }
+                else {
+                    $(this).css('height', $('#table_div td:eq(' + colCount * n + ')').height());
+                }
+                n++;
+            });
+
+        }
+
+        //function to support scrolling of title and first column
+        fnScroll = function () {
+            $('#divHeader').scrollLeft($('#table_div').scrollLeft());
+            $('#firstcol').scrollTop($('#table_div').scrollTop());
+        }
+ 
+    </script>
+    <style type="text/css">
+        .style1
+        {
+            width: 392px;
+        }
+        .style2
+        {
+            width: 108px;
+        }
+        .style3
+        {
+            width: 133px;
+        }
+    </style>
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td id="firstTd">
+            </td>
+            <td>
+                <div id="divHeader" style="overflow: hidden; width: 284px;">
+                    <table cellspacing="0" cellpadding="0" border="1">
+                        <tr>
+                            <td>
+                                <div class="tableHeader">
+                                    Title1</div>
+                            </td>
+                            <td>
+                                <div class="tableHeader">
+                                    Title2</div>
+                            </td>
+                            <td>
+                                <div class="tableHeader">
+                                    Title3</div>
+                            </td>
+                            <td>
+                                <div class="tableHeader">
+                                    Title4</div>
+                            </td>
+                            <td>
+                                <div class="tableHeader">
+                                    Title5</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <div id="firstcol" style="overflow: hidden; height: 80px">
+                    <table width="200px" cellspacing="0" cellpadding="0" border="1">
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row1
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row2
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row3
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row4
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row6
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row7
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row8
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tableFirstCol">
+                                First Col row9
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            <td valign="top">
+                <div id="table_div" style="overflow: scroll; width: 300px; height: 100px; position: relative"
+                    onscroll="fnScroll()">
+                    <table width="500px" cellspacing="0" cellpadding="0" border="1">
+                        <tr id='firstTr'>
+                            <td>
+                                Row1Col1
+                            </td>
+                            <td>
+                                Row1Col2
+                            </td>
+                            <td>
+                                Row1Col3
+                            </td>
+                            <td>
+                                Row1Col4
+                            </td>
+                            <td>
+                                Row1Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row2Col1
+                            </td>
+                            <td>
+                                Row2Col2
+                            </td>
+                            <td>
+                                Row2Col3
+                            </td>
+                            <td>
+                                Row2Col4
+                            </td>
+                            <td>
+                                Row3Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row3Col1
+                            </td>
+                            <td>
+                                Row3Col2
+                            </td>
+                            <td>
+                                Row3Col3
+                            </td>
+                            <td>
+                                Row3Col4
+                            </td>
+                            <td>
+                                Row3Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row4Col1
+                            </td>
+                            <td>
+                                Row4Col2
+                            </td>
+                            <td>
+                                Row4Col3
+                            </td>
+                            <td>
+                                Row4Col4
+                            </td>
+                            <td>
+                                Row4Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row5Col1
+                            </td>
+                            <td>
+                                Row5Col2
+                            </td>
+                            <td>
+                                Row5Col3
+                            </td>
+                            <td>
+                                Row5Col4
+                            </td>
+                            <td>
+                                Row5Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row6Col1
+                            </td>
+                            <td>
+                                Row6Col2
+                            </td>
+                            <td>
+                                Row6Col3 is both wider and<br />
+                                taller than surrounding cells, yet<br />
+                                fixed elements still line up correctly
+                            </td>
+                            <td>
+                                Row6Col4
+                            </td>
+                            <td>
+                                Row6Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row7Col1
+                            </td>
+                            <td>
+                                Row7Col2
+                            </td>
+                            <td>
+                                Row7Col3
+                            </td>
+                            <td>
+                                Row7Col4
+                            </td>
+                            <td>
+                                Row7Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row8Col1
+                            </td>
+                            <td>
+                                Row8Col2
+                            </td>
+                            <td>
+                                Row8Col3
+                            </td>
+                            <td>
+                                Row8Col4
+                            </td>
+                            <td>
+                                Row8Col5
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row9Col1
+                            </td>
+                            <td>
+                                Row9Col2
+                            </td>
+                            <td>
+                                Row9Col3
+                            </td>
+                            <td>
+                                Row9Col4
+                            </td>
+                            <td>
+                                Row9Col5
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <ul id="tree">
+        <li><a href="#"><strong><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f">
+            6</a> </strong></a>
+            <ul>
+                <li><strong><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000">
+                    KP lương, phụ cấp, tiền ăn</a> </strong>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000">
+                    Nghiệp vụ 00</a>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul id="Ul1">
+        <li><a href="#"><strong><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f">
+            6</a> </strong></a>
+            <ul>
+                <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000">
+                    KP lương, phụ cấp, tiền ăn</a>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000">
+                    Nghiệp vụ 00</a>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul id="Ul2">
+        <li><a href="#"><strong><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f">
+            6</a> </strong></a>
+            <ul>
+                <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000">
+                    KP lương, phụ cấp, tiền ăn</a>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1010000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+                <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000">
+                    Nghiệp vụ 00</a>
+                    <ul>
+                        <li><a href="/DuToan_ChungTuChiTiet?iID_MaChungTu=ec89e507-5c9a-41d3-a368-cb57c8abe03f&sLNS=1020000&iID_MaDonVi=13">
+                            Quân Khu 3</a> </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="inputs wideInputs">
+        <span class="wide">
+            <%=Html.TextAreaFor(x => x.PageContent, null)%>
+            <script type="text/javascript">
+                CKEDITOR.replace('PageContent',
+                {
+                    toolbar:
+                    [
+                    ['Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
+                    ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+                    ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+                    ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+                    '/',
+                    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+                    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', 'CreateDiv'],
+                    ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                    ['Link', 'Unlink', 'Anchor'],
+                    ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                    '/',
+                    ['Styles', 'Format', 'Font', 'FontSize'],
+                    ['TextColor', 'BGColor'],
+                    ['Maximize', 'ShowBlocks', '-', 'About']
+
+                    ],
+                    filebrowserBrowseUrl : '/ckfinder/ckfinder.html',
+	                filebrowserImageBrowseUrl : '/ckfinder/ckfinder.html?type=Images',
+	                filebrowserFlashBrowseUrl : '/ckfinder/ckfinder.html?type=Flash',
+	                filebrowserUploadUrl : '/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Files',
+	                filebrowserImageUploadUrl : '/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Images',
+	                filebrowserFlashUploadUrl : '/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Flash',
+	                filebrowserWindowWidth : '1000',
+ 	                filebrowserWindowHeight : '700',
+                    height: 400,
+                    scayt_autoStartup: false
+                });
+            </script>
+        </span>
+    </div>
+
+
+    <table style="width:100%;">
+        <tr>
+            <td class="style2">&nbsp;</td>
+            <td class="style1">&nbsp;</td>
+            <td class="style3">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="style2">&nbsp;</td>
+            <td class="style1">&nbsp;</td>
+            <td class="style3">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td rowspan="2" class="style2">&nbsp;</td>
+            <td rowspan="2" class="style1">&nbsp;</td>
+            <td class="style3">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="style3">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</body>
+</html>

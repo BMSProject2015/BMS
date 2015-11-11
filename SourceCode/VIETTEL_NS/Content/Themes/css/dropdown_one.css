@@ -1,0 +1,265 @@
+
+#dropList {
+position:relative; 
+font-family:Tahoma, verdana, sans-serif; 
+font-size:11px; z-index:500;
+height:28px;
+width:100%; 
+}
+#dropList ul#menu { 
+margin:0; 
+list-style:none; 
+white-space:nowrap; 
+} 
+#dropList ul#menu li.level1-li { 
+float:left; 
+height:28px; 
+} 
+#dropList ul#menu li.level1-li a.level1-a { 
+display:block; 
+height:28px; 
+float:left;
+border-right:1px solid #ccc; 
+padding:0 10px; 
+text-decoration:none; 
+line-height:28px; 
+white-space:nowrap; 
+font-weight:bold; 
+color:#fff; 
+} 
+#dropList ul#menu li.sub a.level1-a {
+color:#fff;
+} 
+#dropList ul#menu li.level1-li:hover, #dropList ul#menu li.level1-li a.level1-a:hover {
+position:relative;
+} 
+#dropList ul#menu li.level1-li a.level1-a:hover, #dropList ul#menu li.level1-li:hover a.level1-a { 
+border-right:1px solid #215778; 
+color:#fff; 
+background:#e77715; 
+} 
+#dropList ul#menu li.sub a.level1-a:hover {
+height:28px; 
+color:#fff; 
+background:#e77715; 
+}  
+#dropList ul#menu li.sub:hover > a.level1-a { 
+height:28px; 
+color:#fff; 
+background:#e77715;
+} 
+#dropList ul#menu li div.listHolder {
+position:absolute; 
+left:-9999px; 
+top:28px; 
+background:#fff ; 
+border:1px solid #ccc; 
+border-width:0 1px 1px 1px; 
+padding:0;
+} /* IE6 only */ 
+#dropList table { 
+border-collapse:collapse; 
+margin:-1px -10px; 
+font-size:1em; 
+width:0; 
+height:0; 
+} 
+#dropList ul#menu :hover div.listHolder {
+left:0;
+} 
+#dropList ul#menu a:hover div.listHolder {
+left:-1px; 
+top:28px;
+} 
+#dropList ul#menu div.col1 {
+width:180px;
+} 
+#dropList ul#menu div.col2 
+{width:200px;
+} 
+#dropList ul#menu div.col3 {
+width:420px;
+} 
+
+#dropList div.listCol {
+display:block; 
+float:left; 
+padding:10px; 
+margin:0; 
+width:160px;
+} 
+#dropList div.listCol h5 {
+padding:5px 0 0 0;
+margin:0; 
+font-size:11px; 
+line-height:16px; 
+text-align:left;
+} 
+#dropList div.listCol h5 a{
+text-decoration:none;
+color:#000;
+}
+#dropList div.listCol h5 a:hover{
+color:#e77715;
+text-decoration:none;
+}
+#dropList div.listCol ul {
+padding:0; 
+margin:0; 
+list-style:none;
+} 
+#dropList div.listCol ul li {
+line-height:16px;
+padding:0; 
+margin:0;
+} 
+#dropList div.listCol ul li a {
+display:block;  
+color:#266992; 
+text-decoration:none; 
+padding-left:10px; 
+font-weight:normal; 
+white-space:nowrap; text-align:left; 
+width:150px;
+} 
+#dropList div.listCol ul li a:hover {
+text-decoration:none;
+color:#e77715;
+} 
+
+
+
+
+/*--------------btn_Khoitaonhanh---------------*/
+
+#khoitao {
+position:relative; 
+font-family:Tahoma, verdana, sans-serif; 
+font-size:11px; z-index:100;
+height:20px;
+width:100%;
+display:block;
+}
+#khoitao ul#menu { 
+margin:0; 
+list-style:none; 
+white-space:nowrap; 
+width:100%;
+} 
+#khoitao ul#menu li.level1-li { 
+float:left; 
+height:20px; 
+width:100%;
+} 
+#khoitao ul#menu li.level1-li a.level1-a { 
+background:#e77715 url(../images/arrdown.gif) no-repeat right center;
+display:block;
+text-align:center;
+height:20px;
+line-height:20px;
+border:1px solid #eeefef;
+font-weight:bold;
+} 
+#khoitao ul#menu li.sub a.level1-a {
+color:#fff;
+width:100%;
+display:block;
+height:20px;
+} 
+#khoitao ul#menu li.level1-li:hover, #khoitao ul#menu li.level1-li a.level1-a:hover {
+position:relative;
+} 
+#khoitao ul#menu li.level1-li a.level1-a:hover, #khoitao ul#menu li.level1-li:hover a.level1-a {  
+color:#fff; 
+background:#e77715 url(../images/arrdown.gif) no-repeat right center;
+} 
+#khoitao ul#menu li.sub a.level1-a:hover {
+height:20px; 
+color:#fff; 
+background:#e77715 url(../images/arrdown.gif) no-repeat right center; 
+}  
+#khoitao ul#menu li.sub:hover > a.level1-a { 
+height:20px; 
+color:#fff; 
+background:#e77715 url(../images/arrdown.gif) no-repeat right center;
+} 
+#khoitao ul#menu li div.listHolder {
+position:absolute; 
+left:-9999px; 
+top:22px; 
+background:#fff ; 
+border:1px solid #ccc; 
+border-width:0 1px 1px 1px; 
+padding:0;
+} /* IE6 only */ 
+#khoitao table { 
+border-collapse:collapse; 
+margin:-1px -10px; 
+font-size:1em; 
+width:0; 
+height:0; 
+} 
+#khoitao ul#menu :hover div.listHolder {
+left:1px;
+} 
+#khoitao ul#menu a:hover div.listHolder {
+left:0; 
+top:20px;
+} 
+#khoitao ul#menu div.col1 {
+width:198px;
+} 
+#khoitao ul#menu div.col2 
+{width:280px;
+} 
+#khoitao ul#menu div.col3 {
+width:420px;
+} 
+
+#khoitao div.listCol {
+display:block; 
+float:left; 
+padding:10px; 
+margin:0; 
+width:160px;
+} 
+#khoitao div.listCol h5 {
+padding:5px 0 0 0;
+margin:0; 
+font-size:11px; 
+line-height:20px; 
+text-align:left;
+} 
+#khoitao div.listCol h5 a{
+color:#266992; 
+text-decoration:none; 
+font-weight:normal;
+}
+#khoitao div.listCol h5 a:hover{
+text-decoration:none;
+color:#e77715;
+font-weight:normal;
+}
+#khoitao div.listCol ul {
+padding:0; 
+margin:0; 
+list-style:none;
+} 
+#khoitao div.listCol ul li {
+line-height:20px;
+padding:0; 
+margin:0;
+} 
+#khoitao div.listCol ul li a {
+display:block;  
+color:#266992; 
+text-decoration:none; 
+padding-left:10px; 
+font-weight:normal; 
+white-space:nowrap; text-align:left; 
+width:100%;
+} 
+#khoitao div.listCol ul li a:hover {
+text-decoration:none;
+color:#e77715;
+} 
