@@ -3,9 +3,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.QuyetToan" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -17,69 +15,74 @@
     String ParentID = "CapPhatNganSach";
     String MaND = User.Identity.Name;
     String iNamLamViec = ReportModels.LayNamLamViec(MaND);
-    //VungNV: 2015/09/28 dt Đợt cấp phát
-    DataTable dtDot = CapPhatModels.getNamCapPhat(MaND);
+        
+    //VungNV: 2015/09/28 Danh sách Đợt cấp phát
+    DataTable dtDot = CapPhat_ReportModels.LayDotCapPhat(MaND);
     SelectOptionList slDot = new SelectOptionList(dtDot,"iNamCapPhat", "iNamCapPhat");
     dtDot.Dispose();
 
-    String iNamCapPhat = Convert.ToString(ViewData["iNamCapPhat"]);       
-    //dt Loại ngân sách
+    String iNamCapPhat = Convert.ToString(ViewData["iNamCapPhat"]); 
+              
+    //Danh sách Loại ngân sách
     String sLNS = Convert.ToString(ViewData["sLNS"]);
 
-    //VungNV: 2015/09/28 dt Danh sách phòng ban
-    DataTable dtPhongBan = CapPhatModels.getDSPhongBan(MaND);
+    //VungNV: 2015/09/28 Danh sách phòng ban
+    DataTable dtPhongBan = CapPhat_ReportModels.LayDSPhongBan(MaND);
     SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
     dtPhongBan.Dispose();
+    
+    //Lấy mã phòng ban từ ViewData
     String MaPhongBan = Convert.ToString(ViewData["MaPhongBan"]);
 
-    //VungNV: 2015/09/25 get value of LoaiCapPhat from ViewData
+    //VungNV: 2015/09/25 Lấy giá trị của loại cấp phát từ ViewData
     String LoaiCapPhat = Convert.ToString(ViewData["LoaiCapPhat"]);
     
-    // VungNV: 2015/09/23 get value of LoaiThongTri from ViewData
+    // VungNV: 2015/09/23 Lấy giá trị của loại thông trị từ ViewData
     String LoaiThongTri = Convert.ToString(ViewData["LoaiThongTri"]);
     DataTable dtLoaiThongTri  = CommonFunction.Lay_dtDanhMuc("LoaiCapPhat");
  
     SelectOptionList slLoaiThongTri = new SelectOptionList(dtLoaiThongTri, "iID_MaDanhMuc", "sTen");
+    
     if (String.IsNullOrEmpty(LoaiThongTri))
     {
-        if (dtLoaiThongTri.Rows.Count > 0)
-        {
-            LoaiThongTri = Convert.ToString(dtLoaiThongTri.Rows[0]["iID_MaDanhMuc"]);
-        }
-        else
-        {
-            LoaiThongTri = Guid.Empty.ToString();
-        }
+        LoaiThongTri = dtLoaiThongTri.Rows.Count > 0 ? Convert.ToString(dtLoaiThongTri.Rows[0]["iID_MaDanhMuc"]) : Guid.Empty.ToString();
     }
+        
     dtLoaiThongTri.Dispose();
 
     String BackURL = Url.Action("Index", "CapPhat_Report", new { Loai = 0 });
 
-    //VungNV: 2015/09/23 get value LoaiTongHop from ViewData    
+    //VungNV: 2015/09/23 Lấy loại báo cáo từ ViewData    
     String LoaiTongHop = Convert.ToString(ViewData["LoaiTongHop"]);
     if (String.IsNullOrEmpty(LoaiTongHop))
     {
         LoaiTongHop = "ChiTiet";
     }
-    //VungNV: 2015/09/23 get value DenMuc from ViewData
+        
+    //VungNV: 2015/09/23 Lấy loại báo cáo chi tiết từ ViewData
     String DenMuc = Convert.ToString(ViewData["DenMuc"]);
     if (String.IsNullOrEmpty(DenMuc))
     {
         DenMuc = "Nganh";
     }
-        
+    
+    //VungNV: Lấy mã đơn vị từ ViewData    
     String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
     String[] arrMaDonVi = iID_MaDonVi.Split(',');
     String[] arrView = new String[arrMaDonVi.Length];
     String Chuoi = "";
+   
     String PageLoad = Convert.ToString(ViewData["PageLoad"]);
     if (String.IsNullOrEmpty(PageLoad))
         PageLoad = "0";
+    //Nếu không chọn loại ngân sách thì không cho xuất báo cáo
     if (String.IsNullOrEmpty(sLNS))
     {
         PageLoad = "0";
         sLNS = Guid.Empty.ToString();
     }
+    
+    //Nếu không chọn đơn vị không cho xuất báo cáo
     if (String.IsNullOrEmpty(iID_MaDonVi)) 
     {
         PageLoad = "0";
@@ -114,7 +117,6 @@
 
     String sGhiChu = Convert.ToString(ViewData["sGhiChu"]);
 
-    String urlExport = Url.Action("ExportToExcel", "rptCapPhat_ThongTri", new { });
     using (Html.BeginForm("EditSubmit", "rptCapPhat_ThongTri", new { ParentID = ParentID }))
     {
     %>
@@ -222,7 +224,7 @@
                             <div>
                                 <b>Loại cấp phát :</b></div>
                         </td>
-                        <td style="width: 12%; height: 10px"">
+                        <td style="width: 12%; height: 10px">
                             <div >
                              <%=MyHtmlHelper.TextBox(ParentID, LoaiCapPhat, "LoaiCapPhat","","style=\"width:100%;\"onchange=update_LoaiCapPhat()")%>
                             </div>
@@ -281,9 +283,9 @@
                         window.open(siteArray[i], '_blank');
                     }
                 } 
-                //VungNV: 2015/09/30 Get value LoaiCapPhat
+                //VungNV: Lấy giá trị loại cấp phát
                     jQuery.ajaxSetup({cache: false});
-                    var url = unescape('<%= Url.Action("getLoaiCapPhat?ParentID=#0&MaND=#1","rptCapPhat_ThongTri") %>');
+                    var url = unescape('<%= Url.Action("LayLoaiCapPhat?ParentID=#0&MaND=#1","rptCapPhat_ThongTri") %>');
                     url = unescape(url.replace("#0", "<%= ParentID %>"));
                     url = unescape(url.replace("#1", "<%= MaND %>"));
                     
@@ -300,7 +302,7 @@
                 for (var i = 0; i < arrGhiChu.length; i++) {
                     sGhiChu += arrGhiChu[i] + '^';
                 }
-                var url = unescape('<%= Url.Action("Update_GhiChu?sGhiChu=#0&MaND=#1&iID_MaDonVi=#2", "rptCapPhat_ThongTri") %>');
+                var url = unescape('<%= Url.Action("CapNhapGhiChu?sGhiChu=#0&MaND=#1&iID_MaDonVi=#2", "rptCapPhat_ThongTri") %>');
                 url = unescape(url.replace("#0",sGhiChu));
                 url = unescape(url.replace("#1","<%=MaND %>"));
                 url = unescape(url.replace("#2", iID_MaDonVi));
@@ -309,13 +311,13 @@
                 });
             }
 
-            //VungNV: 2015/09/30 update or insert LoaiCapPhat into QTA.GhiChu table
+            //VungNV: 2015/09/30 Thêm mới hoặc cập nhật giá trị vào bảng QTA.GhiChu
             function update_LoaiCapPhat() {
                 
                 var LoaiCapPhat = document.getElementById("<%= ParentID %>_LoaiCapPhat").value.trim();
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("update_LoaiCapPhat?LoaiCapPhat=#0&MaND=#1", "rptCapPhat_ThongTri") %>');
+                var url = unescape('<%= Url.Action("CapNhatLoaiCapPhat?LoaiCapPhat=#0&MaND=#1", "rptCapPhat_ThongTri") %>');
                 url = unescape(url.replace("#0",LoaiCapPhat));
                 url = unescape(url.replace("#1","<%=MaND %>"));
 
@@ -329,7 +331,6 @@
                   
                 var NamCapPhat = document.getElementById("<%= ParentID %>_iNamCapPhat").value;
                 var LoaiThongTri = document.getElementById("<%=ParentID %>_LoaiThongTri").value;
-                //VungNV: 2015/09/21 add new MaPhongBan
                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
@@ -375,7 +376,7 @@
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
                 });
             }
-            //Get get value ghiChu
+            
              var iID_MaDonVi = "";
               function GhiChu(value) {
                  
@@ -385,13 +386,13 @@
                   else {
                       iID_MaDonVi = "-1";
                   }
-                 //VungNV: Get value GhiChu.
+                 //VungNV: Lấy giá trị ghi chú
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("DsGhiChu?ParentID=#0&MaND=#1&iID_MaDonVi=#2&sGhiChu=#3", "rptCapPhat_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayGhiChu?ParentID=#0&MaND=#1&iID_MaDonVi=#2", "rptCapPhat_ThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", "<%= MaND %>"));
                 url = unescape(url.replace("#2",iID_MaDonVi));
-                url = unescape(url.replace("#3","<%= sGhiChu %>"));
+
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdGhiChu").innerHTML = data;
                 });
@@ -402,9 +403,6 @@
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel")%>
-        </div>
     </div>
     <%} %>
 </body>

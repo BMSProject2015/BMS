@@ -8,12 +8,21 @@ namespace VIETTEL.Models
     public class CapPhatModels
     {
         public static int iID_MaPhanHe = PhanHeModels.iID_MaPhanHeCapPhat;
+
         public static void ChuyenNamSau(String MaND, String TenBangChungTu = "CP_CapPhat", String TenBangChiTiet = "CP_CapPhatChiTiet")
         {
             DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
             int iNamLamViec = Convert.ToInt16(dtCauHinh.Rows[0]["iNamLamViec"]);
+            //Lấy mã trạng thái duyệt của phân hệ cấp phát
+            int MaTrangThaiDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyet_DaDuyet(PhanHeModels.iID_MaPhanHeCapPhat);
 
-            String SQL = String.Format("SELECT * FROM {0} WHERE iTrangThai=1 AND iID_MaTrangThaiDuyet={1} AND  iID_MaNamNganSach=3 AND iNamLamViec=@iNamLamViec", TenBangChungTu,LuongCongViecModel.Get_iID_MaTrangThaiDuyet_DaDuyet(PhanHeModels.iID_MaPhanHeCapPhat));
+            String SQL = String.Format(
+                          @"SELECT * 
+                            FROM {0} 
+                            WHERE iTrangThai=1 AND iID_MaTrangThaiDuyet={1} 
+                            AND  iID_MaNamNganSach=3 AND iNamLamViec=@iNamLamViec",
+                            TenBangChungTu, MaTrangThaiDuyet);
+            
             DataTable dtChungTu;
             SqlCommand cmd = new SqlCommand(SQL);
             cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
@@ -24,6 +33,7 @@ namespace VIETTEL.Models
             Bang bangChiTiet = new Bang(TenBangChiTiet);
             String iID_MaCapPhat, iID_MaCapPhatatGoc;
             DataTable dtChiTiet;
+
             for (int i = 0; i < dtChungTu.Rows.Count; i++)
             {
 
@@ -66,7 +76,6 @@ namespace VIETTEL.Models
                 {
                     for (int j = 1; j < dtChiTiet.Columns.Count; j++)
                     {
-                        Type _type = dtChiTiet.Columns[j].DataType;
                         String TenCot = dtChiTiet.Columns[j].ColumnName;
                         Object GiaTri = dtChiTiet.Rows[h][j];
                         
@@ -98,55 +107,5 @@ namespace VIETTEL.Models
             }
         }
         
-        //VungNV: 2015/09/28 lấy danh sách phòng ban
-        public static DataTable getDSPhongBan(String MaND)
-        {
-            SqlCommand cmd = new SqlCommand();
-            String DKPhongBan="";
-            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-            
-            String SQL = String.Format(
-                        @"SELECT DISTINCT iID_MaPhongBan,sTenPhongBan
-                        FROM CP_CapPhatChiTiet
-                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} 
-                        ", DKPhongBan);
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
-            DataTable dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            DataRow dr = dt.NewRow();
-            dr["iID_MaPhongBan"] = "-1";
-            dr["sTenPhongBan"] = "--Chọn tất cả các B--";
-            dt.Rows.InsertAt(dr, 0);
-
-            return dt;
-        }
-
-        //VungNV: 2015/09/28 lấy danh sách các đợt cấp phát
-        public static DataTable getNamCapPhat(String MaND) 
-        {
-            SqlCommand cmd = new SqlCommand();
-            String DKPhongBan="";
-            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-
-            String SQL = String.Format(
-                @"SELECT DISTINCT CONVERT(VARCHAR(10), CP_CapPhat.dNgayCapPhat, 103) AS iNamCapPhat
-                        ,CP_CapPhat.dNgayCapPhat
-                FROM CP_CapPhat JOIN CP_CapPhatChiTiet 
-                        ON CP_CapPhat.iID_MaCapPhat = CP_CapPhatChiTiet.iID_MaCapPhat
-                WHERE CP_CapPhatChiTiet.iTrangThai=1 
-                        AND CP_CapPhatChiTiet.iNamLamViec=@iNamLamViec {0}
-                ORDER BY CP_CapPhat.dNgayCapPhat DESC", DKPhongBan);
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
-            DataTable dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-
-            return dt;
-
-        }
-
     }
 }

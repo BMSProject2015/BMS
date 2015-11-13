@@ -5,127 +5,38 @@ using FlexCel.Report;
 using FlexCel.Render;
 using FlexCel.XlsAdapter;
 using System.Data;
-using System.Data.SqlClient;
 using DomainModel;
 using VIETTEL.Models;
-using VIETTEL.Controllers;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections;
-namespace VIETTEL.Report_Controllers.ThuNop
+
+namespace VIETTEL.Report_Controllers.CapPhat
 {
     public class rptCapPhat_ThongTriController : Controller
     {
-        // GET: /rptCapPhat_ThongTri/
         public string sViewPath = "~/Report_Views/";
+        private const String VIEW_PATH_CAPPHAT_THONGTRI = "~/Report_Views/CapPhat/rptCapPhat_ThongTri.aspx";
         private const String sFilePath_ChiTiet_Nganh = "/Report_ExcelFrom/CapPhat/rptCapPhat_ThongTri_ChiTiet_Nganh.xls";
         private const String sFilePath_ChiTiet_Muc = "/Report_ExcelFrom/CapPhat/rptCapPhat_ThongTri_ChiTiet_Muc.xls";
         private const String sFilePath_TongHop_Nganh = "/Report_ExcelFrom/CapPhat/rptCapPhat_ThongTri_TongHop_Nganh.xls";
         private const String sFilePath_TongHop_Muc = "/Report_ExcelFrom/CapPhat/rptCapPhat_ThongTri_TongHop_Muc.xls"; 
         
-            public ActionResult Index()
+        public ActionResult Index()
         {
-            ViewData["path"] = "~/Report_Views/CapPhat/rptCapPhat_ThongTri.aspx";
+            ViewData["path"] = VIEW_PATH_CAPPHAT_THONGTRI;
+
             return View(sViewPath + "ReportView.aspx");
         }
 
         /// <summary>
-        /// <param name="MaND"></param>
-        /// <param name="sLNS"></param>
-        /// <param name="iNamCapPhat"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="LoaiTongHop"></param>
-        /// <returns></returns>
-        /// </summary>
-        public static DataTable rptCapPhat_ThongTri(String MaND, String sLNS, String iNamCapPhat, String iID_MaDonVi, String LoaiTongHop)
-        {
-            String DKDonVi = "", DKPhongBan = "", DK = "";
-            SqlCommand cmd = new SqlCommand();
-            String SQL = "";
-            DKDonVi = ThuNopModels.DKDonVi(MaND, cmd);
-            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-
-            //Báo cáo chi tiết từng đơn vị
-            if(LoaiTongHop == "ChiTiet")
-            {
-                if(!String.IsNullOrEmpty(iID_MaDonVi) && iID_MaDonVi !="-1")
-                {
-                    DK += " AND iID_MaDonVi=@iID_MaDonVi";
-                    cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-                }
-            }
-            //Báo cáo tổng hợp các đơn vị
-            else
-            {
-                if (String.IsNullOrEmpty(iID_MaDonVi))
-                    iID_MaDonVi = Guid.Empty.ToString();
-
-                String[] arrDonVi = iID_MaDonVi.Split(',');
-
-                for (int i = 0; i < arrDonVi.Length; i++)
-                {
-                    DK += "iID_MaDonVi=@MaDonVi" + i;
-                    cmd.Parameters.AddWithValue("@MaDonVi" + i, arrDonVi[i]);
-                    if (i < arrDonVi.Length - 1)
-                        DK += " OR ";
-                }
-
-                if (!String.IsNullOrEmpty(DK))
-                    DK = " AND (" + DK + ")";
-            }
-
-            if (!String.IsNullOrEmpty(sLNS))
-            {
-                DK += " AND sLNS IN (" + sLNS + ")";
-            }
-       
-            //Báo cáo chi tiết từng đơn vị
-            if(LoaiTongHop == "ChiTiet")
-            {
-                SQL = String.Format(@"
-                    SELECT SUBSTRING(sLNS,1,1) as sLNS1,
-                            SUBSTRING(sLNS,1,3) as sLNS3,
-                            SUBSTRING(sLNS,1,5) as sLNS5,
-                            sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa
-                            ,SUM(rTuChi) as rTuChi
-                     FROM CP_CapPhatChiTiet
-                     WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
-                            AND CONVERT(VARCHAR(10), dNgayCapPhat, 103) = '{3}' 
-                     GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa
-                     HAVING SUM(rTuChi)<>0 ", DK, DKDonVi, DKPhongBan, iNamCapPhat);
-            }
-            //Báo cáo tổng hợp các đơn vị
-            else
-            {
-                SQL = String.Format(@"
-                    SELECT SUBSTRING(sLNS,1,1) as sLNS1,
-                            SUBSTRING(sLNS,1,3) as sLNS3,
-                            SUBSTRING(sLNS,1,5) as sLNS5,
-                            sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
-                            ,SUM(rTuChi) as rTuChi
-                     FROM CP_CapPhatChiTiet
-                     WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
-                             AND CONVERT(VARCHAR(10), dNgayCapPhat, 103) = '{3}' 
-                     GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
-                     HAVING SUM(rTuChi)<>0 ", DK, DKDonVi, DKPhongBan, iNamCapPhat);
-            }
-            
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
-            DataTable dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-
-            return dt;
-        }
-
-        /// <summary>
-        /// Lấy dữ liệu
+        /// Lấy các giá trị từ Form gán vào ViewData
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
         public ActionResult EditSubmit(String ParentID)
         {
-            //Get value from View page
+            //Lấy giá trị từ Form
             String sLNS = Request.Form["sLNS"];
             String iID_MaDonVi = Request.Form["iID_MaDonVi"];
             String iNamCapPhat = Request.Form[ParentID + "_iNamCapPhat"];
@@ -135,7 +46,7 @@ namespace VIETTEL.Report_Controllers.ThuNop
             String LoaiCapPhat = Request.Form[ParentID + "_LoaiCapPhat"];
             String LoaiThongTri = Request.Form[ParentID + "_LoaiThongTri"];
             
-            //Set value for ViewData
+            //Gán giá trị vào ViewData
             ViewData["PageLoad"] = "1";
             ViewData["sLNS"] = sLNS;
             ViewData["iID_MaDonVi"] = iID_MaDonVi;
@@ -146,46 +57,101 @@ namespace VIETTEL.Report_Controllers.ThuNop
             ViewData["LoaiCapPhat"] = LoaiCapPhat;
             ViewData["LoaiThongTri"] = LoaiThongTri;
 
-            ViewData["path"] = "~/Report_Views/CapPhat/rptCapPhat_ThongTri.aspx";
+            ViewData["path"] = VIEW_PATH_CAPPHAT_THONGTRI;
             return View(sViewPath + "ReportView.aspx");
         }
 
         /// <summary>
-        /// Tạo báo cáo
+        /// Xuất file PDF cấp phát thông tri
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="MaND"></param>
-        /// <param name="sLNS"></param>
-        /// <param name="iNamCapPhat"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="LoaiTongHop"></param>
-        /// <param name="LoaiCapPhat"></param>
-        /// <param name="LoaiThongTri"></param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="iNamCapPhat">Đợt cấp phát</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <param name="LoaiTongHop">Loại báo cáo tổng hợp hay chi tiết</param>
+        /// <param name="DenMuc">Thông tin chi tiết đến ngành hay mục</param>
+        /// <param name="LoaiCapPhat">Loại cấp phát</param>
+        /// <param name="LoaiThongTri">Loại thông tri</param>
         /// <returns></returns>
-        public ExcelFile CreateReport(String path, String MaND, String sLNS, String iNamCapPhat, String iID_MaDonVi, String LoaiTongHop, String LoaiCapPhat, String LoaiThongTri)
+        /// VungNV: 2015/11/12
+        public ActionResult ViewPDF(String MaND, String iNamCapPhat, String sLNS, String iID_MaDonVi, 
+                    String LoaiTongHop, String DenMuc, String LoaiCapPhat, String LoaiThongTri)
+        {
+            HamChung.Language();
+            String sDuongDan = "";
+
+            //Hiện thị chi tiết
+            if(LoaiTongHop == "ChiTiet")
+            {
+                //Hiện thị đến ngành hoặc đến mục
+                sDuongDan = DenMuc=="Nganh" ? sFilePath_ChiTiet_Nganh : sFilePath_ChiTiet_Muc;
+            }
+            //Hiện thị tổng hợp
+            else
+            {
+                //Hiện thị đến ngành hoặc đến mục
+                sDuongDan = DenMuc == "Nganh" ? sFilePath_TongHop_Nganh : sFilePath_TongHop_Muc;
+            }
+
+            ExcelFile xls = CreateReport(Server.MapPath(sDuongDan), MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop, LoaiCapPhat, LoaiThongTri);
+            
+            using (FlexCelPdfExport pdf = new FlexCelPdfExport())
+            {
+                pdf.Workbook = xls;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    pdf.BeginExport(ms);
+                    pdf.ExportAllVisibleSheets(false, "BaoCao");
+                    pdf.EndExport();
+                    ms.Position = 0;
+                    return File(ms.ToArray(), "application/pdf");
+                }
+            }
+           
+        }
+
+        /// <summary>
+        /// Tạo file PDF xuất dữ liệu của cấp phát thông tri
+        /// </summary>
+        /// <param name="path">Đường dẫn tới file excel</param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="iNamCapPhat">Đợt cấp phát</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <param name="LoaiTongHop">Loại báo cáo tổng hợp hay chi tiết</param>
+        /// <param name="LoaiCapPhat">Loại cấp phát</param>
+        /// <param name="LoaiThongTri">Loại thông tri</param>
+        /// <returns></returns>
+        /// VungNV: 2015/11/12
+        public ExcelFile CreateReport(String path, String MaND, String sLNS, String iNamCapPhat, String iID_MaDonVi,
+            String LoaiTongHop, String LoaiCapPhat, String LoaiThongTri)
         {
             XlsFile Result = new XlsFile(true);
-            Result.Open(path); 
+            Result.Open(path);
             FlexCelReport fr = new FlexCelReport();
             fr = ReportModels.LayThongTinChuKy(fr, "rptCapPhat_ThongTri");
-            
+
+            //Lấy dữ liệu chi tiết
             LoadData(fr, MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop);
-            //VungNV: 2015/09/30 lấy tháng của đợt cấp phát
+
+            //Lấy tháng của đợt cấp phát
             DateTime dNamCapPhat = Convert.ToDateTime(iNamCapPhat);
             String Thang = dNamCapPhat.Month.ToString();
             String Nam = ReportModels.LayNamLamViec(MaND);
-            String sTenDonVi = DonViModels.Get_TenDonVi(iID_MaDonVi,MaND);
 
-            //VungNV: 2015/09/30 Set value for LoaiCapPhat
-            if (String.IsNullOrWhiteSpace(LoaiCapPhat)) 
+            //Lấy tên đơn vị
+            String sTenDonVi = DonViModels.Get_TenDonVi(iID_MaDonVi, MaND);
+
+            //Lấy tên loại cấp phát
+            if (String.IsNullOrWhiteSpace(LoaiCapPhat))
             {
-                DataTable dtLoaiThongTri = CommonFunction.Lay_dtDanhMuc("LoaiCapPhat"); 
+                DataTable dtLoaiThongTri = CommonFunction.Lay_dtDanhMuc("LoaiCapPhat");
 
-                foreach(DataRow row in dtLoaiThongTri.Rows)
+                foreach (DataRow row in dtLoaiThongTri.Rows)
                 {
                     string sMaLoai = row["iID_MaDanhMuc"].ToString();
 
-                    if(sMaLoai == LoaiThongTri)
+                    if (sMaLoai == LoaiThongTri)
                     {
                         LoaiCapPhat = row["sTen"].ToString();
                         break;
@@ -193,28 +159,33 @@ namespace VIETTEL.Report_Controllers.ThuNop
                 }
             }
 
+            if (!String.IsNullOrEmpty(LoaiCapPhat))
+            {
+                LoaiCapPhat.Trim();
+            }
+
             fr.SetValue("BoQuocPhong", ReportModels.CauHinhTenDonViSuDung(1, MaND));
             fr.SetValue("QuanKhu", ReportModels.CauHinhTenDonViSuDung(2, MaND));
             fr.SetValue("NgayThang", ReportModels.Ngay_Thang_Nam_HienTai());
             fr.SetValue("Nam", Nam);
-            fr.SetValue("NgayLap", "tháng "+ Thang +" năm " + Nam);
+            fr.SetValue("NgayLap", "tháng " + Thang + " năm " + Nam);
             fr.SetValue("sTenDonVi", sTenDonVi);
-            fr.SetValue("LoaiCapPhat", LoaiCapPhat.Trim());
+            fr.SetValue("LoaiCapPhat", LoaiCapPhat);
 
             fr.Run(Result);
             return Result;
         }
 
         /// <summary>
-        /// Đổ dư liệu xuống báo cáo
+        /// Lấy dữ liệu chi tiết của cấp phát thông tri
         /// </summary>
         /// <param name="fr"></param>
-        /// <param name="MaND"></param>
-        /// <param name="sLNS"></param>
-        /// <param name="iNamCapPhat"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="LoaiTongHop"></param>
-        /// <returns></returns>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iNamCapPhat">Đợt cấp phát</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <param name="LoaiTongHop">Loại báo cáo tổng hợp hay chi tiết</param>
+        /// VungNV: 2015/11/12
         private void LoadData(FlexCelReport fr, String MaND, String sLNS, String iNamCapPhat, String iID_MaDonVi, String LoaiTongHop)
         {
             int SoDong = 0;
@@ -222,14 +193,14 @@ namespace VIETTEL.Report_Controllers.ThuNop
             DataTable data = new DataTable();
             DataTable dtDonVi = new DataTable();
             //Hiển thị chi tiết
-            if(LoaiTongHop == "ChiTiet")
+            if (LoaiTongHop == "ChiTiet")
             {
-                data = rptCapPhat_ThongTri(MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop);
+                data = CapPhat_ReportModels.rptCapPhat_ThongTri(MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop);
             }
             //Hiển thị tổng hợp
             else
             {
-                dtDonVi = rptCapPhat_ThongTri(MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop);
+                dtDonVi = CapPhat_ReportModels.rptCapPhat_ThongTri(MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop);
                 data = HamChung.SelectDistinct("ChiTiet", dtDonVi, "sLNS1,sLNS3,sLNS5,sLNS,sL,sK,sM,sTM,sTTM,sNG", "sLNS1,sLNS3,sLNS5,sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa");
                 fr.AddTable("dtDonVi", dtDonVi);
                 dtDonVi.Dispose();
@@ -246,21 +217,21 @@ namespace VIETTEL.Report_Controllers.ThuNop
             for (int i = 0; i < dtsLNS5.Rows.Count; i++)
             {
                 r = dtsLNS5.Rows[i];
-                r["sMoTa"] = LayMoTa(Convert.ToString(r["sLNS5"]));
+                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS5"]));
             }
 
             DataTable dtsLNS3 = HamChung.SelectDistinct("dtsLNS3", dtsLNS5, "sLNS1,sLNS3", "sLNS1,sLNS3,sMoTa");
             for (int i = 0; i < dtsLNS3.Rows.Count; i++)
             {
                 r = dtsLNS3.Rows[i];
-                r["sMoTa"] = LayMoTa(Convert.ToString(r["sLNS3"]));
+                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS3"]));
             }
 
             DataTable dtsLNS1 = HamChung.SelectDistinct("dtsLNS1", dtsLNS3, "sLNS1", "sLNS1,sMoTa");
             for (int i = 0; i < dtsLNS1.Rows.Count; i++)
             {
                 r = dtsLNS1.Rows[i];
-                r["sMoTa"] = LayMoTa(Convert.ToString(r["sLNS1"]));
+                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS1"]));
             }
 
             long TongTien = 0;
@@ -294,16 +265,9 @@ namespace VIETTEL.Report_Controllers.ThuNop
             dt.Columns.Add("sGhiChu", typeof(String));
             int soChu1Trang = 80;
 
-            String SQL =
-                String.Format(
-                    @"SELECT sGhiChu 
-                      FROM CP_GhiChu 
-                      WHERE sTen='rptCapPhat_ThongTri' AND sID_MaNguoiDung=@MaND AND iID_MaDonVi=@iID_MaDonVi");
+            //Lấy giá trị ghi chú của đơn vị
+            String sGhiChu = CapPhat_ReportModels.LayGhiChu(MaND, iID_MaDonVi);
 
-            SqlCommand cmd = new SqlCommand(SQL);
-            cmd.Parameters.AddWithValue("@MaND", MaND);
-            cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            String sGhiChu = Connection.GetValueString(cmd, "");
             ArrayList arrDongTong = new ArrayList();
             String[] arrDong = Regex.Split(sGhiChu, "&#10;");
 
@@ -330,7 +294,7 @@ namespace VIETTEL.Report_Controllers.ThuNop
                         s += arrDongCon[j].Trim() + " ";
                     }
 
-                    if (tg <= soChu1Trang) 
+                    if (tg <= soChu1Trang)
                         arrDongTong.Add(s);
                 }
             }
@@ -380,18 +344,18 @@ namespace VIETTEL.Report_Controllers.ThuNop
             int KhoanhCachDong = 120;
             int SoDongTrang1 = 23;
             int SoDongGhiChu = dt.Rows.Count;
-           
+
             //trang 1 voi cỡ chữ 10, số dòng trên trang 23 dòng
             if (SoDongGhiChu == 0)
             {
                 SoDongTrang1 = 23;
-                if(SoDong<=SoDongTrang1+3 && SoDong>SoDongTrang1)
-                    KhoanhCachDong = 158 + (SoDongTrang1 - SoDong)*2;
+                if (SoDong <= SoDongTrang1 + 3 && SoDong > SoDongTrang1)
+                    KhoanhCachDong = 158 + (SoDongTrang1 - SoDong) * 2;
             }
-             //có ghi chú
+            //có ghi chú
             else
             {
-                if(SoDongGhiChu<=10)
+                if (SoDongGhiChu <= 10)
                 {
                     if (SoDong + SoDongGhiChu > SoDongTrang1 - 3 && SoDong + SoDongGhiChu < SoDongTrang1 + 3)
                     {
@@ -401,7 +365,7 @@ namespace VIETTEL.Report_Controllers.ThuNop
                 }
             }
 
-            fr.SetExpression("test", "<#Row height(Autofit;"+KhoanhCachDong+")>");
+            fr.SetExpression("test", "<#Row height(Autofit;" + KhoanhCachDong + ")>");
             data.Dispose();
             dtsTM.Dispose();
             dtsM.Dispose();
@@ -413,133 +377,48 @@ namespace VIETTEL.Report_Controllers.ThuNop
 
         }
 
-        public static String LayMoTa(String sLNS)
-        {
-            String sMoTa = "";
-            SqlCommand cmd = new SqlCommand();
-            String SQL = String.Format(@"SELECT sMoTa FROM NS_MucLucNganSach WHERE iTrangThai=1 AND sLNS=@sLNS");
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@sLNS", sLNS);
-            sMoTa = Connection.GetValueString(cmd, "");
-            return sMoTa;
-        }
-
         /// <summary>
-        /// Hiển thị báo cáo theo định dạng PDF
+        /// Lấy danh sách loại ngân sách dựa vào đợt cấp phát, loại thông tri, phòng ban
         /// </summary>
-        /// <param name="MaND"></param>
-        /// <param name="sLNS"></param>
-        /// <param name="iNamCapPhat"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="LoaiTongHop"></param>
-        /// <param name="LoaiCapPhat"></param>
-        /// <param name="LoaiThongTri"></param>
+        /// <param name="ParentID"></param>
+        /// <param name="iNamCapPhat">Đợt cấp phát</param>
+        /// <param name="LoaiThongTri">Loại thông tri</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
-
-        public ActionResult ViewPDF(String MaND, String iNamCapPhat, String sLNS, String iID_MaDonVi, 
-                    String LoaiTongHop, String DenMuc, String LoaiCapPhat, String LoaiThongTri)
-        {
-            HamChung.Language();
-            String sDuongDan = "";
-
-            //Hiện thị chi tiết
-            if(LoaiTongHop == "ChiTiet")
-            {
-                //Hiện thị đến ngành
-                if(DenMuc=="Nganh")
-                    sDuongDan = sFilePath_ChiTiet_Nganh;
-                //Hiện thị đến mục
-                else
-                    sDuongDan = sFilePath_ChiTiet_Muc;
-            }
-            //Hiện thị tổng hợp
-            else
-            {
-                //Hiện thị đến ngành
-                if(DenMuc == "Nganh")
-                    sDuongDan = sFilePath_TongHop_Nganh;
-                //Hiện thị đến mục
-                else
-                    sDuongDan = sFilePath_TongHop_Muc;
-            }
-
-            ExcelFile xls = CreateReport(Server.MapPath(sDuongDan), MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop, LoaiCapPhat, LoaiThongTri);
-            using (FlexCelPdfExport pdf = new FlexCelPdfExport())
-            {
-                pdf.Workbook = xls;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    pdf.BeginExport(ms);
-                    pdf.ExportAllVisibleSheets(false, "BaoCao");
-                    pdf.EndExport();
-                    ms.Position = 0;
-                    return File(ms.ToArray(), "application/pdf");
-                }
-            }
-           
-        }
-
-        public clsExcelResult ExportToExcel(String MaND, String sLNS, String iNamCapPhat, String iID_MaDonVi,
-                     String LoaiTongHop, String DenMuc, String LoaiCapPhat, String LoaiThongTri)
-        {
-            HamChung.Language();
-            String sDuongDan = "";
-            //Hiện thị chi tiết
-            if (LoaiTongHop == "ChiTiet")
-            {
-                //Hiện thị đến ngành
-                if (DenMuc == "Nganh")
-                    sDuongDan = sFilePath_ChiTiet_Nganh;
-                //Hiện thị đến mục
-                else
-                    sDuongDan = sFilePath_ChiTiet_Muc;
-            }
-           //Hiện thị tổng hợp
-            else
-            {
-                //Hiện thị đến ngành
-                if (DenMuc == "Nganh")
-                    sDuongDan = sFilePath_TongHop_Nganh;
-                //Hiện thị đến mục
-                else 
-                    sDuongDan = sFilePath_TongHop_Muc;
-            }
-           
-            clsExcelResult clsResult = new clsExcelResult();
-            ExcelFile xls = CreateReport(Server.MapPath(sDuongDan), MaND, sLNS, iNamCapPhat, iID_MaDonVi, LoaiTongHop,LoaiCapPhat, LoaiThongTri);
-            
-            using (MemoryStream ms = new MemoryStream())
-            {
-                xls.Save(ms);
-                ms.Position = 0;
-                clsResult.ms = ms;
-                clsResult.FileName = "Thongtriquyettoan.xls";
-                clsResult.type = "xls";
-                return clsResult;
-            }
-        }
-        //VungNV: 2015/09/30 Lấy danh sách LNS 
         public JsonResult Ds_LNS(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaPhongBan)
         {
             String MaND = User.Identity.Name;
+            String sViewPath = "~/Views/DungChung/DonVi/LNS_DanhSach_ThongTri.ascx";
+
             DataTable dt = CapPhat_ChungTuModels.dtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(sLNS))
             {
                 sLNS = Guid.Empty.ToString();
             }
-
-            String ViewNam = "~/Views/DungChung/DonVi/LNS_DanhSach_ThongTri.ascx";
+          
             DanhSachDonViModels Model = new DanhSachDonViModels(MaND, sLNS, dt, ParentID);
-            String strDonVi = HamChung.RenderPartialViewToStringLoad(ViewNam, Model, this);
+            String strDonVi = HamChung.RenderPartialViewToStringLoad(sViewPath, Model, this);
 
             return Json(strDonVi, JsonRequestBehavior.AllowGet);
         }
 
-        //VungNV: 2015/09/30 Lấy danh sách các đơn vị
+        /// <summary>
+        /// Lấy danh sách đơn vị dựa vào loại ngân sách, đợt cấp phát, loại thông tri, phòng ban
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="iNamCapPhat">Đợt cấp phát</param>
+        /// <param name="LoaiThongTri">Loại thông tri</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
+        /// <returns></returns>
         public JsonResult Ds_DonVi(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaDonVi, String iID_MaPhongBan)
         {
             String MaND = User.Identity.Name;
+            String sViewPath = "~/Views/DungChung/DonVi/DonVi_DanhSach_ThongTri.ascx";
+            
             DataTable dt = CapPhat_ChungTuModels.dtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(iID_MaDonVi))
@@ -547,25 +426,22 @@ namespace VIETTEL.Report_Controllers.ThuNop
                 iID_MaDonVi = Guid.Empty.ToString();
             }
 
-            String ViewNam = "~/Views/DungChung/DonVi/DonVi_DanhSach_ThongTri.ascx";
             DanhSachDonViModels Model = new DanhSachDonViModels(MaND, iID_MaDonVi, dt, ParentID);
-            String strDonVi = HamChung.RenderPartialViewToStringLoad(ViewNam, Model, this);
+            String strDonVi = HamChung.RenderPartialViewToStringLoad(sViewPath, Model, this);
             
             return Json(strDonVi, JsonRequestBehavior.AllowGet);
         }
 
-        //VungNV: 2015/09/30 Lấy ghi chú của các Đơn vị
-        public JsonResult DsGhiChu(String ParentID, String MaND, String iID_MaDonVi, String sGhiChu)
+        /// <summary>
+        /// Lấy ghi chú của đơn vị
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <returns></returns>
+        public JsonResult LayGhiChu(String ParentID, String MaND, String iID_MaDonVi)
         {
-            sGhiChu = "";
-            String sTen = "rptCapPhat_ThongTri";
-            String SQL = "";
-            SQL = string.Format(@"SELECT sGhiChu FROM CP_GhiChu WHERE sTen=@sTen AND sID_MaNguoiDung=@sID_MaNguoiDung AND iID_MaDonVi=@iID_MaDonVi");
-            SqlCommand cmd = new SqlCommand(SQL);
-            cmd.Parameters.AddWithValue("@sTen", sTen);
-            cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            cmd.Parameters.AddWithValue("@sID_MaNguoiDung", MaND);
-            sGhiChu = Connection.GetValueString(cmd, "");
+            String sGhiChu = CapPhat_ReportModels.LayGhiChu(MaND, iID_MaDonVi);
             String strDonVi = "";
 
             if (iID_MaDonVi != "-1")
@@ -574,86 +450,44 @@ namespace VIETTEL.Report_Controllers.ThuNop
             return Json(strDonVi, JsonRequestBehavior.AllowGet);
         }
 
-        //VungNV: 2015/09/30 thêm mới hoặc update ghi chú 
-        public ActionResult Update_GhiChu(String sGhiChu, String MaND, String iID_MaDonVi)
+        /// <summary>
+        /// Thêm mới hoặc cập nhật lại ghi chú của đơn vị
+        /// </summary>
+        /// <param name="sGhiChu">Nội dung ghi chú</param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <returns></returns>
+        public ActionResult CapNhapGhiChu(String sGhiChu, String MaND, String iID_MaDonVi)
         {
-            String sTen = "rptCapPhat_ThongTri";
-            SqlCommand cmd = new SqlCommand();
-            String SQL = "";
-            SQL = String.Format(
-                @"IF NOT EXISTS(
-		            SELECT sGhiChu 
-		            FROM CP_GhiChu 
-		            WHERE sTen = @sTen AND sID_MaNguoiDung = @sID_MaNguoiDung AND iID_MaDonVi = @iID_MaDonVi
-	            )
-            INSERT INTO CP_GhiChu(sTen, sID_MaNguoiDung, iID_MaDonVi, sGhiChu) 
-		            VALUES(@sTen, @sID_MaNguoiDung, @iID_MaDonVi, @sGhiChu)
-            ELSE 
-	            UPDATE CP_GhiChu 
-	            SET sGhiChu=@sGhiChu 
-	            WHERE  sTen = @sTen AND	 sID_MaNguoiDung = @sID_MaNguoiDung AND iID_MaDonVi =@iID_MaDonVi");
-
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@sTen", sTen);
-            cmd.Parameters.AddWithValue("@sID_MaNguoiDung", MaND);
-            cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            sGhiChu = sGhiChu.Replace("^", "&#10;");
-            cmd.Parameters.AddWithValue("@sGhiChu", sGhiChu);
-            Connection.UpdateDatabase(cmd);
-            cmd.Dispose();
+           CapPhat_ReportModels.CapNhatGhiChu(sGhiChu, MaND, iID_MaDonVi);
 
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
-        //VungNV: 2015/09/30 thêm mới hoặc update loại cấp phát
-        public ActionResult update_LoaiCapPhat(String LoaiCapPhat, String MaND)
+        /// <summary>
+        /// Lấy giá trị loại cấp phát
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <returns></returns>
+        public ActionResult LayLoaiCapPhat(String ParentID, String MaND)
         {
-           String sTen = "rptCapPhat_ThongTri_LoaiCapPhat";
-            String SQL = "";
-            SQL = String.Format(
-                @"IF NOT EXISTS(
-	                SELECT sGhiChu 
-	                FROM CP_GhiChu 
-	                WHERE sTen =  @sTen AND sID_MaNguoiDung = @sID_MaNguoiDung
-	            )
-            INSERT INTO CP_GhiChu(sTen, sID_MaNguoiDung, sGhiChu) 
-		            VALUES( @sTen,@sID_MaNguoiDung, @sGhiChu)
-            ELSE 
-                UPDATE CP_GhiChu 
-                SET sGhiChu=@sGhiChu 
-                WHERE  sTen = @sTen AND	 sID_MaNguoiDung = @sID_MaNguoiDung");
+            String sLoaiCapPhat = CapPhat_ReportModels.LayLoaiCapPhat(MaND);
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@sTen", sTen);
-            cmd.Parameters.AddWithValue("@sID_MaNguoiDung", MaND);
-            cmd.Parameters.AddWithValue("@sGhiChu", LoaiCapPhat);
-            Connection.UpdateDatabase(cmd);
-            cmd.Dispose();
-
-            return Json("", JsonRequestBehavior.AllowGet);
-
-        }
-
-        //VungNV: 2015/09/30 lấy giá trị của loại cấp phát
-        public ActionResult getLoaiCapPhat(String ParentID, String MaND) 
-        {
-            String sLoaiCapPhat = "";
-            String sTen = "rptCapPhat_ThongTri_LoaiCapPhat";
-            String SQL = "";
-            SQL = String.Format(
-                @"SELECT sGhiChu FROM CP_GhiChu WHERE sTen=@sTen AND sID_MaNguoiDung=@sID_MaNguoiDung"
-               );
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@sID_MaNguoiDung", MaND);
-            cmd.Parameters.AddWithValue("@sTen", sTen);
-            sLoaiCapPhat = Connection.GetValueString(cmd, "");
-            cmd.Dispose();
-           
             return Json(sLoaiCapPhat, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Thêm mới hoặc cập nhật lại loại cấp phát
+        /// </summary>
+        /// <param name="LoaiCapPhat">Nội dung cấp phát</param>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <returns></returns>
+        public ActionResult CapNhatLoaiCapPhat(String LoaiCapPhat, String MaND)
+        {
+            CapPhat_ReportModels.CapNhatLoaiCapPhat(LoaiCapPhat, MaND);
+
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
     }
