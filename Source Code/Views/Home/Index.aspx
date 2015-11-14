@@ -45,10 +45,10 @@
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="left" style="width: 150px;">
-               <%-- <div style="padding-left: 22px; padding-bottom: 5px; text-transform: uppercase; color: #ec3237;">
+                <div style="padding-left: 22px; padding-bottom: 5px; text-transform: uppercase; color: #ec3237;">
                     <b>
                         <%=NgonNgu.LayXau("Luồng dữ liệu: ")%></b>
-                </div>--%>
+                </div>
             </td>
             <td align="right" style="padding-bottom: 5px; color: #ec3237; font-weight: bold;
                 padding-right: 20px;">
@@ -56,7 +56,7 @@
             </td>
         </tr>
     </table>
-    <%--<div style="width: 100%;">
+    <div style="width: 100%;">
         <table width="100%" cellspacing="3" cellpadding="3" border="0">
             <tr>
                 <td colspan="7" style="font-weight: bold;" valign="top">
@@ -322,7 +322,7 @@
                 </td>
             </tr>
         </table>
-    </div>--%>
+    </div>
     <script type="text/javascript">
         function ChonThangNam(value, loai) {
             var iThangLamViec;
