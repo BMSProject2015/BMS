@@ -210,7 +210,7 @@ namespace VIETTEL.Controllers.DuToanBS
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit(string ParentID, string MaChungTu, string sLNS1)
+        public ActionResult ThemSuaChungTu(string ParentID, string MaChungTu, string sLNS1)
         {
             string MaND = User.Identity.Name;
             string sChucNang = EDIT;
@@ -252,6 +252,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 }
                 if (sChucNang == CREATE)
                 {
+                    ViewData["bThemMoi"] = "true";
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_INDEX);
                 }
                 else
@@ -291,7 +292,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit_Gom(String ParentID, String MaChungTu, String sLNS1)
+        public ActionResult ThemSuaChungTuTLTH(String ParentID, String MaChungTu, String sLNS1)
         {
             String MaND = User.Identity.Name;
             string sChucNang = EDIT;
@@ -327,9 +328,10 @@ namespace VIETTEL.Controllers.DuToanBS
                 {
                     ModelState.AddModelError(ParentID + "_" + Errors.GetKey(i), Errors[i]);
                 }
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+                if (sChucNang == CREATE)
                 {
-                    return RedirectToAction("index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
+                    ViewData["bThemMoi"] = "true";
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
                 }
                 else
                 {
@@ -366,7 +368,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit_Gom_THCuc(String ParentID, String MaChungTu, String sLNS1)
+        public ActionResult ThemSuaChungTuTLTHCuc(String ParentID, String MaChungTu, String sLNS1)
         {
             String MaND = User.Identity.Name;
             string sChucNang = EDIT;
@@ -400,7 +402,8 @@ namespace VIETTEL.Controllers.DuToanBS
                 }
                 if (sChucNang == CREATE)
                 {
-                    return RedirectToAction("index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
+                    ViewData["bThemMoi"] = "true";
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
                 }
                 else
                 {
