@@ -115,7 +115,8 @@
         if (check) CheckNDtao = true;
         if (checkTroLyTongHop) check = true;
 
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
+        //DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
 
         double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, "", MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
