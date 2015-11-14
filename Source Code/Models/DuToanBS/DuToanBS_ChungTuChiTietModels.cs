@@ -1531,7 +1531,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_TuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             dt.Dispose();
@@ -1578,7 +1578,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_TrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iID_MaNguoiDungTao = Convert.ToString(dt.Rows[0]["sID_MaNguoiDungTao"]);
@@ -1628,7 +1628,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_BaoDam_TuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iKyThuat = Convert.ToString(dt.Rows[0]["iKyThuat"]);
@@ -1692,7 +1692,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_BaoDam_TrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iID_MaNguoiDungTao = Convert.ToString(dt.Rows[0]["sID_MaNguoiDungTao"]);
@@ -1770,7 +1770,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_BaoDam_TuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1793,7 +1793,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_BaoDam_TrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1810,7 +1810,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_TuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1833,7 +1833,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_TrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1850,7 +1850,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_THCuc_TrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom_THCuc(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1866,7 +1866,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
         public static int Get_iID_MaTrangThaiDuyet_Gom_THCuc_TuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.GetChungTu_Gom_THCuc(MaChungTu);
+            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
