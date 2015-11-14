@@ -55,7 +55,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("EditSubmit_Gom_THCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = iID_MaChungTu }))
+        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = iID_MaChungTu }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

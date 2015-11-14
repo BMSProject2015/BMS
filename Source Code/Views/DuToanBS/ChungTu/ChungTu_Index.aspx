@@ -11,54 +11,43 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <%
-        string MaND = User.Identity.Name;
         string ParentID = "DTBS_ChungTu";
-        string ChiNganSach = Request.QueryString["ChiNganSach"];
+        string MaND = User.Identity.Name;
+        //string ChiNganSach = Request.QueryString["ChiNganSach"];
         string iID_MaChungTu_TLTH = Request.QueryString["iID_MaChungTu"];
-        string bTLTH = Request.QueryString["bTLTH"];
-        string MaLoaiNganSach = Request.QueryString["sLNS"];
-        //LNS1
+        //string bTLTH = Request.QueryString["bTLTH"];
         string sLNS1 = Request.QueryString["sLNS1"];
-        if (String.IsNullOrEmpty(sLNS1)) 
-            sLNS1 = "-1";
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
-        //LSN Tìm kiém
         string sLNS_TK = Request.QueryString["sLNS_TK"];
         string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
         string page = Request.QueryString["page"];
-        string iID_MaPhongBan = "";
         string sNguon = Convert.ToString(ViewData["sNguon"]);
-        //dt Phòng Ban.
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+        
+        if (String.IsNullOrEmpty(sLNS1))
         {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
+            sLNS1 = "-1";
         }
         
-        int CurrentPage = 1;
-
         if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
         if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
         if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) || iID_MaTrangThaiDuyet == "-1") iID_MaTrangThaiDuyet = "";
-        Boolean bThemMoi = false;
-        String iThemMoi = "";
+        string iThemMoi = "";
         if (ViewData["bThemMoi"] != null)
         {
-            bThemMoi = Convert.ToBoolean(ViewData["bThemMoi"]);
-            if (bThemMoi)
+            if (Convert.ToBoolean(ViewData["bThemMoi"]))
+            {
                 iThemMoi = "on";
+            }
         }
         String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
         
-        //dt Danh sach trang thai.
+        //Tất cả trạng thái
         DataTable dtTrangThai_All;
-        //neu la ngan sach bao dam
         dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(DuToanModels.iID_MaPhanHe);
 
+        //Trạng thái được xem
         DataTable dtTrangThai = LuongCongViecModel.Get_dtDSTrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, MaND);
         dtTrangThai.Rows.InsertAt(dtTrangThai.NewRow(), 0);
         dtTrangThai.Rows[0]["iID_MaTrangThaiDuyet"] = -1;
@@ -66,7 +55,7 @@
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
 
-        //dt Danh sách LNS
+        //Danh sách loại ngân sách
         DataTable dtLoaiNganSach = NganSach_HamChungModels.DSLNS_LocCuaPhongBan(MaND, sLNS1);
         dtLoaiNganSach.Rows.InsertAt(dtLoaiNganSach.NewRow(), 0);
         dtLoaiNganSach.Rows[0]["sLNS"] = "";
@@ -74,29 +63,35 @@
         SelectOptionList slLoaiNganSach = new SelectOptionList(dtLoaiNganSach, "sLNS", "sTen");
         dtLoaiNganSach.Dispose();
 
-        //dt Danh sách Nguồn
+        //Danh sách nguồn
         DataTable dtNguon = DuToanBS_ChungTuModels.getNguon();
         SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
         //dtNguon.Dispose();
 
+        int CurrentPage = 1;
         if (String.IsNullOrEmpty(page) == false)
         {
             CurrentPage = Convert.ToInt32(page);
         }
-        //kiem tra nguoi dung co phan tro ly phong ban
+        
+        //Kiểm tra role trợ lý phòng ban
         Boolean check = LuongCongViecModel.KiemTra_TroLyPhongBan(MaND);
+        
+        //Kiểm tra role trợ lý tổng hợp
         Boolean checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
         Boolean CheckNDtao = false;
         if (check) CheckNDtao = true;
         if (checkTroLyTongHop) check = true;
         
         //Lấy danh sách chứng từ.
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS1, "", MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, "0", CurrentPage, Globals.PageSize);
-
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS1, "", "", MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS1, "", MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, "0", CurrentPage, Globals.PageSize);
         
+        //Lấy tổng số lượng chứng từ
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS1, "", MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, "0").Rows.Count;
+        
+        //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
-        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
+        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { sLNS1=sLNS1, SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
         int SoCot = 1;
         String[] arrLNS = sLNS1.Split(',');
     %>
@@ -208,7 +203,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                using (Html.BeginForm("EditSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1 }))
+                using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1 }))
                 {       
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1)%>
@@ -225,7 +220,7 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%=MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi(this.checked)\"")%>
+                                            <%=MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi()\"")%>
                                             <span style="color: brown;">
                                                 (Trường hợp bổ sung đợt mới, đánh dấu chọn "Bổ sung đợt mới". Nếu không chọn đợt bổ sung dưới lưới) 
                                             </span>
@@ -299,18 +294,18 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="td_form2_td1">
+                                    <%--<td class="td_form2_td1">
                                         <div>
                                             <b>Nguồn ngân sách</b>
                                         </div>
-                                    </td>
+                                    </td>--%>
                                     <%--TuNB Hardcode iID_MaNguon--%>
                                     <%=Html.Hidden(ParentID + "_iID_MaNguon", 1)%>
-                                    <td class="td_form2_td5">
+                                    <%--<td class="td_form2_td5">
                                         <div>
                                             <%=MyHtmlHelper.DropDownList(ParentID, slNguon, sNguon, "iID_MaNguon1", "", "class=\"input1_2\"")%>
                                         </div>
-                                    </td>
+                                    </td>--%>
                                 </tr>
                                 <tr>
                                     <td class="td_form2_td1">
@@ -529,9 +524,10 @@
         function OnLoad_CT(v) {
             document.getElementById("idDialog").innerHTML = v;
         }
-        CheckThemMoi(false);
-        function CheckThemMoi(value) {
-            if (value == true) {
+        CheckThemMoi();
+        function CheckThemMoi() {
+            var isChecked = document.getElementById("<%= ParentID %>_iThemMoi").checked;
+            if (isChecked == true) {
                 document.getElementById('tb_DotNganSach').style.display = '';
             } else {
                 document.getElementById('tb_DotNganSach').style.display = 'none';

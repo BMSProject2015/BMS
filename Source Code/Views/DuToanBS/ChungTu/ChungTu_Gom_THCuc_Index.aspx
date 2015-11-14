@@ -17,22 +17,17 @@
         string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
         string sLNS = Request.QueryString["sLNS1"];
         string iLoai = Request.QueryString["iLoai"];
-        if (String.IsNullOrEmpty(sLNS)) sLNS = "-1";
-        
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
-        string sLNS_TK = Request.QueryString["sLNS_TK"];
         string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
         string page = Request.QueryString["page"];
-        string iID_MaPhongBan = "";
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+
+        if (String.IsNullOrEmpty(sLNS))
         {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
+            sLNS = "-1";
         }
+        
         int CurrentPage = 1;
 
         if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
@@ -47,6 +42,7 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
+        
         string dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
         DataTable dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(DuToanModels.iID_MaPhanHe);
 
@@ -56,7 +52,6 @@
         dtTrangThai.Rows[0]["sTen"] = "-- Chọn trạng thái --";
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet(MaND);
         string[] arrChungTu = new String[2];
         if (String.IsNullOrEmpty(page) == false)
         {
@@ -66,10 +61,16 @@
         bool check = LuongCongViecModel.KiemTra_TroLyTongHopCuc(MaND);
         bool CheckNDtao = false;
         if (check) CheckNDtao = true;
-
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom_THCuc(iID_MaPhongBan, MaND, sTuNgay, sDenNgay,iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
-
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom_THCuc_Count(iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet,CheckNDtao, CurrentPage, Globals.PageSize);
+        //Lấy danh sách chứng từ TLTH để gom
+        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet(MaND);
+        
+        //Lấy danh sách chứng từ theo page
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
+        
+        //Lấy số lượng tất cả chứng từ
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
+        
+        //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
         string strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
         int columnCount = 1;
@@ -106,7 +107,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=iLoai }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS, iLoai = iLoai }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -160,7 +161,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("EditSubmit_Gom_THCuc", "DuToanBS_ChungTu", new {ParentID = ParentID, sLNS1 = sLNS}))
+                    using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS }))
                     {
 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>

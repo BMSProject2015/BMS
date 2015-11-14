@@ -19,36 +19,27 @@
         string MaLoaiNganSach = Request.QueryString["sLNS"];
         string sLNS1 = Request.QueryString["sLNS1"];
         string iLoai = Request.QueryString["iLoai"];
-        if (String.IsNullOrEmpty(sLNS1)) sLNS1 = "-1";
-
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
         string sLNS_TK = Request.QueryString["sLNS_TK"];
         string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
         string page = Request.QueryString["page"];
+
+        if (String.IsNullOrEmpty(sLNS1)) sLNS1 = "-1";
         
-        //Mã phòng ban
-        string iID_MaPhongBan = "";
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-        {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
-        }
         int CurrentPage = 1;
         if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
         if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
 
         if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) || iID_MaTrangThaiDuyet == "-1") iID_MaTrangThaiDuyet = "";
-        Boolean bThemMoi = false;
-        String iThemMoi = "";
+        string iThemMoi = "";
         if (ViewData["bThemMoi"] != null)
         {
-            bThemMoi = Convert.ToBoolean(ViewData["bThemMoi"]);
-            if (bThemMoi)
+            if (Convert.ToBoolean(ViewData["bThemMoi"]))
+            { 
                 iThemMoi = "on";
+            }
         }
         
         //Ngay chung tu tao moi.
@@ -64,7 +55,7 @@
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
         DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet(MaND, sLNS1);
-        string[] arrChungTu = new String[2];
+        
         if (String.IsNullOrEmpty(page) == false)
         {
             CurrentPage = Convert.ToInt32(page);
@@ -74,12 +65,20 @@
         bool CheckNDtao = false;
         if (check) CheckNDtao = true;
 
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom("", iLoai,iID_MaChungTu_TLTHCuc, iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
+        // Lay ma trang thai chung tu donvi trinh duyet
+        int iTrangThaiDonViDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
+        iTrangThaiDonViDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iTrangThaiDonViDuyet);
 
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom_Count(iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
+        DataTable dtChungTuDV = DuToanBS_ChungTuModels.LayDanhSachChungTuDeGom(MaND, sLNS1, iTrangThaiDonViDuyet.ToString());
+        //Lấy danh sách chứng từ TLTH page hiện tại
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS1, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
+        //Lấy số lượng tất cả chứng từ TLTH
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS1, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet).Rows.Count;
+        
+        //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
-        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
-        int columnCount = 1;
+        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new {iLoai=1, SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
+        int soCot = 1;
     %>
     <%--Liên kết nhanh--%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -114,7 +113,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iLoai = iLoai }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iLoai = iLoai }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -170,7 +169,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("EditSubmit_Gom", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1 }))
+                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1 }))
                     {
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -186,7 +185,7 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%= MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi(this.checked)\"") %>
+                                            <%= MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi()\"") %>
                                             <span style="color: brown;">
                                                 (Trường hợp bổ sung đợt mới, đánh dấu chọn "Bổ sung đợt mới". Nếu không chọn đợt bổ sung dưới lưới) 
                                             </span>
@@ -206,23 +205,23 @@
                                                 <th align="center" style="width: 40px;">
                                                     <input type="checkbox" id="abc" onclick="CheckAll(this.checked)" />
                                                 </th>
-                                                <% for (int c = 0; c < 1 * 2 - 1; c++)
+                                                <% for (int c = 0; c < soCot * 2 - 1; c++)
                                                    {%>
                                                 <th>
                                                 </th>
                                                 <% } %>
                                             </tr>
                                         <%
-                                        String strTen = "", strMa = "", strChecked = "";
+                                            string strTen = "";
+                                            string strMa = "";
                                         for (int i = 0; i < dtChungTuDuyet.Rows.Count; i++)
                                         {
                                         %>
                                             <tr>
-                                            <% for (int c = 0; c < 1; c++)
+                                            <% for (int c = 0; c < soCot; c++)
                                                 {
                                                     if (i + c < dtChungTuDuyet.Rows.Count)
                                                     {
-                                                        strChecked = "";
                                                         strTen = Convert.ToString(dtChungTuDuyet.Rows[i + c]["sDSLNS"]).Substring(0, 7) + '-' +
                                                                 CommonFunction.LayXauNgay(
                                                                 Convert.ToDateTime(dtChungTuDuyet.Rows[i + c]["dNgayChungTu"])) + '-' +
@@ -230,13 +229,9 @@
                                                                 Convert.ToString(dtChungTuDuyet.Rows[i + c]["sNoiDung"]) + '-' +
                                                                 Convert.ToString(dtChungTuDuyet.Rows[i + c]["sLyDo"]);
                                                         strMa = Convert.ToString(dtChungTuDuyet.Rows[i + c]["iID_MaChungTu"]);
-                                                        if (arrChungTu.Contains(strMa))
-                                                        {
-                                                            strChecked = "checked=\"checked\"";
-                                                        }
                                             %>
                                                 <td align="center" style="width: 40px;">
-                                                    <input type="checkbox" value="<%= strMa %>" <%= strChecked %> check-group="ChungTu"
+                                                    <input type="checkbox" value="<%= strMa %>" check-group="ChungTu"
                                                         id="iID_MaChungTu" name="iID_MaChungTu" />
                                                 </td>
                                                 <td align="left">
@@ -439,9 +434,10 @@
         $(function () {
             $('.buttonReport').text('');
         });
-        CheckThemMoi(false);
-        function CheckThemMoi(value) {
-            if (value == true) {
+        CheckThemMoi();
+        function CheckThemMoi() {
+            var isChecked = document.getElementById("<%= ParentID %>_iThemMoi").checked;
+            if (isChecked == true) {
                 document.getElementById('tb_DotNganSach').style.display = ''
             } else {
                 document.getElementById('tb_DotNganSach').style.display = 'none'

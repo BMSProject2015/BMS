@@ -17,7 +17,7 @@
         string sLNS1 = Convert.ToString(ViewData["sLNS1"]);
         string MaPhongBanNguoiDung = NganSach_HamChungModels.MaPhongBanCuaMaND(UserID);
 
-        DataTable dtChungTu = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+        DataTable dtChungTu = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
         string dNgayChungTu = "";
         string sNoiDung = "";
         if (dtChungTu.Rows.Count > 0)
@@ -30,7 +30,7 @@
             dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
         }
 
-        using (Html.BeginForm("EditSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1 }))
+        using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1 }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
