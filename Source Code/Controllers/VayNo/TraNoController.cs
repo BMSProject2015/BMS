@@ -1,14 +1,8 @@
 ﻿using System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using DomainModel.Abstract;
-using DomainModel;
 using System.Collections.Specialized;
-using System.Data.SqlClient;
-using System.Data;
+using System.Web.Mvc;
+using DomainModel;
+using DomainModel.Abstract;
 using VIETTEL.Models;
 
 namespace VIETTEL.Controllers.VayNo
