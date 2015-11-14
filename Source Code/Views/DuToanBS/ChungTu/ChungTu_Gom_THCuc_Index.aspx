@@ -61,9 +61,10 @@
         bool check = LuongCongViecModel.KiemTra_TroLyTongHopCuc(MaND);
         bool CheckNDtao = false;
         if (check) CheckNDtao = true;
-        //Lấy danh sách chứng từ TLTH để gom
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet(MaND);
         
+        //Lấy danh sách chứng từ TLTH để gom
+        //DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet(MaND);
+        DataTable dtChungTuTLTH = DuToanBS_ChungTuModels.LayDanhSachChungTuDeGomTLTHCuc(MaND);
         //Lấy danh sách chứng từ theo page
         DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
         
@@ -202,17 +203,19 @@
                                         string strTen = "";
                                         string strMa = "";
                                         string strChecked = "";
-                                        for (int i = 0; i < dtChungTuDuyet.Rows.Count; i = i + 1)
+                                        for (int i = 0; i < dtChungTuTLTH.Rows.Count; i = i + 1)
                                         {
                                             for (int c = 0; c < columnCount; c++)
                                             {
-                                                if (i + c < dtChungTuDuyet.Rows.Count)
+                                                if (i + c < dtChungTuTLTH.Rows.Count)
                                                 {
                                                     strChecked = "";
                                                     strTen = CommonFunction.LayXauNgay(
-                                                             Convert.ToDateTime(dtChungTuDuyet.Rows[i + c]["dNgayChungTu"])) + '-' +
-                                                         Convert.ToString(dtChungTuDuyet.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' + Convert.ToString(dtChungTuDuyet.Rows[i + c]["sTenPhongBan"]) + '-' + Convert.ToString(dtChungTuDuyet.Rows[i + c]["sNoiDung"]);
-                                                    strMa = Convert.ToString(dtChungTuDuyet.Rows[i + c]["iID_MaChungTu_TLTH"]);
+                                                             Convert.ToDateTime(dtChungTuTLTH.Rows[i + c]["dNgayChungTu"])) + '-' +
+                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' + 
+                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sTenPhongBan"]) + '-' + 
+                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sNoiDung"]);
+                                                    strMa = Convert.ToString(dtChungTuTLTH.Rows[i + c]["iID_MaChungTu_TLTH"]);
                                                     if (arrChungTu.Contains(strMa))
                                                     {
                                                         strChecked = "checked=\"checked\"";

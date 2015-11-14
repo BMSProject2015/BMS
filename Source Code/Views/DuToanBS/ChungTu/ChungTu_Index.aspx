@@ -316,8 +316,15 @@
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"")%>
-                                            <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td class="td_form2_td1">
+                                            &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                     </td>
                                 </tr>
                                 <tr>

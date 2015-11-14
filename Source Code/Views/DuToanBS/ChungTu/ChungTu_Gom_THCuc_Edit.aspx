@@ -14,26 +14,23 @@
         string MaND = User.Identity.Name;
         string ParentID = "DTBS_ChungTu";
         
-        //Mã phòng ban
-        string iID_MaPhongBan = "";
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-        {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
-        }
         string sLNS1 = Convert.ToString(ViewData["sLNS1"]);
-        string iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
-        string iID_MaChungTu_CT = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTHCuc", "iID_MaChungTu_TLTHCuc", iID_MaChungTu, "iID_MaChungTu_TLTH"));
+        string maChungTuTLTHCuc = Convert.ToString(ViewData["iID_MaChungTu"]);
+
+        string dsMaChungTuTLTH = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTHCuc", "iID_MaChungTu_TLTHCuc", maChungTuTLTHCuc, "iID_MaChungTu_TLTH"));
         if (Html.ValidationMessage(ParentID + "_" + "err_ChungTu") !=null && !String.IsNullOrEmpty(Html.ValidationMessage(ParentID + "_" + "err_ChungTu").ToString()))
         {
-            iID_MaChungTu_CT = "";
+            dsMaChungTuTLTH = "";
         }
-        string[] arrChungTu = iID_MaChungTu_CT.Split(',');
-        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTin_Gom_THCuc(iID_MaChungTu);
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet_Sua(MaND, iID_MaChungTu);
+        string[] arrChungTu = dsMaChungTuTLTH.Split(',');
+        
+        //Lấy thông tin chứng từ TLTHCuc
+        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTHCuc(maChungTuTLTHCuc);
+        
+        //Lấy danh sách chứng từ TLTH
+        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTHCuc(MaND, maChungTuTLTHCuc);
         int columnCount = 1;
+        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { iLoai =2});
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -55,7 +52,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = iID_MaChungTu }))
+        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = maChungTuTLTHCuc }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
@@ -167,7 +164,7 @@
                                                     </td>          
                                                     <td width="5px">&nbsp;</td>          
                                                     <td class="td_form2_td5">
-                                                        <input class="button" type="button" value="Hủy" onclick="history.go(-1)" />
+                                                        <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                                     </td>
                                                 </tr>
                                             </table>
@@ -188,6 +185,10 @@
             $("input:checkbox[check-group='ChungTu']").each(function (i) {
                 this.checked = value;
             });
-        }                                            
+        }
+        function Huy()
+        {
+            window.location.href = '<%=BackURL%>';
+        }
     </script>
 </asp:Content>

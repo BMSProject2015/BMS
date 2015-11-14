@@ -54,24 +54,25 @@
         
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet(MaND, sLNS1);
         
-        if (String.IsNullOrEmpty(page) == false)
+        if (!String.IsNullOrEmpty(page))
         {
             CurrentPage = Convert.ToInt32(page);
         }
         //kiem tra nguoi dung co phan tro ly tong hop
         bool check = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
         bool CheckNDtao = false;
-        if (check) CheckNDtao = true;
+        if (check)
+        {
+            CheckNDtao = true;
+        }
 
-        // Lay ma trang thai chung tu donvi trinh duyet
-        int iTrangThaiDonViDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
-        iTrangThaiDonViDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iTrangThaiDonViDuyet);
-
-        DataTable dtChungTuDV = DuToanBS_ChungTuModels.LayDanhSachChungTuDeGom(MaND, sLNS1, iTrangThaiDonViDuyet.ToString());
+        //DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet(MaND, sLNS1);
+        DataTable dtChungTuDV = DuToanBS_ChungTuModels.LayDanhSachChungDeGomTLTH(MaND, sLNS1);
+        
         //Lấy danh sách chứng từ TLTH page hiện tại
         DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS1, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
+        
         //Lấy số lượng tất cả chứng từ TLTH
         double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS1, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet).Rows.Count;
         
@@ -214,21 +215,21 @@
                                         <%
                                             string strTen = "";
                                             string strMa = "";
-                                        for (int i = 0; i < dtChungTuDuyet.Rows.Count; i++)
+                                        for (int i = 0; i < dtChungTuDV.Rows.Count; i++)
                                         {
                                         %>
                                             <tr>
                                             <% for (int c = 0; c < soCot; c++)
                                                 {
-                                                    if (i + c < dtChungTuDuyet.Rows.Count)
+                                                    if (i + c < dtChungTuDV.Rows.Count)
                                                     {
-                                                        strTen = Convert.ToString(dtChungTuDuyet.Rows[i + c]["sDSLNS"]).Substring(0, 7) + '-' +
+                                                        strTen = Convert.ToString(dtChungTuDV.Rows[i + c]["sDSLNS"]).Substring(0, 7) + '-' +
                                                                 CommonFunction.LayXauNgay(
-                                                                Convert.ToDateTime(dtChungTuDuyet.Rows[i + c]["dNgayChungTu"])) + '-' +
-                                                                Convert.ToString(dtChungTuDuyet.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' +
-                                                                Convert.ToString(dtChungTuDuyet.Rows[i + c]["sNoiDung"]) + '-' +
-                                                                Convert.ToString(dtChungTuDuyet.Rows[i + c]["sLyDo"]);
-                                                        strMa = Convert.ToString(dtChungTuDuyet.Rows[i + c]["iID_MaChungTu"]);
+                                                                Convert.ToDateTime(dtChungTuDV.Rows[i + c]["dNgayChungTu"])) + '-' +
+                                                                Convert.ToString(dtChungTuDV.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' +
+                                                                Convert.ToString(dtChungTuDV.Rows[i + c]["sNoiDung"]) + '-' +
+                                                                Convert.ToString(dtChungTuDV.Rows[i + c]["sLyDo"]);
+                                                        strMa = Convert.ToString(dtChungTuDV.Rows[i + c]["iID_MaChungTu"]);
                                             %>
                                                 <td align="center" style="width: 40px;">
                                                     <input type="checkbox" value="<%= strMa %>" check-group="ChungTu"
