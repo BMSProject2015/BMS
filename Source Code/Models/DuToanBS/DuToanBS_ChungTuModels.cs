@@ -10,10 +10,16 @@ namespace VIETTEL.Models
 {
     public class DuToanBS_ChungTuModels
     {
-        public static NameValueCollection LayThongTin(String iID_MaChungTu)
+        #region Lấy thông tin chứng từ
+        /// <summary>
+        /// Lấy thông tin chứng từ
+        /// </summary>
+        /// <param name="maChungTu">Mã chứng từ</param>
+        /// <returns></returns>
+        public static NameValueCollection LayThongTinChungTu(string maChungTu)
         {
             NameValueCollection Data = new NameValueCollection();
-            DataTable dt = LayChungTu(iID_MaChungTu);
+            DataTable dt = LayChungTu(maChungTu);
             String colName = "";
             for (int i = 0; i < dt.Columns.Count; i++)
             {
@@ -24,10 +30,15 @@ namespace VIETTEL.Models
             return Data;
         }
 
-        public static NameValueCollection LayThongTin_Gom(String iID_MaChungTu)
+        /// <summary>
+        /// Lấy thông tin chứng từ TLTH
+        /// </summary>
+        /// <param name="maChungTuTLTH">Mã chứng từ TLTH Cục</param>
+        /// <returns></returns>
+        public static NameValueCollection LayThongTinChungTuTLTH(string maChungTuTLTH)
         {
             NameValueCollection Data = new NameValueCollection();
-            DataTable dt = LayChungTuTLTH(iID_MaChungTu);
+            DataTable dt = LayChungTuTLTH(maChungTuTLTH);
             String colName = "";
             for (int i = 0; i < dt.Columns.Count; i++)
             {
@@ -39,10 +50,15 @@ namespace VIETTEL.Models
             return Data;
         }
 
-        public static NameValueCollection LayThongTin_Gom_THCuc(String iID_MaChungTu)
+        /// <summary>
+        /// Lấy thông tin chứng từ TLTH Cục
+        /// </summary>
+        /// <param name="maChungTuTLTHCuc">Mã chứng từ TLTH Cục</param>
+        /// <returns></returns>
+        public static NameValueCollection LayThongTinChungTuTLTHCuc(string maChungTuTLTHCuc)
         {
             NameValueCollection Data = new NameValueCollection();
-            DataTable dt = LayChungTuTLTHCuc(iID_MaChungTu);
+            DataTable dt = LayChungTuTLTHCuc(maChungTuTLTHCuc);
             String colName = "";
             for (int i = 0; i < dt.Columns.Count; i++)
             {
@@ -52,7 +68,9 @@ namespace VIETTEL.Models
 
             dt.Dispose();
             return Data;
-        }
+        } 
+        #endregion
+
         public static NameValueCollection LayThongTin_KyThuatLan2(String iID_MaChungTu)
         {
             NameValueCollection Data = new NameValueCollection();
@@ -891,23 +909,20 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             return dt;
         }
 
-
         /// <summary>
-        /// Lấy danh sách chứng từ/ chứng từ TLTH để gom
+        /// Lấy danh sách chứng từ để gom
         /// </summary>
         /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Loại ngân sách</param>
-        /// <param name="maTrangThaiDuyet">Mã trạng thái duyệt</param>
         /// <returns></returns>
-        public static DataTable LayDanhSachChungTuDeGom(string maND,string sLNS, string maTrangThaiDuyet)
+        public static DataTable LayDanhSachChungDeGomTLTH(string maND, string sLNS)
         {
             DataTable result;
             SqlCommand cmd = new SqlCommand();
 
-            string iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
             string maPhongBan = "";
             string dk = "";
-            string[] arrLNS = sLNS.Split(',');
 
             DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(maND);
             if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
@@ -917,23 +932,159 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             }
             if (!String.IsNullOrEmpty(maPhongBan))
             {
-                dk += "iID_MaPhongBan=@iID_MaPhongBan";
+                dk += "iID_MaPhongBan=@iID_MaPhongBan AND";
                 cmd.Parameters.AddWithValue("@iID_MaPhongBan", maPhongBan);
             }
+            else
+            {
+                dk += "1=1 AND";
+            }
+            // Lay ma trang thai chung tu donvi trinh duyet
+            int maTrangThaiDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
+            maTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(maTrangThaiDuyet);
 
+            if (sLNS == "1040100")
+            {
+                dk += " sDSLNS LIKE '104%' ";
+            }
+            else
+            {
+                dk += " sDSLNS NOT LIKE '104%'";
+            }
             string SQL =String.Format(@"SELECT * 
                                 FROM 
                                     DTBS_ChungTu 
                                 WHERE 
                                     iTrangThai=1 AND 
-                                    iNamLamViec=@iNamLamViec {0} AND 
+                                    iNamLamViec=@iNamLamViec AND 
                                     iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND 
-                                    iCheck=0", dk);
+                                    iCheck=0 AND {0}", dk);
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
             cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", maTrangThaiDuyet);
             result = Connection.GetDataTable(cmd);
             cmd.Dispose();
+            return result;
+        }
+
+        /// <summary>
+        /// Lấy danh sách chứng từ dể sửa chứng từ TLTH
+        /// </summary>
+        /// <param name="maND"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="maChungTuTLTH"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachChungTuDeSuaTLTH(string maND, string sLNS, string maChungTuTLTH)
+        {
+            //Danh sách chứng từ chưa gom
+            DataTable dtChungTuChuaGom = LayDanhSachChungDeGomTLTH(maND, sLNS);
+            DataTable result;
+            SqlCommand cmd = new SqlCommand();
+            
+            //Lấy dan sách chúng từ của chứng từ TLTH
+            string dk = "";
+            string dsMaChungTu = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTH", "iID_MaChungTu_TLTH", maChungTuTLTH, "iID_MaChungTu"));
+            string[] arrMaChungTu = dsMaChungTu.Split(',');
+            dk += " (";
+            for (int j = 0; j < arrMaChungTu.Length; j++)
+            {
+                dk += " iID_MaChungTu =@iID_MaChungTu" + j;
+                if (j < arrMaChungTu.Length - 1)
+                    dk += " OR ";
+                cmd.Parameters.AddWithValue("@iID_MaChungTu" + j, arrMaChungTu[j]);
+
+            }
+            dk += " )";
+            string SQL = string.Format(@"SELECT * FROM DTBS_ChungTu 
+                                        WHERE 
+                                            iTrangThai=1 AND 
+                                            iNamLamViec=@iNamLamViec AND {0}", dk);
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(maND));
+            result = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+
+            //Gộp kết quả
+            result.Merge(dtChungTuChuaGom);
+            return result;
+        }
+
+        /// <summary>
+        /// Lấy danh sách chứng từ TLTH để gom
+        /// </summary>
+        /// <param name="maND"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachChungTuDeGomTLTHCuc(string maND)
+        {
+            DataTable result;
+            SqlCommand cmd = new SqlCommand();
+
+            //Mới tạo
+            int iMaTrangThaiTLTH = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
+            //Trợ lý đơn vị trình duyệt
+            iMaTrangThaiTLTH = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iMaTrangThaiTLTH);
+            //Trọ lý tổng hợp trình duyệt
+            iMaTrangThaiTLTH = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iMaTrangThaiTLTH);
+
+            string SQL = @"SELECT * 
+                           FROM DTBS_ChungTu_TLTH 
+                           WHERE 
+                                iTrangThai=1 AND 
+                                iNamLamViec=@iNamLamViec AND 
+                                iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND 
+                                iCheck=0";
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(maND));
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iMaTrangThaiTLTH);
+            result = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return result;
+        }
+        /// <summary>
+        /// Lấy danh sách chứng từ TLTH để sửa chứng từ TLTHCuc
+        /// </summary>
+        /// <param name="maND">Mã người dùng</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="maTrangThaiDuyet"></param>
+        /// <param name="maChungTuTLTHCuc"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachChungTuDeSuaTLTHCuc(string maND, string maChungTuTLTHCuc)
+        {
+            //Lấy danh sách chứng từ TLTH chưa gom
+            DataTable dtChungTuChuaGom = LayDanhSachChungTuDeGomTLTHCuc(maND);
+
+            DataTable result;
+            SqlCommand cmd = new SqlCommand();
+
+            //Lấy danh sách chứng từ TLTH của chứng từ TLTH Cục
+            string dk = "";
+            String dsMaChungTuTLTH = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTHCuc", "iID_MaChungTu_TLTHCuc", maChungTuTLTHCuc, "iID_MaChungTu_TLTH"));
+            String[] arrMaChungTuTLTH = dsMaChungTuTLTH.Split(',');
+            dk += " (";
+            for (int j = 0; j < arrMaChungTuTLTH.Length; j++)
+            {
+                dk += " iID_MaChungTu_TLTH =@iID_MaChungTu_TLTH" + j;
+                if (j < arrMaChungTuTLTH.Length - 1)
+                    dk += " OR ";
+                cmd.Parameters.AddWithValue("@iID_MaChungTu_TLTH" + j, arrMaChungTuTLTH[j]);
+
+            }
+            dk += " )";
+
+            string SQL = String.Format(@" SELECT * 
+                            FROM 
+                                DTBS_ChungTu_TLTH 
+                            WHERE 
+                                iTrangThai=1 AND 
+                                iNamLamViec=@iNamLamViec AND {0}", dk);
+
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(maND));
+            result = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+
+            //Gộp kết quả
+            result.Merge(dtChungTuChuaGom);
             return result;
         }
 
@@ -1301,8 +1452,19 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns>Mã chứng từ mới</returns>
         public static string ThemChungTu(Bang bang, string maND, string sLNS)
         {
-            String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+            String iNamLamViec = ReportModels.LayNamLamViec(maND);
             DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
+
+            //Kiểm tra dữ liệu
+            if (String.IsNullOrEmpty(sLNS))
+            {
+                throw new Exception("err_sLNS|Bạn chưa chọn loại ngân sách. Hãy chọn loại ngân sách!");
+            }
+
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
 
             string iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
             if (dtCauHinh.Rows.Count > 0)
@@ -1344,7 +1506,19 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns></returns>
         public static string ThemChungTuTLTH(Bang bang, string maND, string dsMaChungTu)
         {
-            string iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+
+            //Kiểm tra dữ liệu
+            if (String.IsNullOrEmpty(dsMaChungTu))
+            {
+                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+            }
+
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
+
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
             string iID_MaNguonNganSach = "";
             string iID_MaNamNganSach = "";
             string iID_MaPhongBan = "";
@@ -1413,8 +1587,19 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns>Mã chứng từ TLTHCuc mới tạo</returns>
         public static string ThemChungTuTLTHCuc(Bang bang, string maND, string dsMaChungTuTLTH)
         {
+            if (String.IsNullOrEmpty(dsMaChungTuTLTH))
+            {
+                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+            }
+
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
+
+
             //int iSoChungTu = 0;
-            string iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
             string iID_MaNguonNganSach = "";
             string iID_MaNamNganSach = "";
             string iID_MaPhongBan = "";
@@ -1483,6 +1668,11 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns>kết quả</returns>
         public static int SuaChungTu(Bang bang, string MaChungTu)
         {
+            //Kiểm tra dữ liệu
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
             bang.GiaTriKhoa = MaChungTu;
             bang.DuLieuMoi = false;
             bang.Save();
@@ -1500,6 +1690,16 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns></returns>
         public static int SuaChungTuTLTH(Bang bang, string maChungTuTLTH, string dsMaChungTu)
         {
+            if (String.IsNullOrEmpty(dsMaChungTu))
+            {
+                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+            }
+
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
+
             string SQL = "";
             string dk = "";
             SqlCommand cmd = new SqlCommand();
@@ -1544,7 +1744,7 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
 
             //Cập nhật bản DTBS_ChungTu_TLTH
             bang.GiaTriKhoa = maChungTuTLTH;
-            bang.CmdParams.Parameters.Add("@iID_MaChungTu", dsMaChungTu);
+            bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu", dsMaChungTu);
             bang.DuLieuMoi = false;
             bang.Save();
             return 1;
@@ -1561,6 +1761,17 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <returns></returns>
         public static int SuaChungTuTLTHCuc(Bang bang, string maChungTuTLTHCuc, string dsMaChungTuTLTH)
         {
+            //Kiểm tra dữ liệu
+            if (String.IsNullOrEmpty(dsMaChungTuTLTH))
+            {
+                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+            }
+
+            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+            }
+
             string SQL = "";
             string dk = "";
             SqlCommand cmd = new SqlCommand();
@@ -1605,7 +1816,7 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
 
             //Cập nhật bản DTBS_ChungTu_TLTH
             bang.GiaTriKhoa = maChungTuTLTHCuc;
-            bang.CmdParams.Parameters.Add("@iID_MaChungTu_TLTH", dsMaChungTuTLTH);
+            bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu_TLTH", dsMaChungTuTLTH);
             bang.DuLieuMoi = false;
             bang.Save();
             return 1;
