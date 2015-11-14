@@ -107,7 +107,7 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
 
             else
             {
-                data = DuToanBS_ChungTuModels.LayThongTin(iID_MaChungTu);
+                data = DuToanBS_ChungTuModels.LayThongTinChungTu(iID_MaChungTu);
             }
            
 

@@ -227,59 +227,47 @@ namespace VIETTEL.Controllers.DuToanBS
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
 
-            //Kiểm tra dữ liệu
-            NameValueCollection Errors = new NameValueCollection();
             string sLNS = Convert.ToString(Request.Form["sLNS"]);
-            string NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
-            if (String.IsNullOrEmpty(NgayChungTu))
-            {
-                Errors.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
+            
+            // Khởi tạo và gán giá trị cho bảng dữ liệu
+            Bang bang = new Bang("DTBS_ChungTu");
+            bang.MaNguoiDungSua = MaND;
+            bang.IPSua = Request.UserHostAddress;
+            bang.TruyenGiaTri(ParentID, Request.Form);
             if (sChucNang == CREATE)
             {
-                if (sLNS == string.Empty || sLNS == "" || sLNS == null)
+                try
                 {
-                    Errors.Add("err_sLNS", "Bạn chưa chọn LNS!");
+                    string MaChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTu(bang, MaND, sLNS);
+                    return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = MaChungTuAddNew });
                 }
-            }
-
-            //Có lỗi xảy ra
-            if (Errors.Count > 0)
-            {
-                for (int i = 0; i <= Errors.Count - 1; i++)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(ParentID + "_" + Errors.GetKey(i), Errors[i]);
-                }
-                if (sChucNang == CREATE)
-                {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_INDEX);
                 }
-                else
+            }
+            else
+            {
+                try
                 {
+                    DuToanBS_ChungTuModels.SuaChungTu(bang, MaChungTu);
+                    return RedirectToAction("Index", CONTROLLER_NAME, new { sLNS1 = sLNS1 });
+                }
+                catch (Exception ex)
+                {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["sLNS1"] = sLNS1;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_EDIT);
                 }
-            }
-            //Không có lỗi, update dữ liệu
-            else
-            {
-                // Khởi tạo và gán giá trị cho bảng dữ liệu
-                Bang bang = new Bang("DTBS_ChungTu");
-                bang.MaNguoiDungSua = MaND;
-                bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (sChucNang == CREATE)
-                {
-                    string MaChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTu(bang, MaND, sLNS);
-                    return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = MaChungTuAddNew});
-                }
-                else
-                {
-                    DuToanBS_ChungTuModels.SuaChungTu(bang, MaChungTu);
-                    return RedirectToAction("Index", CONTROLLER_NAME, new {sLNS1 = sLNS1});
-                }
+
             }
         }
 
@@ -308,53 +296,44 @@ namespace VIETTEL.Controllers.DuToanBS
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
 
-            //Validate.
-            NameValueCollection Errors = new NameValueCollection();
             string dsMaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
-            string NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
 
-            if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
+            Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTH);
+            bang.MaNguoiDungSua = User.Identity.Name;
+            bang.IPSua = Request.UserHostAddress;
+            bang.TruyenGiaTri(ParentID, Request.Form);
+            if (sChucNang == CREATE)
             {
-                Errors.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
-            if (String.IsNullOrEmpty(dsMaChungTu))
-            {
-                Errors.Add("err_ChungTu", "Không có đợt được chọn!");
-            }
-
-            if (Errors.Count > 0)
-            {
-                for (int i = 0; i <= Errors.Count - 1; i++)
+                try
                 {
-                    ModelState.AddModelError(ParentID + "_" + Errors.GetKey(i), Errors[i]);
+                    String MaChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu);
+                    return RedirectToAction("Index", CONTROLLER_NAME, new { iLoai = 1, sLNS1 = sLNS1 });
                 }
-                if (sChucNang == CREATE)
+                catch (Exception ex)
                 {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
-                }
-                else
-                {
-                    ViewData["iID_MaChungTu"] = MaChungTu;
-                    ViewData["sLNS"] = sLNS1;
-                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_EDIT);
                 }
             }
             else
             {
-                Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTH);
-                bang.MaNguoiDungSua = User.Identity.Name;
-                bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (sChucNang == CREATE)
-                {
-                    String MaChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu);
-                    return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
-                }
-                else
+                try
                 {
                     DuToanBS_ChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu);
-                    return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
+                    return RedirectToAction("Index", CONTROLLER_NAME, new { iLoai = 1, sLNS1 = sLNS1 });
+                }
+                catch (Exception ex)
+                {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+
+                    ViewData["iID_MaChungTu"] = MaChungTu;
+                    ViewData["sLNS"] = sLNS1;
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_EDIT);
                 }
             }
         }
@@ -381,52 +360,44 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            int i;
-            NameValueCollection Errors = new NameValueCollection();
-            string dsMaChungTuTLTH = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
-            string NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
-            if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-            {
-                Errors.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
-            if (String.IsNullOrEmpty(dsMaChungTuTLTH))
-            {
-                Errors.Add("err_iID_MaChungTu", "Không có đợt được chọn!");
-            }
 
-            if (Errors.Count > 0)
+            string dsMaChungTuTLTH = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
+
+            Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTHCuc);
+            bang.MaNguoiDungSua = User.Identity.Name;
+            bang.IPSua = Request.UserHostAddress;
+            bang.TruyenGiaTri(ParentID, Request.Form);
+            if (sChucNang == CREATE)
             {
-                for (i = 0; i <= Errors.Count - 1; i++)
+                try
                 {
-                    ModelState.AddModelError(ParentID + "_" + Errors.GetKey(i), Errors[i]);
+                    DuToanBS_ChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH);
+                    return RedirectToAction("Index", CONTROLLER_NAME, new { iLoai = 2, sLNS1 = sLNS1 });
                 }
-                if (sChucNang == CREATE)
+                catch (Exception ex)
                 {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
-                }
-                else
-                {
-                    ViewData["MaChungTu"] = MaChungTu;
-                    ViewData["sLNS"] = sLNS1;
-                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_EDIT);
                 }
             }
             else
             {
-                Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTHCuc);
-                bang.MaNguoiDungSua = User.Identity.Name;
-                bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (sChucNang == CREATE)
-                {
-                    DuToanBS_ChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH);
-                    return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
-                }
-                else
+                try
                 {
                     DuToanBS_ChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH);
-                    return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
+                    return RedirectToAction("Index", CONTROLLER_NAME, new { iLoai = 2, sLNS1 = sLNS1 });
+                }
+                catch (Exception ex)
+                {
+                    string er = ex.Message;
+                    string[] ers = er.Split('|');
+                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ViewData["iID_MaChungTu"] = MaChungTu;
+                    ViewData["sLNS"] = sLNS1;
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_EDIT);
                 }
             }
         }
