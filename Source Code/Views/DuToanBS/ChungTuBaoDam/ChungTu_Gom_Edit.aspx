@@ -31,8 +31,8 @@
             iID_MaChungTu_CT = "";
         }
         string[] arrChungTu = iID_MaChungTu_CT.Split(',');
-        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTin_Gom(iID_MaChungTu);
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet_Sua(MaND, sLNS, iID_MaChungTu);
+        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(iID_MaChungTu);
+        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND, sLNS, iID_MaChungTu);
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>

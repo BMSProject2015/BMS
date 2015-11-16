@@ -13,17 +13,25 @@
         type="text/javascript"></script>
         
     <%
-        String iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
-        if (String.IsNullOrEmpty(iID_MaChungTu)) iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
-        String ChiNganSach = Convert.ToString(ViewData["ChiNganSach"]);
-        if (String.IsNullOrEmpty(ChiNganSach)) ChiNganSach = Request.QueryString["ChiNganSach"];
-        String MaDotNganSach = Request.QueryString["MaDotNganSach"];
-        String iLoai = Convert.ToString(ViewData["iLoai"]);
-        String iChiTapTrung = Convert.ToString(ViewData["iChiTapTrung"]);
+        string iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
+        string ChiNganSach = Convert.ToString(ViewData["ChiNganSach"]);
+        string MaDotNganSach = Request.QueryString["MaDotNganSach"];
+        string iLoai = Convert.ToString(ViewData["iLoai"]);
+        string iChiTapTrung = Convert.ToString(ViewData["iChiTapTrung"]);
+
+        if (String.IsNullOrEmpty(iID_MaChungTu)) 
+        { 
+            iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]); 
+        }
+        if (String.IsNullOrEmpty(ChiNganSach))
+        {
+            ChiNganSach = Request.QueryString["ChiNganSach"];
+        }
+        
         NameValueCollection data;
         if (iLoai == "1")
         {
-            data = DuToanBS_ChungTuModels.LayThongTin_Gom(iID_MaChungTu);
+            data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(iID_MaChungTu);
         }
         //ky thuat lan 2
         else if(iLoai == "4")
@@ -32,7 +40,7 @@
         }
         else
         {
-             data = DuToanBS_ChungTuModels.LayThongTin(iID_MaChungTu);
+             data = DuToanBS_ChungTuModels.LayThongTinChungTu(iID_MaChungTu);
         }
         int iID_MaTrangThaiDuyet = Convert.ToInt32(data["iID_MaTrangThaiDuyet"]);
         string MaND = User.Identity.Name;
@@ -43,22 +51,6 @@
             sLNS = data["sDSLNS"];
         }
         String iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
-        int iID_MaTrangThaiDuyet_TuChoi = 0;
-        int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
-        if (iLoai == "1")
-        {
-            iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TuChoi(MaND, iID_MaChungTu);
-            iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TrinhDuyet(MaND, iID_MaChungTu);
-        }
-        else if (iLoai == "4")
-        {
-
-        }
-        else
-        {
-            iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaChungTu);
-            iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaChungTu);
-        }
     %>
     <%--Lien ket nhanh--%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">

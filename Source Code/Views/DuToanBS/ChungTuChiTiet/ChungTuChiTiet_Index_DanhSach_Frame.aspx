@@ -102,9 +102,9 @@
                 }
                 else
                 {
-                                       
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TuChoi(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TrinhDuyet(MaND, iID_MaChungTu);
+
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiBaoDam(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, iID_MaChungTu);
                 }
             }
             else
@@ -112,8 +112,8 @@
                 //gom
                 if (iLoai == "1")
                 {
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TuChoi(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TrinhDuyet(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTH(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTH(MaND, iID_MaChungTu);
                 }
                 else if (iLoai == "4")
                 {
@@ -122,8 +122,8 @@
                 }
                 else
                 {
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
                 }
             }
     %>

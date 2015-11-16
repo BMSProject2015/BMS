@@ -16,7 +16,6 @@
         String ParentID = "DuToan";
         String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
         String slyDo = "";
-        
         String idAction = "1";
          using (Html.BeginForm("DetailSubmit", "DuToanBS_ChungTuChiTiet", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu }))
         {

@@ -12,23 +12,25 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <%
         int i;
-        String MaND = User.Identity.Name;
-        String ParentID = "DuToan_ChungTu";
-        String ChiNganSach = Request.QueryString["ChiNganSach"];
-        String MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
-        String MaLoaiNganSach = Request.QueryString["sLNS"];
-        String sLNS = Request.QueryString["sLNS"];
-        if (String.IsNullOrEmpty(sLNS)) sLNS = "-1";
-        
-        
-        String iSoChungTu = Request.QueryString["SoChungTu"];
-        String sTuNgay = Request.QueryString["TuNgay"];
-        String sDenNgay = Request.QueryString["DenNgay"];
-        String sLNS_TK = Request.QueryString["sLNS_TK"];
-        String iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
-        String page = Request.QueryString["page"];
-        String iID_MaPhongBan = "";
+        string MaND = User.Identity.Name;
+        string ParentID = "DuToan_ChungTu";
+        string ChiNganSach = Request.QueryString["ChiNganSach"];
+        string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
+        string MaLoaiNganSach = Request.QueryString["sLNS"];
+        string sLNS = Request.QueryString["sLNS"];
+        string iSoChungTu = Request.QueryString["SoChungTu"];
+        string sTuNgay = Request.QueryString["TuNgay"];
+        string sDenNgay = Request.QueryString["DenNgay"];
+        string sLNS_TK = Request.QueryString["sLNS_TK"];
+        string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
+        string page = Request.QueryString["page"];
+        string iID_MaPhongBan = "";
         DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
+
+        if (String.IsNullOrEmpty(sLNS))
+        {
+            sLNS = "-1";
+        }
         if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
         {
             DataRow drPhongBan = dtPhongBan.Rows[0];
@@ -36,8 +38,7 @@
             dtPhongBan.Dispose();
         }
         int CurrentPage = 1;
-        SqlCommand cmd;
-
+        
         if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
         if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
 

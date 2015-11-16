@@ -19,7 +19,7 @@
     string iKyThuat = Convert.ToString(ViewData["iKyThuat"]);
     string MaPhongBanNguoiDung = NganSach_HamChungModels.MaPhongBanCuaMaND(UserID);
 
-    DataTable dtChungTu = DuToanBS_ChungTuModels.GetChungTu(MaChungTu);
+    DataTable dtChungTu = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
     DataRow R;
     string iSoChungTu = "", dNgayChungTu = "", sNoiDung = "";
     if (dtChungTu.Rows.Count > 0)

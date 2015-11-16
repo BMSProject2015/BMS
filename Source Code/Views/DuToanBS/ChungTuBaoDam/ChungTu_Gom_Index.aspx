@@ -16,10 +16,9 @@
         string ParentID = "DuToan_ChungTu";
         string ChiNganSach = Request.QueryString["ChiNganSach"];
         string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
+        string iID_MaChungTu_TLTHCuc = Request.QueryString["iID_MaChungTu"];
         string sLNS = Request.QueryString["sLNS"];
-        if (String.IsNullOrEmpty(sLNS)) sLNS = "1040100";
-        sLNS = "1040100";
-
+        
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
@@ -27,17 +26,10 @@
         string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
         string page = Request.QueryString["page"];
         string iLoai = Request.QueryString["iLoai"];
-        string iID_MaPhongBan = "";
         string iKyThuat = Request.QueryString["iKyThuat"]; ;
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-        {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
-        }
+        
+        sLNS = "1040100";
         int CurrentPage = 1;
-
         if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
         if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
 
@@ -50,7 +42,7 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
-        String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        string dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
         DataTable dtTrangThai_All;
         DataTable dtTrangThai;
         if (iKyThuat == "1")
@@ -68,8 +60,7 @@
         dtTrangThai.Rows[0]["sTen"] = "-- Chọn trạng thái --";
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet(MaND,sLNS);
-        String[] arrChungTu = new String[2];
+        string[] arrChungTu = new String[2];
         if (String.IsNullOrEmpty(page) == false)
         {
             CurrentPage = Convert.ToInt32(page);
@@ -78,16 +69,20 @@
         Boolean check = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
         Boolean CheckNDtao=false;
         if (check) CheckNDtao = true;
+        
+        //Lấy danh sách chứng từ để gom
+        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungDeGomTLTH(MaND, sLNS);
+        
+        //Lấy danh sách chứng từ TLTH của page
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
 
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom(iKyThuat,iLoai, "",iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize, sLNS);
-
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom_Count(iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize, sLNS);
+        //Lấy tổng số chứng từ TLTH
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, sLNS, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize).Rows.Count;
+        
+        //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
-        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
-        String strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
-
-        //using (Html.BeginForm("SearchSubmit", "DuToan_ChungTu", new { ParentID = ParentID, sLNS = sLNS }))
-        //{
+        string strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
+        string strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>

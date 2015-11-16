@@ -11,16 +11,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <%
-        int i;
         string MaND = User.Identity.Name;
         string ParentID = "DuToanBS_ChungTu_BD";
+        
         string ChiNganSach = Request.QueryString["ChiNganSach"];
         string iID_MaChungTu_TLTH = Request.QueryString["iID_MaChungTu"];
-        string bTLTH = Request.QueryString["bTLTH"];
         string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
-        string sLNS = Request.QueryString["sLNS"];
-        if (String.IsNullOrEmpty(sLNS)) sLNS = "-1";
-
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
@@ -29,23 +25,13 @@
         string page = Request.QueryString["page"];
         string iKyThuat = Request.QueryString["iKyThuat"];
 
-
-        string iID_MaPhongBan = "";
-        DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-        if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-        {
-            DataRow drPhongBan = dtPhongBan.Rows[0];
-            iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-            dtPhongBan.Dispose();
-        }
+        string sLNS = "1040100";
         int CurrentPage = 1;
-        
-        if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
-        if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
-
+        if (!HamChung.isDate(sTuNgay)) sTuNgay = "";
+        if (!HamChung.isDate(sDenNgay)) sDenNgay = "";
         if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) || iID_MaTrangThaiDuyet == "-1") iID_MaTrangThaiDuyet = "";
-        Boolean bThemMoi = false;
-        String iThemMoi = "";
+        bool bThemMoi = false;
+        string iThemMoi = "";
         if (ViewData["bThemMoi"] != null)
         {
             bThemMoi = Convert.ToBoolean(ViewData["bThemMoi"]);
@@ -54,7 +40,7 @@
         }
         String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
 
-        //dtTrangThai
+        //Trạng thái all
         DataTable dtTrangThai_All;
         if (iKyThuat == "1")
         {
@@ -70,13 +56,12 @@
         dtTrangThai.Rows[0]["sTen"] = "-- Chọn trạng thái --";
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
-        //Danh sach LNS
-        sLNS = "1040100";
+        
+        //Loại ngân sách dropdown list
         DataTable dtLoaiNganSach = NganSach_HamChungModels.DSLNS_LocCuaPhongBan(MaND, sLNS);
         dtLoaiNganSach.Rows.InsertAt(dtLoaiNganSach.NewRow(), 0);
         dtLoaiNganSach.Rows[0]["sLNS"] = "";
         dtLoaiNganSach.Rows[0]["sTen"] = "-- Chọn loại ngân sách --";
-
         dtLoaiNganSach.Rows.Add(dtLoaiNganSach.NewRow());
         if (dtLoaiNganSach.Rows.Count > 2)
         {
@@ -84,22 +69,13 @@
             dtLoaiNganSach.Rows[2]["sTen"] = "109-Ngân sách Quốc phòng khác";
         }
 
-
         SelectOptionList slLoaiNganSach = new SelectOptionList(dtLoaiNganSach, "sLNS", "sTen");
         dtLoaiNganSach.Dispose();
+        
         sLNS = "1040100,109";
         if (iKyThuat == "1") sLNS = "1040100";
-        //Danh sach phòng ban đích
-        string iID_MaPhongBanDich = Request.QueryString["iID_MaPhongBanDich"];
-        if (String.IsNullOrEmpty(iID_MaPhongBanDich)) iID_MaPhongBanDich = iID_MaPhongBan;
-        DataTable dtPhongBanDich = PhongBanModels.GetDanhSachPhongBan();
-        dtPhongBanDich.Rows.InsertAt(dtPhongBanDich.NewRow(), 0);
-        dtPhongBanDich.Rows[0]["sKyHieu"] = "";
-        dtPhongBanDich.Rows[0]["TenHT"] = "-- Chọn phòng ban đích --";
-        SelectOptionList slPhongBanDich = new SelectOptionList(dtPhongBanDich, "sKyHieu", "TenHT");
-        dtPhongBanDich.Dispose();
 
-        String iID_MaNguon = Request.QueryString["iID_MaNguon"];
+        string iID_MaNguon = Request.QueryString["iID_MaNguon"];
         DataTable dtNguon = DuToanBS_ChungTuModels.getNguon();
         SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
         //dtNguon.Dispose();
@@ -115,19 +91,20 @@
         if (check) CheckNDtao = true;
         if (checkTroLyTongHop) check = true;
 
-        //DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
+        //Lấy danh sách chứng từ page hiện tại
         DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
 
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, "", MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
+        //Lấy số lượng tổng cộng chứng từ
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat).Rows.Count; 
+        
+        //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
-        String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
-        String strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
+        string strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
+        string strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
 
-        String sKyThuat = "";
+        string sKyThuat = "";
         if (iKyThuat == "1")
             sKyThuat = "Ngành kỹ thuật";
-        //using (Html.BeginForm("SearchSubmit", "DuToan_ChungTu", new { ParentID = ParentID, sLNS = sLNS }))
-        //{
     %>
     <%--Liên kết nhanh--%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -259,17 +236,6 @@
                             </table>
                             <table cellpadding="0" cellspacing="0" border="0" width="50%" class="table_form2"
                                 id="tb_DotNganSach">
-                                <%-- <tr>
-                                    <td class="td_form2_td1">
-                                        <div>
-                                            <b>Chọn phòng ban đích</b></div>
-                                    </td>
-                                    <td class="td_form2_td5">
-                                        <div>
-                                            <%=MyHtmlHelper.DropDownList(ParentID, slPhongBanDich, iID_MaPhongBanDich, "iID_MaPhongBanDich", "", "class=\"input1_2\"")%></div>
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_iID_MaPhongBanDich")%>
-                                    </td>
-                                </tr>--%>
                                 <tr>
                                     <td class="td_form2_td1">
                                         <div>
@@ -281,10 +247,10 @@
                                         <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
                                     </td>
                                 </tr>
-                                <tr>
+                                <%--<tr>
                                     <td class="td_form2_td1">
                                         <div><b>Nguồn ngân sách</b></div>
-                                        <%--TuNB Hard Code MaNguon--%>
+                                        TuNB Hard Code MaNguon
                                         <%=Html.Hidden(ParentID + "_iID_MaNguon",1)%>
                                     </td>
                                     <td class="td_form2_td5">
@@ -292,7 +258,7 @@
                                             <%=MyHtmlHelper.DropDownList(ParentID, slNguon, iID_MaNguon, "iID_MaNguon1", "", "class=\"input1_2\"")%></div>
                                         <%= Html.ValidationMessage(ParentID + "_" + "err_iID_MaNguon")%>
                                     </td>
-                                </tr>
+                                </tr>--%>
                                 <tr>
                                     <td class="td_form2_td1">
                                         <div>
@@ -392,7 +358,7 @@
                 </th>
             </tr>
             <%
-                for (i = 0; i < dt.Rows.Count; i++)
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     DataRow R = dt.Rows[i];
                     String NgayChungTu = CommonFunction.LayXauNgay(Convert.ToDateTime(R["dNgayChungTu"]));

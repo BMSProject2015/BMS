@@ -13,15 +13,15 @@
 </head>
 <body>
     <%
-        String ParentID = "DuToan";
-        String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
-        String iKyThuat = Convert.ToString(Request.QueryString["iKyThuat"]);
-        String iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
-        String sLNS = Convert.ToString(Request.QueryString["sLNS"]);
-        String slyDo = "";
+        string ParentID = "DuToan";
+        string iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
+        string iKyThuat = Convert.ToString(Request.QueryString["iKyThuat"]);
+        string iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
+        string sLNS = Convert.ToString(Request.QueryString["sLNS"]);
+        string slyDo = "";
         
         String idAction = "1";
-        using (Html.BeginForm("TrinhDuyet", "DuToanBS_ChungTuChiTiet", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu, sLNS = sLNS,iKyThuat=iKyThuat, iLoai = 1, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
+        using (Html.BeginForm("TrinhDuyetChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = iKyThuat, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>

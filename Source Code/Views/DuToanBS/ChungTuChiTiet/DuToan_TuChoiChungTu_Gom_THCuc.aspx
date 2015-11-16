@@ -13,14 +13,14 @@
 </head>
 <body>
     <%
-        String ParentID = "DuToan";
-        String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
-        String iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
-        String sLNS = Convert.ToString(Request.QueryString["sLNS"]);
-        String slyDo = "";
+        string ParentID = "DuToan";
+        string iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
+        string iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
+        string sLNS = Convert.ToString(Request.QueryString["sLNS"]);
+        string slyDo = "";
+        string idAction = "1";
         
-        String idAction = "1";
-        using (Html.BeginForm("TuChoi_THCuc", "DuToan_ChungTuChiTiet_Gom", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = 2 }))
+        using (Html.BeginForm("TuChoiChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, maChungTuTLTHCuc = iID_MaChungTu, sLNS = sLNS, iLoai = 2 }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>

@@ -20,7 +20,7 @@
         String slyDo = "";
         
         String idAction = "1";
-        using (Html.BeginForm("TuChoi", "DuToanBS_ChungTuChiTiet", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = 1, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
+        using (Html.BeginForm("TuChoiChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>

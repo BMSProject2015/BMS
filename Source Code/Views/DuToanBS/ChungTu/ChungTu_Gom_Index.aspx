@@ -364,7 +364,13 @@
                     }
                     String strEdit = "";
                     String strDelete = "";
-                    if (check && (Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) == 2))
+                    int maTrangThaiDVTrinhDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
+                    maTrangThaiDVTrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(maTrangThaiDVTrinhDuyet);
+
+                    int maTrangThaiTHCucTuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(maTrangThaiDVTrinhDuyet);
+                    maTrangThaiTHCucTuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(maTrangThaiTHCucTuChoi);
+                    if (check && (Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) == maTrangThaiDVTrinhDuyet) ||
+                        Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) ==maTrangThaiTHCucTuChoi)
                     {
                         strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTH", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS1 = sLNS1 }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
                         strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTH", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
@@ -397,17 +403,17 @@
                 </td>
                 <td align="center">
                     <div onclick="OnInit_CT_NEW(800, 'Báo cáo in kiểm');">
-                        <%= Ajax.ActionLink("Báo cáo", "Index", "NhapNhanh", new { id = "DUTOANBS_BAOCAOINKIEM_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1 }, new AjaxOptions { }, new { @class = "buttonReport" })%>
+                        <%= Ajax.ActionLink("Báo cáo", "Index", "NhapNhanh", new { id = "DUTOANBS_BAOCAOINKIEM_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1, iID_MaChungTu_TLTHCuc = iID_MaChungTu_TLTHCuc }, new AjaxOptions { }, new { @class = "buttonReport" })%>
                     </div>
                 </td>
                 <td align="center">
                     <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
-                        <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "DUTOANBS_TRINHDUYETCHUNGTU_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1 }, new AjaxOptions { }, new { @class = "buttonDuyet" })%>
+                        <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "DUTOANBS_TRINHDUYETCHUNGTU_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1, iID_MaChungTu_TLTHCuc = iID_MaChungTu_TLTHCuc }, new AjaxOptions { }, new { @class = "buttonDuyet" })%>
                     </div>
                 </td>
                 <td align="center">
                     <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
-                        <%= Ajax.ActionLink("Từ Chối", "Index", "NhapNhanh", new { id = "DUTOANBS_TUCHOICHUNGTU_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1 }, new AjaxOptions { }, new { @class = "button123" })%>
+                        <%= Ajax.ActionLink("Từ Chối", "Index", "NhapNhanh", new { id = "DUTOANBS_TUCHOICHUNGTU_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS1, iID_MaChungTu_TLTHCuc = iID_MaChungTu_TLTHCuc }, new AjaxOptions { }, new { @class = "button123" })%>
                     </div>
                 </td>
             </tr>
