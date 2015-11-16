@@ -201,7 +201,7 @@ namespace VIETTEL.Models
                 {
                     if (String.IsNullOrEmpty(arrGiaTriTimKiem[arrDSTruong[i]]) == false)
                     {
-                        if (arrDSTruong[i] == "sLNS")
+                        if (arrDSTruong[i] == "sLNS" && arrGiaTriTimKiem[arrDSTruong[i]] != "109")
                         {
                             DK += String.Format(" AND sLNS IN ({0}) ", sLNS);
                         }
@@ -247,7 +247,7 @@ namespace VIETTEL.Models
                 {
                     if (String.IsNullOrEmpty(arrGiaTriTimKiem[arrDSTruong[i]]) == false)
                     {
-                        if (arrDSTruong[i] == "sLNS")
+                        if (arrDSTruong[i] == "sLNS" && arrGiaTriTimKiem[arrDSTruong[i]] !="109")
                         {
                             DK += String.Format(" AND sLNS IN ({0}) ", sLNS);
                         }
@@ -1528,166 +1528,11 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
             return vR;
         }
 
-        public static int Get_iID_MaTrangThaiDuyet_TuChoi(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
-            dt.Dispose();
+        
 
-
-            //Trolytonghop duoc trinh chung tu minh tao
-            Boolean checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
-            Boolean CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanModels.iID_MaPhanHe, iID_MaTrangThaiDuyet);
-            //la tro tong hop va la trang thai moi tao
-            if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
-            {
-                int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                }
-
-            }
-            //la tro ly tong hop chua gom chung tu
-            else if (checkTroLyTongHop && iCheck == 0)
-            {
-                vR = -1;
-            }
-            else
-            {
-                if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-                {
-                    int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                    if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                    {
-                        //SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM DTBS_ChungTuChiTiet WHERE iID_MaChungTu=@iID_MaChungTu AND bDongY=0");
-                        //cmd.Parameters.AddWithValue("@iID_MaChungTu", MaChungTu);
-                        //if (Convert.ToInt32(Connection.GetValue(cmd, 0)) > 0)
-                        //{
-                        vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                        //}
-                        //cmd.Dispose();
-                    }
-                }
-            }
-            return vR;
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_TrinhDuyet(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
-            String iID_MaNguoiDungTao = Convert.ToString(dt.Rows[0]["sID_MaNguoiDungTao"]);
-            dt.Dispose();
-
-            //Trolytonghop duoc trinh chung tu minh tao
-            Boolean checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
-            Boolean CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanModels.iID_MaPhanHe, iID_MaTrangThaiDuyet);
-            //la tro tong hop va la trang thai moi tao
-            if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-
-            }
-
-                //la tro ly tong hop chua gom chung tu
-            else if (checkTroLyTongHop && iCheck == 0)
-            {
-                vR = -1;
-            }
-            else if (checkTroLyTongHop && MaND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            else
-            {
-                if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-                {
-                    int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                    if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                    {
-                        vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                    }
-                }
-            }
-            return vR;
-        }
+        
         //Lay trang thai duyet từ chối ngân sách bảo đảm
-        public static int Get_iID_MaTrangThaiDuyet_BaoDam_TuChoi(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
-            String iKyThuat = Convert.ToString(dt.Rows[0]["iKyThuat"]);
-            dt.Dispose();
-
-
-            //Trolytonghop duoc trinh chung tu minh tao
-            Boolean checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
-            Boolean CheckTrangThaiDuyetMoiTao = false;
-            if (iKyThuat == "1")
-            {
-                CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet);
-            }
-            else
-            {
-                CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanModels.iID_MaPhanHe, iID_MaTrangThaiDuyet);
-            }
-            //la tro tong hop va la trang thai moi tao
-            if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
-            {
-                int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                }
-
-            }
-            //la tro ly tong hop chua gom chung tu
-            else if (checkTroLyTongHop && iCheck == 0)
-            {
-                vR = -1;
-            }
-            else
-            {
-                if (iKyThuat == "1")
-                {
-                    if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, MaND, iID_MaTrangThaiDuyet))
-                    {
-                        int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                        if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                        {
-                            vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                        }
-                    }
-                }
-                else
-                {
-                    if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-                    {
-                        int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                        if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                        {
-                            vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                        }
-                    }
-                }
-            }
-            return vR;
-        }
+        
         //Lay trang thai duyet ngân sách bảo đảm
         public static int Get_iID_MaTrangThaiDuyet_BaoDam_TrinhDuyet(String MaND, String MaChungTu)
         {
@@ -1767,118 +1612,9 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
             return vR;
         }
 
-        public static int Get_iID_MaTrangThaiDuyet_Gom_BaoDam_TuChoi(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    //SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM DTBS_ChungTuChiTiet WHERE iID_MaChungTu=@iID_MaChungTu AND bDongY=0");
-                    //cmd.Parameters.AddWithValue("@iID_MaChungTu", MaChungTu);
-                    //if (Convert.ToInt32(Connection.GetValue(cmd, 0)) > 0)
-                    //{
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                    //}
-                    //cmd.Dispose();
-                }
-            }
-            return vR;
-        }
+        
 
-        public static int Get_iID_MaTrangThaiDuyet_Gom_BaoDam_TrinhDuyet(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            return vR;
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_Gom_TuChoi(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    //SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM DTBS_ChungTuChiTiet WHERE iID_MaChungTu=@iID_MaChungTu AND bDongY=0");
-                    //cmd.Parameters.AddWithValue("@iID_MaChungTu", MaChungTu);
-                    //if (Convert.ToInt32(Connection.GetValue(cmd, 0)) > 0)
-                    //{
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                    //}
-                    //cmd.Dispose();
-                }
-            }
-            return vR;
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_Gom_TrinhDuyet(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            return vR;
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_Gom_THCuc_TrinhDuyet(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            return vR;
-        }
-        public static int Get_iID_MaTrangThaiDuyet_Gom_THCuc_TuChoi(String MaND, String MaChungTu)
-        {
-            int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            return vR;
-        }
+        
         /// <summary>
         /// Lấy tổng dự toán đã duyệt của sLNS trong iNamLamViec
         /// </summary>
