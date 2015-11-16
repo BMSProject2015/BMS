@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using DomainModel.Abstract;
 using DomainModel;
@@ -31,7 +29,7 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
         public ActionResult Index(string iID_MaChungTu, string sLNS, string iID_MaDonVi, string iLoai, string iChiTapTrung)
         {
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DT_ChungTuChiTiet", "Detail") == false)
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTuChiTiet", "Detail") == false)
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
@@ -76,24 +74,13 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
             }
             string iID_MaChungTu = Request.Form["DuToan_iID_MaChungTu"];
 
-            //TuNB delete
-
-            //string DSTruong = "iID_MaDonVi," + MucLucNganSachModels.strDSTruong;
-            //string[] arrDSTruong = DSTruong.Split(',');
-            //Dictionary<string, string> dicGiaTriTimKiem = new Dictionary<string, string>();
-            //for (int i = 0; i < arrDSTruong.Length; i++)
-            //{
-            //    dicGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
-            //}
             MaLoai = Request.Form["DuToan_MaLoai"];
             ViewData["iID_MaChungTu"] = iID_MaChungTu;
             ViewData["MaLoai"] = MaLoai;
             ViewData["iLoai"] = iLoai;
             ViewData["iChiTapTrung"] = iChiTapTrung;
             return View(sViewPath + "ChungTuChiTiet_Index_DanhSach_Frame.aspx", new { sLNS = sLNS });
-            //return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, LoadLai = "1" });
         }
-
         
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -324,70 +311,6 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
                 return RedirectToAction("TrinhDuyet", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS,iLoai=iLoai,iChiTapTrung=iChiTapTrung, iKyThuat = data["iKyThuat"], sLyDo = sLyDo });
             }
             return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = iLoai,iChiTapTrung=iChiTapTrung });
-        }
-
-
-        [Authorize]
-        public ActionResult TrinhDuyet(String iID_MaChungTu, String iLoai, String sLNS, String iKyThuat,String sLyDo, String iID_MaChungTu_TLTH)
-        {
-            String MaND = User.Identity.Name;
-            //Xác định trạng thái duyệt tiếp theo
-            int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
-            if (sLNS.StartsWith("1040100") && iKyThuat=="1")
-                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TrinhDuyet(MaND, iID_MaChungTu);
-            else
-                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaChungTu);
-            if (iID_MaTrangThaiDuyet_TrinhDuyet <= 0)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            if (String.IsNullOrEmpty(sLyDo))
-                sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
-            //update ly do
-            DuToanBS_ChungTuModels.updateLyDo_ChungTu(iID_MaChungTu, sLyDo);
-            ///Update trạng thái cho bảng chứng từ
-            DuToanBS_ChungTuModels.Update_iID_MaTrangThaiDuyet(iID_MaChungTu, iID_MaTrangThaiDuyet_TrinhDuyet, true, MaND, Request.UserHostAddress);
-            DuToanBS_ChungTuModels.updateChungTu_TLTH(iID_MaChungTu, MaND, sLNS);
-            ViewData["LoadLai"] = "1";
-            //Duyet tu danh sach chung tu
-            if (iLoai == "1")
-            {
-                //neu la ngân sách bảo đảm
-                if (sLNS.Contains("1040100"))
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS,iKyThuat=iKyThuat, iID_MaChungTu = iID_MaChungTu_TLTH });
-                return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iKyThuat = iKyThuat,iID_MaChungTu = iID_MaChungTu_TLTH });
-            }
-            return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS });
-        }
-
-        [Authorize]
-        public ActionResult TuChoi(String iID_MaChungTu, String iLoai, String sLNS, String sLyDo, String iID_MaChungTu_TLTH)
-        {
-            String MaND = User.Identity.Name;
-            //Xác định trạng thái duyệt tiếp theo
-            int iID_MaTrangThaiDuyet_TuChoi = 0;
-            if (sLNS.StartsWith("1040100"))
-                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TuChoi(MaND, iID_MaChungTu);
-            else
-                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaChungTu);
-            if (iID_MaTrangThaiDuyet_TuChoi <= 0)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            if (String.IsNullOrEmpty(sLyDo))
-                sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
-            //update ly do
-            DuToanBS_ChungTuModels.updateLyDo_ChungTu(iID_MaChungTu, sLyDo);
-            DuToanBS_ChungTuModels.Update_iID_MaTrangThaiDuyet(iID_MaChungTu, iID_MaTrangThaiDuyet_TuChoi, true, MaND, Request.UserHostAddress);
-            DuToanBS_ChungTuModels.updateChungTu_TLTH(iID_MaChungTu, MaND, sLNS);
-            if (iLoai == "1")
-            {
-                //neu la ngân sách bảo đảm
-                if (sLNS.Contains("1040100"))
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iID_MaChungTu = iID_MaChungTu_TLTH });
-                return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iID_MaChungTu = iID_MaChungTu_TLTH });
-            }
-            return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu });
         }
 
         [Authorize]

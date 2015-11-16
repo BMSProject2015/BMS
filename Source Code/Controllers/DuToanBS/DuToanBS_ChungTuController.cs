@@ -5,10 +5,11 @@ using DomainModel;
 using DomainModel.Abstract;
 using VIETTEL.Models;
 using VIETTEL.Models.DungChung;
+using System.Data.SqlClient;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
-    public class DuToanBS_ChungTuController : Controller
+    public class DuToanBSChungTuController : Controller
     {
         #region Hằng Số
         public static readonly string CREATE = "Create";
@@ -38,15 +39,15 @@ namespace VIETTEL.Controllers.DuToanBS
         public ActionResult Index(string MaDotNganSach, string sLNS1, string iLoai)
         {
             ViewData["MaDotNganSach"] = MaDotNganSach;
-            if (iLoai == "1")
+            switch (iLoai)
             {
-                return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
+                case "1":
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
+                case "2":
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
+                default: 
+                    return View(VIEW_ROOTPATH + VIEW_CHUNGTU_INDEX);
             }
-            else if (iLoai == "2")
-            {
-                return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
-            }
-            return View(VIEW_ROOTPATH + VIEW_CHUNGTU_INDEX);
         }
 
         #endregion
@@ -84,38 +85,6 @@ namespace VIETTEL.Controllers.DuToanBS
                 });
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="ChiNganSach"></param>
-        /// <returns></returns>
-        //[Authorize]
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult SearchDuyetSubmit(String ParentID, String ChiNganSach)
-        //{
-        //    string MaPhongBan = Request.Form[ParentID + "_iID_MaPhongBan"];
-        //    string MaLoaiNganSach = Request.Form[ParentID + "_sLNS"];
-        //    string NgayDotNganSach = Request.Form[ParentID + "_" + NgonNgu.MaDate + "sNgayDotNganSach"];
-        //    string TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
-        //    string DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-        //    string SoChungTu = Request.Form[ParentID + "_iSoChungTu"];
-        //    string TrangThaiChungTu = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
-
-        //    return RedirectToAction("Duyet", "DuToanBS_ChungTu",
-        //        new
-        //        {
-        //            ChiNganSach = ChiNganSach,
-        //            MaPhongBan = MaPhongBan,
-        //            MaLoaiNganSach = MaLoaiNganSach,
-        //            NgayDotNganSach = NgayDotNganSach,
-        //            SoChungTu = SoChungTu,
-        //            TuNgay = TuNgay,
-        //            DenNgay = DenNgay,
-        //            iID_MaTrangThaiDuyet = TrangThaiChungTu
-        //        });
-        //}
-
         #endregion
 
         #region Chuyển Page Sửa Chứng Từ
@@ -136,7 +105,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            if (!BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_CHUNGTU, EDIT))
+            if (!BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu", EDIT))
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -162,7 +131,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            if (!BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_ChungTu_TLTH, EDIT))
+            if (!BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu_TLTH", EDIT))
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -187,7 +156,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            if (!BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_ChungTu_TLTHCuc, EDIT))
+            if (!BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu_TLTHCuc", EDIT))
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -222,7 +191,7 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_CHUNGTU, sChucNang) == false)
+            if (BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu", sChucNang) == false)
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -291,14 +260,14 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_ChungTu_TLTH, sChucNang) == false)
+            if (BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu_TLTH", sChucNang) == false)
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
 
             string dsMaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
 
-            Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTH);
+            Bang bang = new Bang("DTBS_ChungTu_TLTH");
             bang.MaNguoiDungSua = User.Identity.Name;
             bang.IPSua = Request.UserHostAddress;
             bang.TruyenGiaTri(ParentID, Request.Form);
@@ -356,14 +325,14 @@ namespace VIETTEL.Controllers.DuToanBS
                 sChucNang = CREATE;
             }
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(MaND, BangModels.DTBS_ChungTu_TLTHCuc, sChucNang) == false)
+            if (BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu_TLTHCuc", sChucNang) == false)
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
 
             string dsMaChungTuTLTH = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
 
-            Bang bang = new Bang(BangModels.DTBS_ChungTu_TLTHCuc);
+            Bang bang = new Bang("DTBS_ChungTu_TLTHCuc");
             bang.MaNguoiDungSua = User.Identity.Name;
             bang.IPSua = Request.UserHostAddress;
             bang.TruyenGiaTri(ParentID, Request.Form);
@@ -418,7 +387,7 @@ namespace VIETTEL.Controllers.DuToanBS
         public ActionResult XoaChungTu(String iID_MaChungTu, String MaDotNganSach, String ChiNganSach, String sLNS1)
         {
             //Kiểm tra quyền
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, BangModels.DTBS_CHUNGTU, DELETE) == false)
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu", DELETE) == false)
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -436,7 +405,7 @@ namespace VIETTEL.Controllers.DuToanBS
         [Authorize]
         public ActionResult XoaChungTuTLTH(String iID_MaChungTu, String sLNS1)
         {
-            if (!BaoMat.ChoPhepLamViec(User.Identity.Name, BangModels.DTBS_ChungTu_TLTH, DELETE))
+            if (!BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu_TLTH", DELETE))
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -453,7 +422,7 @@ namespace VIETTEL.Controllers.DuToanBS
         [Authorize]
         public ActionResult XoaChungTuTLTHCuc(String iID_MaChungTu, String sLNS1)
         {
-            if (!BaoMat.ChoPhepLamViec(User.Identity.Name, BangModels.DTBS_ChungTu_TLTHCuc, DELETE))
+            if (!BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu_TLTHCuc", DELETE))
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
@@ -463,14 +432,207 @@ namespace VIETTEL.Controllers.DuToanBS
 
         #endregion
 
+        #region Trình Duyệt
         /// <summary>
-        /// Duyệt chứng từ
+        /// Trình duyệt chứng từ
         /// </summary>
+        /// <param name="maChungTu"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="iKyThuat"></param>
+        /// <param name="sLyDo"></param>
+        /// <param name="maChungTuTLTH"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult Duyet()
+        public ActionResult TrinhDuyetChungTu(string maChungTu, string sLNS, string iKyThuat, string sLyDo, string maChungTuTLTH)
         {
-            return View(VIEW_ROOTPATH + "ChungTu_Duyet.aspx");
+            string MaND = User.Identity.Name;
+
+            //Xác định trạng thái duyệt tiếp theo
+            int maTrangThaiTiepTheo = 0;
+            if (sLNS.StartsWith("1040100") && iKyThuat == "1")
+                maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, maChungTu);
+            else
+                maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, maChungTu);
+
+            if (maTrangThaiTiepTheo <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+
+            if (String.IsNullOrEmpty(sLyDo))
+                sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
+
+            //update ly do
+            DuToanBS_ChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
+            ///Update trạng thái cho bảng chứng từ
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, maTrangThaiTiepTheo, true, MaND, Request.UserHostAddress);
+
+            //Update trạng thái chứng từ TLTH
+            DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, MaND);
+            ViewData["LoadLai"] = "1";
+            
+            if (sLNS.Contains("1040100"))
+            {
+                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iKyThuat = iKyThuat, iID_MaChungTu = maChungTuTLTH });
+            }
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iKyThuat = iKyThuat, iID_MaChungTu = maChungTuTLTH });
         }
+
+        /// <summary>
+        /// Trình duyệt chứng từ TLTH
+        /// </summary>
+        /// <param name="maChungTuTLTH"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="maChungTuTLTHCuc"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult TrinhDuyetChungTuTLTH(string maChungTuTLTH, string iLoai, string sLNS, string maChungTuTLTHCuc)
+        {
+            String MaND = User.Identity.Name;
+            //Xác định trạng thái duyệt tiếp theo
+            int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
+            if (sLNS.StartsWith("1040100"))
+                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTHBaoDam(MaND, maChungTuTLTH);
+            else
+                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTH(MaND, maChungTuTLTH);
+            if (iID_MaTrangThaiDuyet_TrinhDuyet <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+
+            //Update trạng thái duyệt
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, iID_MaTrangThaiDuyet_TrinhDuyet, MaND, Request.UserHostAddress);
+            DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, MaND);
+            if (sLNS == "1040100")
+            {
+                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc });
+            }
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc });
+        }
+
+        /// <summary>
+        /// Trình duyệt chứng từ TLTH Cục
+        /// </summary>
+        /// <param name="maChungTuTLTHCuc"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult TrinhDuyetChungTuTLTHCuc(string maChungTuTLTHCuc, string iLoai, string sLNS)
+        {
+            String MaND = User.Identity.Name;
+            //Xác định trạng thái duyệt tiếp theo
+            int maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTHCuc(MaND, maChungTuTLTHCuc);
+            if (maTrangThaiTiepTheo <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+            //Update mã trạng thái duyệt
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, maTrangThaiTiepTheo, MaND, Request.UserHostAddress);
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS = sLNS, iLoai = iLoai });
+        } 
+        #endregion
+
+        #region Từ Chối
+        /// <summary>
+        /// Từ chối chứng từ
+        /// </summary>
+        /// <param name="maChungTu"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="sLyDo"></param>
+        /// <param name="maChungTuTLTH"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult TuChoiChungTu(string maChungTu, string iLoai, string sLNS, string sLyDo, string maChungTuTLTH)
+        {
+            String MaND = User.Identity.Name;
+            //Xác định trạng thái duyệt tiếp theo
+            int iID_MaTrangThaiDuyet_TuChoi = 0;
+            if (sLNS.StartsWith("1040100"))
+                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiBaoDam(MaND, maChungTu);
+            else
+                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, maChungTu);
+            if (iID_MaTrangThaiDuyet_TuChoi <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+            if (String.IsNullOrEmpty(sLyDo))
+                sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
+            //update ly do
+            DuToanBS_ChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
+
+            //Update mã trạng thái duyệt
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, iID_MaTrangThaiDuyet_TuChoi, true, MaND, Request.UserHostAddress);
+
+            //Update chứng từ TLTH
+            DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, MaND);
+            if (sLNS.Contains("1040100"))
+            {
+                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iID_MaChungTu = maChungTuTLTH });
+            }
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iID_MaChungTu = maChungTuTLTH });
+        }
+
+        /// <summary>
+        /// Từ chối chứng từ TLTH
+        /// </summary>
+        /// <param name="maChungTuTLTH"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="maChungTuTLTHCuc"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult TuChoiChungTuTLTH(string maChungTuTLTH, string iLoai, string sLNS, string maChungTuTLTHCuc)
+        {
+            string MaND = User.Identity.Name;
+            
+            //Xác định trạng thái duyệt tiếp theo
+            int iID_MaTrangThaiDuyet_TuChoi = 0;
+            if (sLNS.StartsWith("1040100"))
+                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTHBaoDam(MaND, maChungTuTLTH);
+            else
+                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTH(MaND, maChungTuTLTH);
+            
+            if (iID_MaTrangThaiDuyet_TuChoi <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+            //Updatr mã trạng thái duyệt
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, iID_MaTrangThaiDuyet_TuChoi, MaND, Request.UserHostAddress);
+
+            DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, MaND);
+            if (sLNS == "1040100")
+            {
+                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc });
+            }
+                return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc });
+        }
+
+        /// <summary>
+        /// Từ chối chứng từ TLTH Cục
+        /// </summary>
+        /// <param name="maChungTuTLTHCuc"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult TuChoiChungTuTLTHCuc(string maChungTuTLTHCuc, string iLoai, string sLNS)
+        {
+            string MaND = User.Identity.Name;
+            
+            //Xác định trạng thái duyệt tiếp theo
+            int iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTHCuc(MaND, maChungTuTLTHCuc);
+            if (iID_MaTrangThaiDuyet_TrinhDuyet <= 0)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+
+            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, iID_MaTrangThaiDuyet_TrinhDuyet, MaND, Request.UserHostAddress);
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { sLNS = sLNS, iLoai = iLoai });
+        } 
+        #endregion
     }
 }

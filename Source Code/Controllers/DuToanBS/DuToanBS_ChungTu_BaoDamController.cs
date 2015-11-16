@@ -16,63 +16,66 @@ namespace VIETTEL.Controllers.DuToan
 {
     public class DuToanBS_ChungTu_BaoDamController : Controller
     {
-        //
-        // GET: /ChungTu/
+        #region Hằng Số
         public static readonly string EDIT = "Edit";
-        public static readonly string CREATE ="Create";
-        public string sViewPath = "~/Views/DuToanBS/ChungTuBaoDam/";
+        public static readonly string CREATE = "Create";
+        public string VIEWS_ROOT_PATH = "~/Views/DuToanBS/ChungTuBaoDam/"; 
+        #endregion
+
+        /// <summary>
+        /// Index
+        /// </summary>
+        /// <param name="MaDotNganSach">Mã đợt ngân sách</param>
+        /// <param name="iLoai">Loại thực hiện</param>
+        /// <param name="iLan">lần phân cấp</param>
+        /// <param name="iKyThuat">Ngành kỹ thuật</param>
+        /// <returns></returns>
         [Authorize]
-        public ActionResult Index(String MaDotNganSach, String sLNS, String iLoai, String iLan,String iKyThuat)
+        public ActionResult Index(string MaDotNganSach, string iLoai, string iLan,string iKyThuat)
         {
             ViewData["MaDotNganSach"] = MaDotNganSach;
-            ViewData["sLNS"] = sLNS;
             ViewData["iLoai"] = iLoai;
-            if (iLoai == "1")
-            {
-                return View(sViewPath + "ChungTu_Gom_Index.aspx");
+            switch (iLoai)
+            { 
+                case "1":
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Gom_Index.aspx");
+                case "2":
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Gom_THCuc_Index.aspx");
+                case "3":
+                    ViewData["iKyThuat"] = iKyThuat;
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Gom_NhanBKhac_Index.aspx");
+                case "4":
+                    ViewData["iKyThuat"] = iKyThuat;
+                    return View(VIEWS_ROOT_PATH + "ChungTu_NhanKyThuat_Detail.aspx");
+                case "5":
+                    ViewData["iKyThuat"] = iKyThuat;
+                    return View(VIEWS_ROOT_PATH + "ChungTu_NhanKyThuat_Index.aspx");
+                default:
+                    if (iLan == "lan2")
+                    {
+                        return View(VIEWS_ROOT_PATH + "ChungTu_GomLan2_Index.aspx");
+                    }
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Index.aspx");
             }
-                //gom tro ly cuc
-            else if (iLoai == "2")
-            {
-                return View(sViewPath + "ChungTu_Gom_THCuc_Index.aspx");
-            }
-            else if (iLoai == "3")
-            {
-                ViewData["iKyThuat"] = iKyThuat;
-                return View(sViewPath + "ChungTu_Gom_NhanBKhac_Index.aspx");
-            }
-            //Nhan chung tu nganh ky thuat
-            else if (iLoai == "4")
-            {
-                ViewData["iKyThuat"] = iKyThuat;
-                return View(sViewPath + "ChungTu_NhanKyThuat_Detail.aspx");
-            }
-                //dot ct ky thuat dot 
-            else if (iLoai == "5")
-            {
-                ViewData["iKyThuat"] = iKyThuat;
-                return View(sViewPath + "ChungTu_NhanKyThuat_Index.aspx");
-            }
-            //ngan sach bao dam phan cap lan 2
-            if (iLan == "lan2")
-                return View(sViewPath + "ChungTu_GomLan2_Index.aspx");
-            return View(sViewPath + "ChungTu_Index.aspx");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="iLoai"></param>
+        /// <param name="iID_MaChungTu_TLTH"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchSubmit(String ParentID, String sLNS, String iLoai, String iID_MaChungTu_TLTH)
+        public ActionResult TimKiemChungTu(string ParentID, string iLoai, string iID_MaChungTu_TLTH)
         {
-            String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
-            String DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-            String SoChungTu = Request.Form[ParentID + "_iSoChungTu"];
-            String sLNS_TK = Request.Form[ParentID + "_sLNS_TK"];
-            String iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
-            if (String.IsNullOrEmpty(TuNgay) == false && HamChung.isDate(TuNgay) == false)
-            {
-
-            }
-            return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS, iLoai = iLoai, SoChungTu = SoChungTu, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, sLNS_TK = sLNS_TK, iID_MaChungTu = iID_MaChungTu_TLTH });
+            string TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
+            string DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
+            string SoChungTu = Request.Form[ParentID + "_iSoChungTu"];
+            string sLNS_TK = Request.Form[ParentID + "_sLNS_TK"];
+            string iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
+            return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = iLoai, SoChungTu = SoChungTu, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, sLNS_TK = sLNS_TK, iID_MaChungTu = iID_MaChungTu_TLTH });
         }
 
         [Authorize]
@@ -98,7 +101,7 @@ namespace VIETTEL.Controllers.DuToan
             ViewData["ChiNganSach"] = ChiNganSach;
             ViewData["sLNS"] = sLNS;
             ViewData["iKyThuat"] = iKyThuat;
-            return View(sViewPath + "ChungTu_Edit.aspx");
+            return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
         }
 
         [Authorize]
@@ -115,7 +118,7 @@ namespace VIETTEL.Controllers.DuToan
             ViewData["ChiNganSach"] = ChiNganSach;
             ViewData["sLNS"] = sLNS;
             ViewData["iKyThuat"] = iKyThuat;
-            return View(sViewPath + "ChungTu_Gom_Edit.aspx");
+            return View(VIEWS_ROOT_PATH + "ChungTu_Gom_Edit.aspx");
         } 
 
         [Authorize]
@@ -167,14 +170,14 @@ namespace VIETTEL.Controllers.DuToan
                 }
                 if (sChucNang==CREATE)
                 {
-                    return View(sViewPath + "ChungTu_index.aspx");
+                    return View(VIEWS_ROOT_PATH + "ChungTu_index.aspx");
 
                 }
                 else
                 {
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["sLNS"] = sLNS1;
-                    return View(sViewPath + "ChungTu_Edit.aspx");
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
                 }
             }
             else
@@ -292,7 +295,7 @@ namespace VIETTEL.Controllers.DuToan
                 {
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["sLNS"] = sLNS1;
-                    return View(sViewPath + "ChungTu_Edit.aspx");
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
                 }
             }
             else
@@ -429,7 +432,7 @@ namespace VIETTEL.Controllers.DuToan
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
-                    return View(sViewPath + "ChungTu_Edit.aspx");
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
                 }
             }
             else
@@ -565,7 +568,7 @@ namespace VIETTEL.Controllers.DuToan
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
-                    return View(sViewPath + "ChungTu_Edit.aspx");
+                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
                 }
             }
             else
@@ -683,11 +686,6 @@ namespace VIETTEL.Controllers.DuToan
             cmd.Dispose();
 
             return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1, sLNS = sLNS1 });
-        }
-        [Authorize]
-        public ActionResult Duyet()
-        {
-            return View(sViewPath + "ChungTu_Duyet.aspx");
         }
 
         [Authorize]
