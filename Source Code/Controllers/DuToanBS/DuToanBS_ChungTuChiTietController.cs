@@ -98,9 +98,8 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
             }
            
 
-            String MaND = User.Identity.Name;
-            String TenBangChiTiet = "DTBS_ChungTuChiTiet";
-
+            string MaND = User.Identity.Name;
+            string TenBangChiTiet = "DTBS_ChungTuChiTiet";
             string idXauMaCacHang = Request.Form["idXauMaCacHang"];
             string idXauMaCacCot = Request.Form["idXauMaCacCot"];
             string idXauGiaTriChiTiet = Request.Form["idXauGiaTriChiTiet"];

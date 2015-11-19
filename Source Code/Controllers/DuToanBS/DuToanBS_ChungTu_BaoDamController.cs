@@ -79,7 +79,7 @@ namespace VIETTEL.Controllers.DuToan
         }
 
         [Authorize]
-        public ActionResult Edit(String MaDotNganSach, String iID_MaChungTu, String ChiNganSach, String sLNS,String iKyThuat)
+        public ActionResult SuaChungTu(String MaDotNganSach, String iID_MaChungTu, String ChiNganSach, String sLNS,String iKyThuat)
         {
             String MaND = User.Identity.Name;
             if (String.IsNullOrEmpty(iID_MaChungTu) && LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanModels.iID_MaPhanHe, MaND) == false)
@@ -105,25 +105,8 @@ namespace VIETTEL.Controllers.DuToan
         }
 
         [Authorize]
-        public ActionResult Edit_Gom(string MaDotNganSach, string iID_MaChungTu, string ChiNganSach, string sLNS, string iKyThuat)
-        {
-            String MaND = User.Identity.Name;
-            if (String.IsNullOrEmpty(iID_MaChungTu) && LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanModels.iID_MaPhanHe, MaND) == false)
-            {
-                //Phải có quyền thêm chứng từ
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            ViewData["MaDotNganSach"] = MaDotNganSach;
-            ViewData["MaChungTu"] = iID_MaChungTu;
-            ViewData["ChiNganSach"] = ChiNganSach;
-            ViewData["sLNS"] = sLNS;
-            ViewData["iKyThuat"] = iKyThuat;
-            return View(VIEWS_ROOT_PATH + "ChungTu_Gom_Edit.aspx");
-        } 
-
-        [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit(String ParentID, String MaChungTu, String sLNS1, String iKyThuat)
+        public ActionResult ThemSuaChungTu(String ParentID, String MaChungTu, String sLNS1, String iKyThuat)
         {
             String MaND = User.Identity.Name;
             string sChucNang = EDIT;
@@ -241,137 +224,6 @@ namespace VIETTEL.Controllers.DuToan
                     bang.DuLieuMoi = false;
                     bang.Save();
                     return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { sLNS = sLNS1, iKyThuat = iKyThuat });
-                }
-            }
-
-        }
-
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit_Gom(String ParentID, String MaChungTu, String sLNS1, String iLan2)
-        {
-            String MaND = User.Identity.Name;
-            string sChucNang = EDIT;
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-            {
-                sChucNang = CREATE;
-            }
-            //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(MaND, "DTBS_ChungTu_TLTH", sChucNang) == false)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            int i;
-            NameValueCollection Errors = new NameValueCollection();
-            String iID_MaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
-            String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
-            if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-            {
-                Errors.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
-            if (iID_MaChungTu == string.Empty || iID_MaChungTu == "" || iID_MaChungTu == null)
-            {
-                Errors.Add("err_iID_MaChungTu", "Không có đợt được chọn!");
-            }
-            if (sChucNang==CREATE)
-            {
-                if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-                {
-                    Errors.Add("err_sLNS", "Không có đợt ngân sách!");
-                }
-            }
-
-            if (Errors.Count > 0)
-            {
-                for (i = 0; i <= Errors.Count - 1; i++)
-                {
-                    ModelState.AddModelError(ParentID + "_" + Errors.GetKey(i), Errors[i]);
-                }
-                if (sChucNang== CREATE)
-                {
-                    return RedirectToAction("index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1, sLNS = sLNS1 });
-                }
-                else
-                {
-                    ViewData["MaChungTu"] = MaChungTu;
-                    ViewData["sLNS"] = sLNS1;
-                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
-                }
-            }
-            else
-            {
-
-                Bang bang = new Bang("DTBS_ChungTu_TLTH");
-                bang.MaNguoiDungSua = User.Identity.Name;
-                bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-                {
-                    //lay soChungtuTheoLamLamViec
-                    int iSoChungTu = 0;
-                    String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
-                    DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-                    // iSoChungTu = DuToanBS_ChungTu_BaoDamModels.iSoChungTu(iNamLamViec)+1;
-                    //bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(DuToanModels.iID_MaPhanHe));
-                    // bang.CmdParams.Parameters.AddWithValue("@iSoChungTu", iSoChungTu);
-                    String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
-                    if (dtCauHinh.Rows.Count > 0)
-                    {
-                        iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                        iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                        dtCauHinh.Dispose();
-                    }
-                    DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-                    if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-                    {
-                        DataRow drPhongBan = dtPhongBan.Rows[0];
-                        iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                        sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
-                        dtPhongBan.Dispose();
-                    }
-                    String DK = "";
-                    if (String.IsNullOrEmpty(iID_MaChungTu)) iID_MaChungTu = Guid.Empty.ToString();
-                    String[] arrChungtu = iID_MaChungTu.Split(',');
-                    SqlCommand cmd = new SqlCommand();
-                    for (int j = 0; j < arrChungtu.Length; j++)
-                    {
-                        DK += " iID_MaChungTu =@iID_MaChungTu" + j;
-                        if (j < arrChungtu.Length - 1)
-                            DK += " OR ";
-                        cmd.Parameters.AddWithValue("@iID_MaChungTu" + j, arrChungtu[j]);
-
-                    }
-                    int iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
-                    ///Update trạng thái check cho bảng chứng từ
-                    String SQL = "";
-                    //neu gom lan 2
-                    if (iLan2 == "1")
-                        SQL = @"UPDATE DTBS_ChungTu SET iCheckLan2=1 WHERE iTrangThai=1 AND (" + DK + ")";
-                    else
-                        SQL = @"UPDATE DTBS_ChungTu SET iCheck=1 WHERE iTrangThai=1 AND (" + DK + ")";
-                    cmd.CommandText = SQL;
-                    Connection.UpdateDatabase(cmd);
-                    cmd.Dispose();
-
-                    bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-                    String MaChungTuAddNew = Convert.ToString(bang.Save());
-                    //DuToanBS_ChungTu_BaoDamModels.InsertDuyetChungTu(MaChungTuAddNew, "Mới ", User.Identity.Name, Request.UserHostAddress);
-
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1, sLNS = sLNS1 });
-                }
-                else
-                {
-                    bang.GiaTriKhoa = MaChungTu;
-                    bang.DuLieuMoi = false;
-                    bang.Save();
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1, sLNS = sLNS1 });
                 }
             }
 
@@ -513,140 +365,9 @@ namespace VIETTEL.Controllers.DuToan
             }
 
         }
+        
         [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit_Gom_THCuc(String ParentID, String MaChungTu, String sLNS1)
-        {
-            String MaND = User.Identity.Name;
-            string sChucNang = "Edit";
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-            {
-                sChucNang = "Create";
-            }
-            Bang bang = new Bang("DTBS_ChungTu_TLTHCuc");
-            //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(MaND, bang.TenBang, sChucNang) == false)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            int i;
-            NameValueCollection arrLoi = new NameValueCollection();
-            String iID_MaChungTu = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
-            String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
-            if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-            {
-                arrLoi.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
-            if (iID_MaChungTu == string.Empty || iID_MaChungTu == "" || iID_MaChungTu == null)
-            {
-                arrLoi.Add("err_iID_MaChungTu", "Không có đợt được chọn!");
-            }
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-            {
-                if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-                {
-                    arrLoi.Add("err_sLNS", "Không có đợt ngân sách!");
-                }
-            }
-
-            if (arrLoi.Count > 0)
-            {
-                for (i = 0; i <= arrLoi.Count - 1; i++)
-                {
-                    ModelState.AddModelError(ParentID + "_" + arrLoi.GetKey(i), arrLoi[i]);
-                }
-                ViewData["MaChungTu"] = MaChungTu;
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-                {
-                    ViewData["DuLieuMoi"] = "0";
-                    ViewData["sLNS"] = sLNS1;
-                    return RedirectToAction("index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 2, sLNS = sLNS1 });
-
-                }
-                else
-                {
-                    ViewData["MaChungTu"] = MaChungTu;
-                    ViewData["DuLieuMoi"] = "0";
-                    ViewData["sLNS"] = sLNS1;
-                    return View(VIEWS_ROOT_PATH + "ChungTu_Edit.aspx");
-                }
-            }
-            else
-            {
-
-                bang.MaNguoiDungSua = User.Identity.Name;
-                bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
-                {
-                    //lay soChungtuTheoLamLamViec
-                    int iSoChungTu = 0;
-                    String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
-                    DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-                    // iSoChungTu = DuToanBS_ChungTu_BaoDamModels.iSoChungTu(iNamLamViec)+1;
-                    //bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(DuToanModels.iID_MaPhanHe));
-                    // bang.CmdParams.Parameters.AddWithValue("@iSoChungTu", iSoChungTu);
-                    String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
-                    if (dtCauHinh.Rows.Count > 0)
-                    {
-                        iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                        iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                        dtCauHinh.Dispose();
-                    }
-                    DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-                    if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-                    {
-                        DataRow drPhongBan = dtPhongBan.Rows[0];
-                        iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                        sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
-                        dtPhongBan.Dispose();
-                    }
-                    String DK = "";
-                    if (String.IsNullOrEmpty(iID_MaChungTu)) iID_MaChungTu = Guid.Empty.ToString();
-                    String[] arrChungtu = iID_MaChungTu.Split(',');
-                    SqlCommand cmd = new SqlCommand();
-                    for (int j = 0; j < arrChungtu.Length; j++)
-                    {
-                        DK += " iID_MaChungTu_TLTH =@iID_MaChungTu" + j;
-                        if (j < arrChungtu.Length - 1)
-                            DK += " OR ";
-                        cmd.Parameters.AddWithValue("@iID_MaChungTu" + j, arrChungtu[j]);
-
-                    }
-                    //Trang thai truong phong duyet itrangthaiduyet=4
-                    int iID_MaTrangThaiDuyet = 4;
-                    ///Update trạng thái check cho bảng chứng từ
-
-                    String SQL = @"UPDATE DTBS_ChungTu_TLTH SET iCheck=1 WHERE iTrangThai=1 AND (" + DK + ")";
-                    cmd.CommandText = SQL;
-                    Connection.UpdateDatabase(cmd);
-                    cmd.Dispose();
-
-                    bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu_TLTH", iID_MaChungTu);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-                    String MaChungTuAddNew = Convert.ToString(bang.Save());
-                    //DuToanBS_ChungTu_BaoDamModels.InsertDuyetChungTu(MaChungTuAddNew, "Mới ", User.Identity.Name, Request.UserHostAddress);
-
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 2, sLNS = sLNS1 });
-                }
-                else
-                {
-                    bang.GiaTriKhoa = MaChungTu;
-                    bang.DuLieuMoi = false;
-                    bang.Save();
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 2, sLNS = sLNS1 });
-                }
-            }
-
-        }
-        [Authorize]
-        public ActionResult Delete(String iID_MaChungTu, String MaDotNganSach, String ChiNganSach, String sLNS,String iKyThuat)
+        public ActionResult XoaChungTu(String iID_MaChungTu, String MaDotNganSach, String ChiNganSach, String sLNS,String iKyThuat)
         {
             if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu", "Delete") == false)
             {
@@ -656,38 +377,7 @@ namespace VIETTEL.Controllers.DuToan
             iXoa = DuToanBS_ChungTuModels.XoaChungTu(iID_MaChungTu);
             return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, sLNS = sLNS, iKyThuat = iKyThuat });
         }
-        [Authorize]
-        public ActionResult Delete_Gom(String iID_MaChungTu, String sLNS1)
-        {
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu_TLTH", "Delete") == false)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            Bang bang = new Bang("DTBS_ChungTu_TLTH");
-            bang.GiaTriKhoa = iID_MaChungTu;
-            bang.Delete();
-
-            //update lai trang thai check bang chung tu
-
-            String iID_MaChungTu_ChungTu = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTH", "iID_MaChungTu_TLTH", iID_MaChungTu, "iID_MaChungTu"));
-            String DK = "";
-            String[] arrChungtu = iID_MaChungTu_ChungTu.Split(',');
-            SqlCommand cmd = new SqlCommand();
-            for (int j = 0; j < arrChungtu.Length; j++)
-            {
-                DK += " iID_MaChungTu =@iID_MaChungTu" + j;
-                if (j < arrChungtu.Length - 1)
-                    DK += " OR ";
-                cmd.Parameters.AddWithValue("@iID_MaChungTu" + j, arrChungtu[j]);
-            }
-            String SQL = @"UPDATE DTBS_ChungTu SET iCheck=0 WHERE iTrangThai=1 AND (" + DK + ")";
-            cmd.CommandText = SQL;
-            Connection.UpdateDatabase(cmd);
-            cmd.Dispose();
-
-            return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1, sLNS = sLNS1 });
-        }
-
+        
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UpLoadExcel(String iID_MaChungTu, String iLoai)

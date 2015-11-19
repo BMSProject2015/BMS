@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
-    public class DuToanBSChungTuController : Controller
+    public class DuToanBS_ChungTuController : Controller
     {
         #region Hằng Số
         public static readonly string CREATE = "Create";
