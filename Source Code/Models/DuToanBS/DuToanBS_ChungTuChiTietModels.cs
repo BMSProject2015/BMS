@@ -166,127 +166,114 @@ namespace VIETTEL.Models
             cmd.Dispose();
             return vR;
         }
-        public static DataTable GetChungTuChiTiet(String iID_MaChungTu, Dictionary<String, String> arrGiaTriTimKiem, String MaND, String sLNS)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maChungTu"></param>
+        /// <param name="dicGiaTriTimKiem"></param>
+        /// <param name="maND"></param>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        public static DataTable LayChungTuChiTiet(string maChungTu, Dictionary<string, string> dicGiaTriTimKiem, string maND, string sLNS)
         {
-
-            DataTable vR, dtChungTu;
-            String SQL, DK = "", Dk1 = "";
+            DataTable dtResult;
+            string sql;
+            string dk = "";
             SqlCommand cmd;
-            DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(MaND);
+            DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(maND);
 
-            dtChungTu = GetChungTu(iID_MaChungTu);
-            String[] arrLNS = sLNS.Split(',');
-            String DKLNS = "";
             cmd = new SqlCommand();
-            for (int i = 0; i < arrLNS.Length; i++)
+            dk = "iTrangThai=1";
+            //Ngân sách 109
+            if (sLNS == "109")
             {
-                DKLNS += " sLNS LIKE @LNS" + i;
-                if (i < arrLNS.Length - 1)
-                    DKLNS += " OR ";
-                cmd.Parameters.AddWithValue("LNS" + i, arrLNS[i] + "%");
+                dk += " AND sLNS Like @LNS";
+                cmd.Parameters.AddWithValue("@LNS", sLNS);
             }
-            if (String.IsNullOrEmpty(DKLNS)) DKLNS = "0=1";
-            DK = String.Format("iTrangThai=1 AND ({0}) ", DKLNS);
-
-            DataRow RChungTu = dtChungTu.Rows[0];
+            else
+            {
+                dk += " AND sLNS IN (" + sLNS + ")";
+            }
 
             String sTruongTien = MucLucNganSachModels.strDSTruongTien + ",iID_MaChungTuChiTiet,iID_MaDonVi,sTenDonVi,sTenDonVi_BaoDam,iID_MaPhongBanDich,iID_MaPhongBan,sGhiChu,sMaCongTrinh";
             String[] arrDSTruong = MucLucNganSachModels.strDSTruong.Split(',');
             String[] arrDSTruong_TK = (MucLucNganSachModels.strDSTruong + ",iID_MaDonVi").Split(',');
             String[] arrDSTruongTien = sTruongTien.Split(',');
             //<--Lay toan bo Muc luc ngan sach
-            if (arrGiaTriTimKiem != null)
+            if (dicGiaTriTimKiem != null)
             {
                 for (int i = 0; i < arrDSTruong.Length; i++)
                 {
-                    if (String.IsNullOrEmpty(arrGiaTriTimKiem[arrDSTruong[i]]) == false)
+                    if (String.IsNullOrEmpty(dicGiaTriTimKiem[arrDSTruong[i]]) == false)
                     {
-                        if (arrDSTruong[i] == "sLNS" && arrGiaTriTimKiem[arrDSTruong[i]] != "109")
-                        {
-                            DK += String.Format(" AND sLNS IN ({0}) ", sLNS);
-                        }
-                        else
-                        {
-                            DK += String.Format(" AND {0} LIKE @{0}", arrDSTruong[i]);
-                            cmd.Parameters.AddWithValue("@" + arrDSTruong[i], "%" + arrGiaTriTimKiem[arrDSTruong[i]] + "%");
-                        }
+                        dk += String.Format(" AND {0} LIKE @{0}", arrDSTruong[i]);
+                        cmd.Parameters.AddWithValue("@" + arrDSTruong[i], "%" + dicGiaTriTimKiem[arrDSTruong[i]] + "%");
                     }
                 }
             }
             if (dt.Rows.Count > 0)
-                DK += " AND( ";
+                dk += " AND( ";
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 String Nguon = Convert.ToString(dt.Rows[i]["sLNS"]).Substring(0, 1);
                 String LoaiNS = Convert.ToString(dt.Rows[i]["sLNS"]).Substring(0, 3);
-                DK += "  (sLNS=@sLNS" + i + " OR (SUBSTRING(sLNS,1,1)=" + Nguon + " AND LEN(sLNS)=1) OR  (SUBSTRING(sLNS,1,3)=" + LoaiNS + " AND LEN(sLNS)=3))";
+                //dk += "  (sLNS=@sLNS" + i + " OR (SUBSTRING(sLNS,1,1)=" + Nguon + " AND LEN(sLNS)=1) OR  (SUBSTRING(sLNS,1,3)=" + LoaiNS + " AND LEN(sLNS)=3))";
+                dk += "  (sLNS=@sLNS" + i + " OR sLNS=" + Nguon + " OR  sLNS=" + LoaiNS + ")";
                 if (i < dt.Rows.Count - 1)
-                    DK += " OR ";
+                    dk += " OR ";
                 cmd.Parameters.AddWithValue("@sLNS" + i, dt.Rows[i]["sLNS"]);
             }
             if (dt.Rows.Count > 0)
-                DK += " ) ";
-            SQL = String.Format("SELECT iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,bLaHangCha,sXauNoiMa,{0},{1} FROM NS_MucLucNganSach WHERE {2}  ORDER BY {3}", MucLucNganSachModels.strDSTruong, MucLucNganSachModels.strDSDuocNhapTruongTien, DK, MucLucNganSachModels.strDSTruongSapXep);
-            cmd.CommandText = SQL;
-            vR = Connection.GetDataTable(cmd);
+                dk += " ) ";
+            sql = String.Format("SELECT iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,bLaHangCha,sXauNoiMa,{0},{1} FROM NS_MucLucNganSach WHERE {2}  ORDER BY {3}", MucLucNganSachModels.strDSTruong, MucLucNganSachModels.strDSDuocNhapTruongTien, dk, MucLucNganSachModels.strDSTruongSapXep);
+            cmd.CommandText = sql;
+            dtResult = Connection.GetDataTable(cmd);
             cmd.Dispose();
-            //Lay toan bo Muc luc ngan sach-->
+
+            //Lấy dữ liệu từ bảng DTBS_ChungTuChiTiet
             cmd = new SqlCommand();
-            DK = "iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu";
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-
-
-            if (arrGiaTriTimKiem != null)
+            dk = "iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu";
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTu);
+            if (dicGiaTriTimKiem != null)
             {
-                if (String.IsNullOrEmpty(arrGiaTriTimKiem["iID_MaDonVi"]) == false)
+                if (String.IsNullOrEmpty(dicGiaTriTimKiem["iID_MaDonVi"]) == false)
                 {
-                    DK += String.Format(" AND {0} LIKE @{0}", "iID_MaDonVi");
-                    cmd.Parameters.AddWithValue("@" + "iID_MaDonVi", "%" + arrGiaTriTimKiem["iID_MaDonVi"] + "%");
+                    dk += String.Format(" AND {0} LIKE @{0}", "iID_MaDonVi");
+                    cmd.Parameters.AddWithValue("@" + "iID_MaDonVi", "%" + dicGiaTriTimKiem["iID_MaDonVi"] + "%");
                 }
                 for (int i = 0; i < arrDSTruong.Length; i++)
                 {
-                    if (String.IsNullOrEmpty(arrGiaTriTimKiem[arrDSTruong[i]]) == false)
+                    if (String.IsNullOrEmpty(dicGiaTriTimKiem[arrDSTruong[i]]) == false)
                     {
-                        if (arrDSTruong[i] == "sLNS" && arrGiaTriTimKiem[arrDSTruong[i]] !="109")
-                        {
-                            DK += String.Format(" AND sLNS IN ({0}) ", sLNS);
-                        }
-                        else
-                        {
-                            DK += String.Format(" AND {0} LIKE @{0}", arrDSTruong[i]);
-                            cmd.Parameters.AddWithValue("@" + arrDSTruong[i], "%" + arrGiaTriTimKiem[arrDSTruong[i]] + "%");
-                        }
+                        dk += String.Format(" AND {0} LIKE @{0}", arrDSTruong[i]);
+                        cmd.Parameters.AddWithValue("@" + arrDSTruong[i], "%" + dicGiaTriTimKiem[arrDSTruong[i]] + "%");
                     }
                 }
             }
-            DK += " AND (";
+            dk += " AND (";
             for (int i = 1; i < arrDSTruongTien.Length - 8; i++)
             {
-                DK += arrDSTruongTien[i] + "<>0 OR ";
+                dk += arrDSTruongTien[i] + "<>0 OR ";
             }
-            DK = DK.Substring(0, DK.Length - 3);
-            DK += ") ";
+            dk = dk.Substring(0, dk.Length - 3);
+            dk += ") ";
 
-
-            SQL = String.Format("SELECT *,sTenDonVi as sTenDonVi_BaoDam FROM DTBS_ChungTuChiTiet WHERE {0} ORDER BY sXauNoiMa,iID_MaDonVi", DK);
-            cmd.CommandText = SQL;
+            sql = String.Format("SELECT *,sTenDonVi as sTenDonVi_BaoDam FROM DTBS_ChungTuChiTiet WHERE {0} ORDER BY sXauNoiMa,iID_MaDonVi", dk);
+            cmd.CommandText = sql;
 
             DataTable dtChungTuChiTiet = Connection.GetDataTable(cmd);
             int cs0 = 0;
             DataColumn column;
 
-
-
             for (int j = 0; j < arrDSTruongTien.Length; j++)
             {
-
-
                 column = new DataColumn(arrDSTruongTien[j], typeof(String));
                 column.AllowDBNull = true;
-                vR.Columns.Add(column);
+                dtResult.Columns.Add(column);
 
             }
-            int vRCount = vR.Rows.Count;
+            int vRCount = dtResult.Rows.Count;
             for (int i = 0; i < vRCount; i++)
             {
                 int count = 0;
@@ -296,7 +283,7 @@ namespace VIETTEL.Models
                     Boolean ok = true;
                     for (int k = 0; k < arrDSTruong.Length; k++)
                     {
-                        if (Convert.ToString(vR.Rows[i][arrDSTruong[k]]) != Convert.ToString(dtChungTuChiTiet.Rows[j][arrDSTruong[k]]))
+                        if (Convert.ToString(dtResult.Rows[i][arrDSTruong[k]]) != Convert.ToString(dtChungTuChiTiet.Rows[j][arrDSTruong[k]]))
                         {
                             ok = false;
                             break;
@@ -306,42 +293,41 @@ namespace VIETTEL.Models
                     {
                         if (count == 0)
                         {
-                            for (int k = 0; k < vR.Columns.Count - 1; k++)
+                            for (int k = 0; k < dtResult.Columns.Count - 1; k++)
                             {
-                                if ((vR.Columns[k].ColumnName.StartsWith("b") == false && vR.Columns[k].ColumnName != "iID_MaMucLucNganSach_Cha") || vR.Columns[k].ColumnName == "bLaHangCha")
-                                    vR.Rows[i][k] = dtChungTuChiTiet.Rows[j][vR.Columns[k].ColumnName];
+                                if ((dtResult.Columns[k].ColumnName.StartsWith("b") == false && dtResult.Columns[k].ColumnName != "iID_MaMucLucNganSach_Cha") || dtResult.Columns[k].ColumnName == "bLaHangCha")
+                                    dtResult.Rows[i][k] = dtChungTuChiTiet.Rows[j][dtResult.Columns[k].ColumnName];
                                 else
-                                    vR.Rows[i][k] = vR.Rows[i][k];
+                                    dtResult.Rows[i][k] = dtResult.Rows[i][k];
                             }
                             count++;
                         }
                         else
                         {
-                            DataRow row = vR.NewRow();
-                            for (int k = 0; k < vR.Columns.Count - 1; k++)
+                            DataRow row = dtResult.NewRow();
+                            for (int k = 0; k < dtResult.Columns.Count - 1; k++)
                             {
-                                if ((vR.Columns[k].ColumnName.StartsWith("b") == false && vR.Columns[k].ColumnName != "iID_MaMucLucNganSach_Cha") || vR.Columns[k].ColumnName == "bLaHangCha")
-                                    row[k] = dtChungTuChiTiet.Rows[j][vR.Columns[k].ColumnName];
+                                if ((dtResult.Columns[k].ColumnName.StartsWith("b") == false && dtResult.Columns[k].ColumnName != "iID_MaMucLucNganSach_Cha") || dtResult.Columns[k].ColumnName == "bLaHangCha")
+                                    row[k] = dtChungTuChiTiet.Rows[j][dtResult.Columns[k].ColumnName];
                                 else
                                 {
-                                    row[k] = vR.Rows[i][k];
+                                    row[k] = dtResult.Rows[i][k];
                                 }
                             }
-                            vR.Rows.InsertAt(row, i + 1);
+                            dtResult.Rows.InsertAt(row, i + 1);
                             i++;
                             vRCount++;
                         }
                     }
                 }
-
             }
-            vR.Columns.Add("bPhanCap", typeof(Boolean));
-            dtChungTu.Dispose();
+            dtResult.Columns.Add("bPhanCap", typeof(Boolean));
             dtChungTuChiTiet.Dispose();
-            vR.Dispose();
+            dtResult.Dispose();
             cmd.Dispose();
-            return vR;
+            return dtResult;
         }
+
         public static DataTable GetChungTuChiTiet_ChiTapTrung(String iID_MaChungTu, Dictionary<String, String> arrGiaTriTimKiem, String MaND, String sLNS)
         {
 
@@ -595,7 +581,6 @@ SELECT sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
             cmd.Dispose();
             return vR;
         }
-
 
         public static DataTable GetChungTuChiTietLan2(String iID_MaChungTu, Dictionary<String, String> arrGiaTriTimKiem, String MaND, String sLNS)
         {
@@ -1448,7 +1433,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
                     sDSLNS += sLNS + ";";
                     cmd = new SqlCommand();
                     cmd.Parameters.AddWithValue("@sDSLNS", sDSLNS);
-                    DuToan_ChungTuModels.UpdateRecord(iID_MaChungTu, cmd.Parameters, MaND, IPSua);
+                    DuToanBS_ChungTuModels.UpdateRecord(iID_MaChungTu, cmd.Parameters, MaND, IPSua);
                     cmd.Dispose();
                 }
                 dtChungTu.Dispose();

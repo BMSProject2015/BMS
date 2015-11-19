@@ -47,7 +47,6 @@ namespace VIETTEL.Models
             bang.Save();
             return false;
         }
-       
         public static DataTable getDanhSachChungTu_TongHopDuyet(String sMaND, String sLNS)
         {
             DataTable vR;
@@ -816,25 +815,7 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             string dk = "";
             SqlCommand cmd = new SqlCommand();
 
-            //Ngân sách bảo đảm ngành kỹ thuật
-            if (sLNS == "1040100" && iKyThuat == "1")
-            {
-                dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeChiTieu, maND);
-            }
-            //Ngân sách bảo đảm ngành khác
-            else if (sLNS == "1040100,109")
-            {
-                dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
-            }
-            //Các loại ngân sách khác
-            else
-            {
-                dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
-                dk += " AND (sDSLNS NOT LIKE '104%'  AND sDSLNS NOT LIKE '109%'  )  ";
-            }
-
-            dk += " AND iTrangThai = 1 AND iiD_MaDonVi is null";
-
+            dk = "iTrangThai = 1 AND iiD_MaDonVi is null";
             dk += String.Format(" AND iNamLamViec={0}", ReportModels.LayNamLamViec(maND));
 
             //Xem danh sách chứng từ của 1 chứng từ TLTH
@@ -856,6 +837,26 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             //Xem danh sách tất cả chứng từ
             else
             {
+                //Ngân sách bảo đảm ngành kỹ thuật
+                if (sLNS == "1040100" && iKyThuat == "1")
+                {
+                    dk += " AND ";
+                    dk += LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeChiTieu, maND);
+                }
+                //Ngân sách bảo đảm ngành khác
+                else if (sLNS == "1040100,109")
+                {
+                    dk += " AND ";
+                    dk += LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
+                }
+                //Các loại ngân sách khác
+                else
+                {
+                    dk += " AND ";
+                    dk += LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
+                    dk += " AND (sDSLNS NOT LIKE '104%'  AND sDSLNS NOT LIKE '109%'  )  ";
+                }
+
                 //Điều kiện phòng ban
                 DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(maND);
                 string maPhongBan = "";
@@ -886,9 +887,9 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
                 if (laTroLyTongHop == false)
                     LayTheoMaNDTao = true;
 
+                //Điều kiện loại ngân sách
             }
 
-            //Điều kiện loại ngân sách
             if (!String.IsNullOrEmpty(sLNS) && sLNS != "-1")
             {
                 String[] arrLNS = sLNS.Split(',');
@@ -902,7 +903,6 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
                 }
                 dk += " ) ";
             }
-
             //Điều kiện loại ngân sách tìm kiế
             if (!String.IsNullOrEmpty(sLNS_TK))
             {
@@ -983,18 +983,13 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <param name="trang"></param>
         /// <param name="soBanGhi"></param>
         /// <returns></returns>
-        public static DataTable LayDanhSachChungTuTLTH(string maChungTuTLTHCuc, string sLNS, string maND, bool layTheoMaNDTao, string tuNgay, string denNgay, string maTrangThaiDuyet, int trang = 0, int soBanGhi = 0)
+        public static DataTable LayDanhSachChungTuTLTH(string maChungTuTLTHCuc, string maND, bool layTheoMaNDTao, string tuNgay, string denNgay, string maTrangThaiDuyet, int trang = 0, int soBanGhi = 0)
         {
             DataTable result;
             SqlCommand cmd = new SqlCommand();
-            String dk = "";
-            if (sLNS == "1040100")
-                dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeDuToan, maND);
-            else
-                dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
-
+            string dk = "";
+            dk = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, maND);
             dk += " AND iTrangThai = 1 ";
-
             dk += String.Format(" AND iNamLamViec={0}", ReportModels.LayNamLamViec(maND));
 
             //Xem danh sách chứng từ TLTH của chứng từ TLTH cục
@@ -1149,7 +1144,7 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Loại ngân sách</param>
         /// <returns></returns>
-        public static DataTable LayDanhSachChungDeGomTLTH(string maND, string sLNS)
+        public static DataTable LayDanhSachChungDeGomTLTH(string maND)
         {
             DataTable result;
             SqlCommand cmd = new SqlCommand();
@@ -1166,25 +1161,17 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             }
             if (!String.IsNullOrEmpty(maPhongBan))
             {
-                dk += "iID_MaPhongBan=@iID_MaPhongBan AND";
+                dk += "iID_MaPhongBan=@iID_MaPhongBan";
                 cmd.Parameters.AddWithValue("@iID_MaPhongBan", maPhongBan);
             }
             else
             {
-                dk += "1=1 AND";
+                dk += "1=1";
             }
             // Lay ma trang thai chung tu donvi trinh duyet
             int maTrangThaiDuyet = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan);
             maTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(maTrangThaiDuyet);
 
-            if (sLNS == "1040100")
-            {
-                dk += " sDSLNS LIKE '104%' ";
-            }
-            else
-            {
-                dk += " sDSLNS NOT LIKE '104%'";
-            }
             string SQL = String.Format(@"SELECT * 
                                 FROM 
                                     DTBS_ChungTu 
@@ -1210,10 +1197,10 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
         /// <param name="sLNS"></param>
         /// <param name="maChungTuTLTH"></param>
         /// <returns></returns>
-        public static DataTable LayDanhSachChungTuDeSuaTLTH(string maND, string sLNS, string maChungTuTLTH)
+        public static DataTable LayDanhSachChungTuDeSuaTLTH(string maND, string maChungTuTLTH)
         {
             //Danh sách chứng từ chưa gom
-            DataTable dtChungTuChuaGom = LayDanhSachChungDeGomTLTH(maND, sLNS);
+            DataTable dtChungTuChuaGom = LayDanhSachChungDeGomTLTH(maND);
             DataTable result;
             SqlCommand cmd = new SqlCommand();
 

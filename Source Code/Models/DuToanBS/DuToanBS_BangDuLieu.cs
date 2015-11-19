@@ -9,7 +9,7 @@ using System.Data;
 using DomainModel.Controls;
 using System.Data.SqlClient;
 
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     /// <summary>
     /// Lớp DuToanBS_BangDuLieu cho phần bảng của Phân bổ chỉ tiêu
@@ -140,31 +140,6 @@ namespace VIETTEL.Models
             //bao dam
             else
             {
-                //Boolean ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, MaND,
-                //                                                                        iID_MaTrangThaiDuyet);
-                //if (LuongCongViecModel.KiemTra_TrangThaiDaDuyet(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet))
-                //{
-                //    _ChiDoc = true;
-                //}
-
-                //if (ND_DuocSuaChungTu == false)
-                //{
-                //    _ChiDoc = true;
-                //}
-
-                //if (LuongCongViecModel.KiemTra_TrangThaiTrinhDuyet(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet) &&
-                //    ND_DuocSuaChungTu)
-                //{
-                //    _CoCotDuyet = true;
-                //    _DuocSuaDuyet = true;
-                //}
-
-                //if (MaND==iID_MaNguoiDungTao &&LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet))
-                //{
-                //    _CoCotDuyet = true;
-                //}
-
-                //_DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeChiTieu, MaND);
                 bool ND_DuocSuaChungTu = false;
                 bool CheckTrangThaiDuyetMoiTao = false;
                 if (iKyThuat == "1")
@@ -237,7 +212,7 @@ namespace VIETTEL.Models
                 }
                 else
                 {
-                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTiet(_iID_Ma, arrGiaTriTimKiem, MaND, sLNS);
+                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.LayChungTuChiTiet(_iID_Ma, arrGiaTriTimKiem, MaND, sLNS);
                 }
             }
 
