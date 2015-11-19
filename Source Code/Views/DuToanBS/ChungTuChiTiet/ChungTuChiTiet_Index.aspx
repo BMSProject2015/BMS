@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site_KeToan_Default.Master"
     Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
@@ -11,7 +10,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
   <script src="<%= Url.Content("~/Scripts/jsDuToanBS.js?id=") %><%=DateTime.Now.ToString("yyMMddHHmmss") %>"
         type="text/javascript"></script>
-        
     <%
         string iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
         string ChiNganSach = Convert.ToString(ViewData["ChiNganSach"]);
@@ -29,12 +27,9 @@
         }
         
         NameValueCollection data;
-        if (iLoai == "1")
-        {
-            data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(iID_MaChungTu);
-        }
+        
         //ky thuat lan 2
-        else if(iLoai == "4")
+        if(iLoai == "4")
         {
              data = DuToanBS_ChungTuModels.LayThongTin_KyThuatLan2(iID_MaChungTu);
         }
@@ -44,13 +39,8 @@
         }
         int iID_MaTrangThaiDuyet = Convert.ToInt32(data["iID_MaTrangThaiDuyet"]);
         string MaND = User.Identity.Name;
-
-        String sLNS = Convert.ToString(Request.QueryString["sLNS"]);
-        if (String.IsNullOrEmpty(sLNS))
-        {
-            sLNS = data["sDSLNS"];
-        }
-        String iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
+        string sLNS = data["sDSLNS"];
+        string iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
     %>
     <%--Lien ket nhanh--%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -95,7 +85,6 @@
         <div id="divChungTuChiTietHT" style="float: right; position: relative; width: 100%;">
             <table width="100%" cellpadding="2" cellspacing="2">
                 <tr>
-                    
                     <td>
                         <div class="box_tong">
                             <div id="nhapform">
@@ -119,21 +108,18 @@
                                                     <%=data["sMoTa"]%></div>
                                             </td>--%>
                                             <td class="td_form2_td1" style="width: 10%">
-                                                <div>
-                                                    <b>BQL:</b></div>
+                                                <div><b>BQL:</b></div>
                                             </td>
                                             <td class="td_form2_td5" style="width: 30%">
-                                                <div>
-                                                    <%=data["sTenPhongBan"]%></div>
+                                                <div><%=data["sTenPhongBan"]%></div>
                                             </td>
                                             <td class="td_form2_td1" style="width: 15%">
-                                                <div>
-                                                    <b>Nội dung đợt:</b></div>
+                                                <div><b>Nội dung đợt:</b></div>
                                             </td>
                                             <td class="td_form2_td5" style="width: 45%">
                                             <%if (iChiTapTrung == "1")
                                               {
-                                                  String sTenDonVi = DonViModels.Get_TenDonVi(data["iID_MaDonVi"]);%>
+                                                  string sTenDonVi = DonViModels.Get_TenDonVi(data["iID_MaDonVi"]);%>
                                                 <div>
                                                     <%=data["iID_MaDonVi"]+ "- "+sTenDonVi%></div>
                                                     <%}
@@ -149,31 +135,32 @@
                             </div>
                         </div>
                         <div style="width: 100%; float: left; margin-top: 2px;">
+                            <%--Thanh hướng dẫn--%>
                             <div class="box_tong">
                                 <div class="title_tong">
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                          <tr>
-                        <td>
-                            <span>Thông tin chứng từ</span>
-                        </td>
-                          <td align="right">
-                                <span>F2:Thêm dòng</span>
-                            </td>
-                            <td align="right" style="width: 100px;">
-                                <span>Delete: Xóa</span>
-                            </td>
-                            <td align="right" style="width: 140px;">
-                                <span>Backspace: Sửa </span>
-                            </td>
-                            <td align="left">
-                                <span>F10: Lưu</span>
-                            </td>
-                    </tr>
+                                            <td>
+                                                <span>Thông tin chứng từ</span>
+                                            </td>
+                                            <td align="right">
+                                                <span>F2:Thêm dòng</span>
+                                            </td>
+                                            <td align="right" style="width: 100px;">
+                                                <span>Delete: Xóa</span>
+                                            </td>
+                                            <td align="right" style="width: 140px;">
+                                                <span>Backspace: Sửa </span>
+                                            </td>
+                                            <td align="left">
+                                                <span>F10: Lưu</span>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </div>
                             </div>
                             <div>
-                                <%Html.RenderPartial("~/Views/DuToanBS/ChungTuChiTiet/ChungTuChiTiet_Index_DanhSach.ascx", new { ControlID = "ChungTuChiTiet_Index_DanhSach", MaND = User.Identity.Name, ChucNangCapNhap = true, sLNS = sLNS, iLoai = iLoai, iChiTapTrung = iChiTapTrung }); %>
+                                <%Html.RenderPartial("~/Views/DuToanBS/ChungTuChiTiet/ChungTuChiTiet_Index_DanhSach.ascx", new { ControlID = "ChungTuChiTiet_Index_DanhSach", MaND = User.Identity.Name, ChucNangCapNhap = true, iLoai = iLoai, iChiTapTrung = iChiTapTrung}); %>
                             </div>
                         </div>
                     </td>

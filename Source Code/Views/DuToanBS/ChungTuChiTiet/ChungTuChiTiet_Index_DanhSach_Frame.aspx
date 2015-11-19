@@ -5,30 +5,30 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="System.ComponentModel" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <%  
-        String LoadLai = Convert.ToString(ViewData["LoadLai"]);
+        string LoadLai = Convert.ToString(ViewData["LoadLai"]);
         if (LoadLai == "1")
         {
     %>
     <script type="text/javascript">
         $(document).ready(function () {
             parent.reloadPage();
-
         });
     </script>
     <%
-}
+        }
         else
         {
             string MaND = User.Identity.Name;
-
             string IPSua = Request.UserHostAddress;
             
             //Mã chứng từ.
             string iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
-            if (String.IsNullOrEmpty(iID_MaChungTu)) iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
+            if (String.IsNullOrEmpty(iID_MaChungTu)) 
+                iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
             
             //Mã loại.
             string MaLoai = "";
@@ -53,50 +53,29 @@
                 sLNS = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu", "iID_MaChungTu", iID_MaChungTu, "sDSLNS"));
             //????
             string iID_MaPhongBanDich = "05";
-            //int iCheck = 0;
-
-            //String sL = "", sK = "", sM = "", sTM = "", sTTM = "";
-            //if (sLNS.Substring(0, 2) == "80")
-            //{
-            //    DataTable dt_LNS = DuToan_ChungTuChiTietModels.Get_LNS_80(sLNS, ref iCheck);
-            //    if (dt_LNS != null && dt_LNS.Rows.Count > 0 && iCheck == 1)
-            //    {
-            //        sL = Convert.ToString(dt_LNS.Rows[0]["sL"]);
-            //        sK = Convert.ToString(dt_LNS.Rows[0]["sK"]);
-            //        sM = Convert.ToString(dt_LNS.Rows[0]["sM"]);
-            //        sTM = Convert.ToString(dt_LNS.Rows[0]["sTM"]);
-            //        sTTM = Convert.ToString(dt_LNS.Rows[0]["sTTM"]);
-            //        dt_LNS.Dispose();
-            //    }
-            //}
-            //else
-            //{
-            //    DataTable dt_LNS = DuToan_ChungTuChiTietModels.Get_LNS(sLNS, ref iCheck);
-            //    if (dt_LNS != null && dt_LNS.Rows.Count > 0 && iCheck == 1)
-            //    {
-            //        sL = Convert.ToString(dt_LNS.Rows[0]["sL"]);
-            //        sK = Convert.ToString(dt_LNS.Rows[0]["sK"]);
-            //        dt_LNS.Dispose();
-            //    }
-            //}
-
+            
             DuToanBS_BangDuLieu bang = new DuToanBS_BangDuLieu(iID_MaChungTu, dicGiaTriTimKiem, MaND, IPSua, sLNS, MaLoai, iLoai, iChiTapTrung);
             string strDSDonVi = bang.strDSDonVi;
             string BangID = "BangDuLieu";
             int Bang_Height = 470;
             int Bang_FixedRow_Height = 50;
-            string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS = sLNS });
+            string sLNS1 = sLNS.Substring(0,3);
+            string BackURL ="";
+            if(sLNS1 =="104" || sLNS1 == "109")
+            {
+                BackURL = Url.Action("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = iLoai });
+            }
+            else
+            {
+                sLNS1 = sLNS.Substring(0,1);
+                BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1});
+            }
             int iID_MaTrangThaiDuyet_TuChoi = 0;
             int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
             //Nếu loại NS bảo đảm
             if (sLNS == "1040100")
             {
-                if (iLoai == "1")
-                {
-                    //iID_MaTrangThaiDuyet_TuChoi = DuToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TuChoi(MaND, iID_MaChungTu);
-                    //iID_MaTrangThaiDuyet_TrinhDuyet = DuToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_Gom_TrinhDuyet(MaND, iID_MaChungTu);
-                }
-                else if(iLoai=="4")
+                if(iLoai=="4")
                 {
                     
                 }
@@ -109,22 +88,8 @@
             }
             else
             {
-                //gom
-                if (iLoai == "1")
-                {
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTH(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTH(MaND, iID_MaChungTu);
-                }
-                else if (iLoai == "4")
-                {
-                   // iID_MaTrangThaiDuyet_TuChoi = DuToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TuChoi(MaND, iID_MaChungTu);
-                    //iID_MaTrangThaiDuyet_TrinhDuyet = DuToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_BaoDam_TrinhDuyet(MaND, iID_MaChungTu);
-                }
-                else
-                {
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
-                }
+                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
+                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
             }
     %>
     <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>
@@ -159,15 +124,14 @@
         <input type="hidden" id="idXauCacHangDaXoa" name="idXauCacHangDaXoa" value="" />
         <input type="hidden" id="idMaMucLucNganSach" name="idMaMucLucNganSach" value="<%=HttpUtility.HtmlEncode(bang.strMaMucLucNganSach)%>" />
         <%
-            if (bang.ChiDoc == false)
-            {
-        %>
-        </form>
-        <%
-            }
+        if (bang.ChiDoc == false)
+        {
+            %>
+            </form>
+            <%
+        }
         %>
     </div>
-    
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table_form2">
         <tr>
             <td>
@@ -176,56 +140,37 @@
         </tr>
         <tr>
         <%
-            if (bang.ChiDoc == false)
-            {
-    %>
-    <%if (sLNS == "1040100")
-      { %>
-    <td align="right" style="padding-right:10px;width:5%">        
-                         <div onclick="OnInit_CT_NEW(500, 'Nhập excel');">
+        if (bang.ChiDoc == false)
+        {
+            if (sLNS == "1040100")
+            {%>
+            <%--Button Nhập Excel--%>
+            <td align="right" style="padding-right:10px;width:5%">        
+                <div onclick="OnInit_CT_NEW(500, 'Nhập excel');">
                     <%= Ajax.ActionLink("Nhập Excel", "Index", "NhapNhanh", new { id = "DuToan_NhapExcel", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
             <%} %>
-             <td align="right" style="padding-right:10px;width:40%;">
+            <%--Button Thực Hiện--%>
+            <td align="right" style="padding-right:10px;width:40%;">
                 <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();"
                     value="<%=NgonNgu.LayXau("Thực hiện")%>" />
-            </td>
-               <td align="right" style="padding-right:10px;width:6%">        
-
-                <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
             </td>
             <%
             if (iID_MaTrangThaiDuyet_TuChoi > 0)
             {
-                %>
-             <td align="right" style="padding-right:10px;width:6%">        
-
-               <%--<button class='button' style="float: left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">
-                        Từ chối</button>--%>
-
-                         <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
+            %>
+            <td align="right" style="padding-right:10px;width:6%">        
+                <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
                     <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "DuToanBS_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
-            <%} %>
-             <%
+            <%} 
             if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
             {
-                String TrinhDuyet = "Duyệt";
-                if (LuongCongViecModel.KiemTra_NguoiDungDuocDuyet(MaND, PhanHeModels.iID_MaPhanHeDuToan))
-                {
-                    TrinhDuyet = "Duyệt";
-                }
-                           
-                                
-                %>
-             <td align="right" style="padding-right:10px;width:6%">        
-
-              <%-- <button class='button' style="float: left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);">
-                        <%=TrinhDuyet%></button>--%>
-
-                           <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
+            %>
+            <td align="right" style="padding-right:10px;width:6%">        
+                <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
                     <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "DuToanBS_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
@@ -234,7 +179,7 @@
             
            <%if (iLoai == "1")
              { %>
-           <td align="right"  style="padding-right:10px;">
+            <td align="right"  style="padding-right:10px;">
                 <div onclick="OnInit_CT_NEW(700, 'Báo cáo in kiểm');">
                     <%= Ajax.ActionLink("Báo cáo", "Index", "NhapNhanh", new { id = "DuToanBS_BaoCaoInKiem", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
@@ -242,19 +187,22 @@
             <%}
              else
              {
-                  %>
-                  <td align="right" style="padding-right:10px;">
+            %>
+            <td align="right" style="padding-right:10px;">
                 <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
                     <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "DuToanBS_TuyChinh", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
-           <td  style="padding-right:10px;">
+            <td  style="padding-right:10px;">
                 <div onclick="OnInit_CT_NEW(700, 'Báo cáo in kiểm');">
                     <%= Ajax.ActionLink("Báo cáo", "Index", "NhapNhanh", new { id = "DuToanBS_BaoCaoInKiem", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu,iChiTapTrung=iChiTapTrung }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
-                  <%} %>
-           <td align="right" style="padding-right:10px;width:40%;">
+            <td align="right" style="padding-right:10px;width:6%">        
+                <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
+            </td>
+            <%} %>
+            <td align="right" style="padding-right:10px;width:40%;">
             </td>
         </tr>
         <tr>
@@ -264,12 +212,9 @@
         </tr>
     </table>
     <%
-//dtChungTuChiTiet_TongCong.Dispose();
     %>
     <script type="text/javascript">
-     
         $(document).ready(function () {
-        //alert("!");
 //            $("<div>test</div>").dialog({
 //                model: true,
 //                buttons: [
@@ -287,9 +232,6 @@
                 }
 
                 document.getElementById("formDuyet").submit();
-
-                // console.log(document.getElementById("formDuyet"));
-                // return Bang_HamTruocKhiKetThuc();
             });
 
             $('#btnTuChoi').live("click", function () {
@@ -298,13 +240,9 @@
                 if (document.getElementById("sLyDo")) {
                     document.getElementById("sLyDo").value = document.getElementById("DuToan_sLyDo1").value;
                 }
-
                 document.getElementById("formDuyet").submit();
-
-
             });
         });
-        
     </script>
     <script src="<%= Url.Content("~/Scripts/jsBang_Editable.js") %>?id=<%=DateTime.Now.ToString("YYYYMMddHHmmss") %>"
         type="text/javascript"></script>

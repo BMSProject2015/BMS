@@ -13,8 +13,6 @@
     <%
         string MaND = User.Identity.Name;
         string ParentID = "DTBS_ChungTu";
-        
-        string sLNS1 = Convert.ToString(ViewData["sLNS1"]);
         string iLoai = Convert.ToString(ViewData["iLoai"]);
         string maChungTuTLTH = Convert.ToString(ViewData["iID_MaChungTu"]);
         string iID_MaChungTu_CT = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTH", "iID_MaChungTu_TLTH", maChungTuTLTH, "iID_MaChungTu"));
@@ -29,8 +27,8 @@
         NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(maChungTuTLTH);
         
         //Danh sách chứng từ
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND,sLNS1, maChungTuTLTH);
-        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new {sLNS1 = sLNS1, iLoai = 1});
+        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND, maChungTuTLTH);
+        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new {iLoai = 1});
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -52,7 +50,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = maChungTuTLTH }))
+        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTH }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

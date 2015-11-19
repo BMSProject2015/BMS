@@ -118,7 +118,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=1 }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS, iLoai = 1 }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -173,7 +173,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("EditSubmit_Gom", "DuToanBS_ChungTu_BaoDam", new {ParentID = ParentID, sLNS1 = sLNS}))
+                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, sLNS1 = sLNS }))
                     {
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -350,8 +350,8 @@
                     String strDelete = "";
                     if (check) 
                     {
-                        strEdit = MyHtmlHelper.ActionLink(Url.Action("Edit_Gom", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                        strDelete = MyHtmlHelper.ActionLink(Url.Action("Delete_Gom", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                        strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTH", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                        strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTH", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                     }
             %>
             <tr <%=strColor %>>

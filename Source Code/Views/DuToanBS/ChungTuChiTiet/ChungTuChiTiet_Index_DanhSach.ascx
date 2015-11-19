@@ -14,11 +14,6 @@
     string MaND = Convert.ToString(props["MaND"].GetValue(Model));
     string IPSua = Request.UserHostAddress;
     string iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
-    string sLNS = Convert.ToString(props["sLNS"].GetValue(Model));
-    if (String.IsNullOrEmpty(sLNS))
-    {
-         sLNS = Convert.ToString(Request.QueryString["sLNS"]);
-    }
     string iLoai = Convert.ToString(props["iLoai"].GetValue(Model));
     string iChiTapTrung = Convert.ToString(props["iChiTapTrung"].GetValue(Model));
     string iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
@@ -36,36 +31,12 @@
         strDSTruong = MucLucNganSachModels.strDSTruong;
         strDSTruongDoRong = MucLucNganSachModels.strDSTruongDoRong;
     }
-    //}
-    //else
-    //{
-    //    if (sLNS.Substring(0, 2) == "80")
-    //    {
-    //        strDSTruong = "iID_MaDonVi," + MucLucNganSachModels.strDSTruong_80;
-    //        strDSTruongDoRong = "250," + MucLucNganSachModels.strDSTruongDoRong_80;
-    //    }
-    //    else
-    //    {
-
-
-    //        if (sLNS.Length == 7)
-    //        {
-    //            strDSTruong = "iID_MaDonVi," + MucLucNganSachModels.strDSTruong_LNS;
-    //            strDSTruongDoRong = "250," + MucLucNganSachModels.strDSTruongDoRong_LNS;
-    //        }
-    //        else
-    //        {
-    //            strDSTruong = "iID_MaDonVi," + MucLucNganSachModels.strDSTruong_LNS_New;
-    //            strDSTruongDoRong = "250," + MucLucNganSachModels.strDSTruongDoRong_LNS_New;
-    //        }
-    //    }
-    //}
     string[] arrDSTruong = strDSTruong.Split(',');
     string[] arrDSTruongDoRong = strDSTruongDoRong.Split(',');
-    Dictionary<string, string> arrGiaTriTimKiem = new Dictionary<string, string>();
+    Dictionary<string, string> dicGiaTriTimKiem = new Dictionary<string, string>();
     for (int i = 0; i < arrDSTruong.Length; i++)
     {
-        arrGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
+        dicGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
     }
 %>
 
@@ -97,7 +68,7 @@
                     %>
                     <%if(iLoai!="4"){ %>
                     <td style="text-align:left;width:<%=iColWidth%>px;">
-                        <%=MyHtmlHelper.TextBox(new { ParentID = ParentID, Value = arrGiaTriTimKiem[arrDSTruong[j]], TenTruong = arrDSTruong[j], LoaiTextBox = "2", Attributes = strAttr })%>
+                        <%=MyHtmlHelper.TextBox(new { ParentID = ParentID, Value = dicGiaTriTimKiem[arrDSTruong[j]], TenTruong = arrDSTruong[j], LoaiTextBox = "2", Attributes = strAttr })%>
                     </td>
                     <%} %>
                     <%
@@ -105,7 +76,7 @@
                 %>
             </tr>
             </table>
-            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, sLNS=sLNS,iLoai=iLoai,iChiTapTrung=iChiTapTrung})%>"></iframe>
+            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, iLoai=iLoai,iChiTapTrung=iChiTapTrung})%>"></iframe>
         </div>
     </div>
 </div>

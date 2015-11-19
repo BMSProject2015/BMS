@@ -33,8 +33,8 @@
     {
         dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
     }
-
-    using (Html.BeginForm("EditSubmit", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS, iKyThuat = iKyThuat }))
+    string backURL = Url.Action("Index", "DuToanBS_ChungTu_BaoDam");
+    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS, iKyThuat = iKyThuat }))
     {
 %>
 <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
@@ -92,7 +92,7 @@
                                         </td>          
                                             <td width="5px">&nbsp;</td>          
                                         <td class="td_form2_td5">
-                                            <input class="button" type="button" value="Hủy" onclick="history.go(-1)" />
+                                            <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                         </td>
                                     </tr>
                                 </table>
@@ -108,5 +108,9 @@
     dtChungTu.Dispose();
     }       
 %>
+<script type="text/javascript">
+         function Huy() {
+        window.parent.location.href = '<%=BackURL %>';
+</script>
 </asp:Content>
 

@@ -174,7 +174,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("EditSubmit_Gom_THCuc", "DuToan_ChungTu", new {ParentID = ParentID, sLNS1 = sLNS}))
+                    using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToan_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS }))
                     {
 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -367,22 +367,20 @@
                             break;
                         }
                     }
-                    String strEdit = "";
-                    String strDelete = "";
-                    String strduyet = "",strTuChoi;
+                    string strEdit = "";
+                    string strDelete = "";
+                    string strduyet = "",strTuChoi;
                     if (check) 
                     {
                         strEdit = MyHtmlHelper.ActionLink(Url.Action("Edit_Gom", "DuToan_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
                         strDelete = MyHtmlHelper.ActionLink(Url.Action("Delete_Gom", "DuToan_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                     }
 
-                    String strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToan_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS, bTLTH = 1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
-                    String strURLTuChoi = "", strTex = "";
+                    string strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToan_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], sLNS = sLNS, bTLTH = 1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
+                    string strURLTuChoi = "";
                     if (LuongCongViecModel.KiemTra_NguoiDungDuocDuyet(MaND, PhanHeModels.iID_MaPhanHeDuToan) && Convert.ToInt16(R["iID_MaTrangThaiDuyet"]) == LuongCongViecModel.layTrangThaiDuyet(PhanHeModels.iID_MaPhanHeDuToan))
                     {
                         strURLTuChoi = Url.Action("TuChoi", "DuToan_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaChungTu = R["iID_MaChungTu_TLTH"] });
-                        strTex = "Từ chối";
-                         
                     }
                     bool DaDuyet = false;
                     if (LuongCongViecModel.KiemTra_TrangThaiDaDuyet(DuToanModels.iID_MaPhanHe, Convert.ToInt16(R["iID_MaTrangThaiDuyet"])))

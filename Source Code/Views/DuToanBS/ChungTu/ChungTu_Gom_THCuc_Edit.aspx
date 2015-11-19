@@ -14,7 +14,6 @@
         string MaND = User.Identity.Name;
         string ParentID = "DTBS_ChungTu";
         
-        string sLNS1 = Convert.ToString(ViewData["sLNS1"]);
         string maChungTuTLTHCuc = Convert.ToString(ViewData["iID_MaChungTu"]);
 
         string dsMaChungTuTLTH = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTHCuc", "iID_MaChungTu_TLTHCuc", maChungTuTLTHCuc, "iID_MaChungTu_TLTH"));
@@ -52,7 +51,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, MaChungTu = maChungTuTLTHCuc }))
+        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTHCuc }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

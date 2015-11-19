@@ -33,6 +33,7 @@
         string[] arrChungTu = iID_MaChungTu_CT.Split(',');
         NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(iID_MaChungTu);
         DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND, sLNS, iID_MaChungTu);
+        string backURL = Url.Action("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 1 });
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -54,7 +55,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("EditSubmit_Gom", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, sLNS1 = sLNS, MaChungTu = iID_MaChungTu }))
+        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, sLNS1 = sLNS, MaChungTu = iID_MaChungTu }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
@@ -169,7 +170,7 @@
                                                     </td>          
                                                     <td width="5px">&nbsp;</td>          
                                                     <td class="td_form2_td5">
-                                                        <input class="button" type="button" value="Hủy" onclick="history.go(-1)" />
+                                                        <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                                     </td>
                                                 </tr>
                                             </table>
@@ -190,6 +191,10 @@
             $("input:checkbox[check-group='ChungTu']").each(function (i) {
                 this.checked = value;
             });
-        }                                            
+        }
+
+        function Huy() {
+            window.location.href = '<%=BackURL %>';
+        }
     </script>
 </asp:Content>
