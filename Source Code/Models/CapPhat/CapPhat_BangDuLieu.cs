@@ -100,7 +100,7 @@ namespace VIETTEL.Models
 
             _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(CapPhatModels.iID_MaPhanHe, MaND);
 
-            _dtChiTiet = CapPhat_ChungTuChiTietModels.Get_dtChungTuChiTiet(_iID_Ma, arrGiaTriTimKiem, "", MaND);
+            _dtChiTiet = CapPhat_ChungTuChiTietModels.LayDtChungTuChiTietCuc(_iID_Ma, arrGiaTriTimKiem, "", MaND);
 
             _dtChiTiet_Cu = _dtChiTiet.Copy();
 
@@ -240,7 +240,7 @@ namespace VIETTEL.Models
                     }
                 }
             }
-            DataTable dtCapPhat = CapPhat_ChungTuChiTietModels.GetChungTu(_iID_Ma);
+            DataTable dtCapPhat = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(_iID_Ma);
             DataRow dr = dtCapPhat.Rows[0];
             int index = -1;
             if (dtCapPhat != null && dtCapPhat.Rows.Count > 0)
@@ -695,7 +695,10 @@ namespace VIETTEL.Models
         /// <param name="iID_MaNguonNganSach"></param>
         /// <param name="iID_MaNamNganSach"></param>
         /// <returns></returns>
-        public static String LayGiaTri_ChiTieu_DaCap(String iID_MaMucLucNganSach,
+        public static String LayGiaTri_ChiTieu_DaCap(String iDM_MaLoaiCapPhat,
+                                                     String iID_MaTinhChatCapThu,
+                                                     String sDSLNS, 
+                                                     String iID_MaMucLucNganSach,
                                                      String iID_MaDonVi,
                                                      int iNamLamViec,
                                                      String dNgayCapPhat,
@@ -704,7 +707,7 @@ namespace VIETTEL.Models
         {
             String vR = "";
             DataTable dtTongPhanBo = PhanBo_PhanBoChiTietModels.Get_dtTongPhanBoChoDonVi(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec, dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
-            DataTable dtTongDaCapPhat = CapPhat_ChungTuChiTietModels.Get_dtTongCapPhatChoDonVi(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec, dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
+            DataTable dtTongDaCapPhat = CapPhat_ChungTuChiTietModels.LayDtTongCapPhatChoDonVi(iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu,sDSLNS,iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec, dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
 
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
             String strTruong = MucLucNganSachModels.strDSTruongTien_So;

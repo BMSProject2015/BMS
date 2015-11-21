@@ -9,138 +9,44 @@ using DomainModel.Abstract;
 
 namespace VIETTEL.Models
 {
-    public class CapPhat_ChungTuChiTietModels
+    public class CapPhat_ChungTuChiTietModels : CapPhatChungTuChiTietCha
     {
         private static DataTable _Chitiet;
-        public static void ThemChiTiet(String iID_MaCapPhat, String MaND, String IPSua)
-        {
-            String[] arrDSTruongTien = MucLucNganSachModels.strDSTruongTien.Split(',');
-            DataTable dtCapPhat = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
-            //DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
-            DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(MaND);
-            int iNamLamViec = Convert.ToInt32(dtCapPhat.Rows[0]["iNamLamViec"]);
-            int iID_MaNguonNganSach = Convert.ToInt32(dtCapPhat.Rows[0]["iID_MaNguonNganSach"]);
-            int iID_MaNamNganSach = Convert.ToInt32(dtCapPhat.Rows[0]["iID_MaNamNganSach"]);
-            Boolean bChiNganSach = Convert.ToBoolean(dtCapPhat.Rows[0]["bChiNganSach"]);
-
-            Bang bang = new Bang("CP_CapPhatChiTiet");
-            bang.GiaTriKhoa = null;
-            bang.DuLieuMoi = true;
-            bang.MaNguoiDungSua = MaND;
-            bang.IPSua = IPSua;
-            
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaCapPhat", dtCapPhat.Rows[0]["iID_MaCapPhat"]);
-            bang.CmdParams.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", dtCapPhat.Rows[0]["iDM_MaLoaiCapPhat"]);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", dtCapPhat.Rows[0]["iID_MaPhongBan"]);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", dtCapPhat.Rows[0]["iID_MaTrangThaiDuyet"]);
-            bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", dtCapPhat.Rows[0]["iNamLamViec"]);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", dtCapPhat.Rows[0]["iID_MaNguonNganSach"]);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", dtCapPhat.Rows[0]["iID_MaNamNganSach"]);
-            bang.CmdParams.Parameters.AddWithValue("@bChiNganSach", dtCapPhat.Rows[0]["bChiNganSach"]);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaDonVi", "");
-
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                String sLNS = Convert.ToString(dt.Rows[i]["sLNS"]);
-
-                DataTable dtMucLucNganSach = NganSach_HamChungModels.DT_MucLucNganSach_sLNS(sLNS);
-                for (int j = 0; j < dtMucLucNganSach.Rows.Count; j++)
-                {   
-                    //Dien thong tin cua Muc luc ngan sach
-                    NganSach_HamChungModels.ThemThongTinCuaMucLucNganSach(dtMucLucNganSach.Rows[j], bang.CmdParams.Parameters);
-                    //if (Convert.ToBoolean(dtMucLucNganSach.Rows[j]["bLaHangCha"]))
-                    //{
-                    //bang.CmdParams.Parameters["@iID_MaDonVi"].Value = "";
-                        bang.Save();
-                    //}
-                    //else
-                    //{
-                    //    for (int csDonVi = 0; csDonVi < dtDonVi.Rows.Count; csDonVi++)
-                    //    {
-                    //        bang.CmdParams.Parameters["@iID_MaDonVi"].Value = dtDonVi.Rows[csDonVi]["iID_MaDonVi"];
-                    //        bang.Save();
-                    //    }
-                    //}
-                }
-                dtMucLucNganSach.Dispose();
-            }
-
-            dt.Dispose();
-            dtCapPhat.Dispose();
-            //dtDonVi.Dispose();
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_TuChoi(String MaND, String iID_MaCapPhat)
-        {
-            int vR = -1;
-            DataTable dt = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeCapPhat, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TuChoi = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TuChoi(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM CP_CapPhatChiTiet WHERE iID_MaCapPhat=@iID_MaCapPhat AND bDongY=0");
-                    cmd.Parameters.AddWithValue("@iID_MaCapPhat", iID_MaCapPhat);
-                    if (Convert.ToInt32(Connection.GetValue(cmd, 0)) > 0)
-                    {
-                        vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TuChoi);
-                    }
-                    cmd.Dispose();
-                }
-            }
-            return vR;
-        }
-
-        public static int Get_iID_MaTrangThaiDuyet_TrinhDuyet(String MaND, String iID_MaCapPhat)
-        {
-            int vR = -1;
-            DataTable dt = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
-            dt.Dispose();
-            if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeCapPhat, MaND, iID_MaTrangThaiDuyet))
-            {
-                int iID_MaTrangThaiDuyet_TrinhDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(iID_MaTrangThaiDuyet);
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    vR = Convert.ToInt32(iID_MaTrangThaiDuyet_TrinhDuyet);
-                }
-            }
-            return vR;
-        }
-        /*<summary>
-         * Hàm lấy dự liệu của bảng chức từ chi tiết để fill vào lưới nhập
-         * Dư liệu bao gồm:
-         * Lấy tất cả ngân sách từ bảng mục lục ngân sách left join với 
-         * bản chứng từ cấp phát chi tiết
-         * </summary>
-         */
-        public static DataTable Get_dtChungTuChiTiet(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem,String Loai="",String MaND="")
+        /// <summary>
+        /// Hàm lấy dự liệu của bảng chức từ chi tiết để fill vào lưới nhập
+        /// Dư liệu bao gồm:Lấy tất cả ngân sách từ bảng mục lục ngân sách left join với 
+        /// bản chứng từ cấp phát chi tiết
+        /// </summary>
+        /// <param name="iID_MaCapPhat">Mã chứng từ cấp phát</param>
+        /// <param name="arrGiaTriTimKiem">các giá trị tìm kiếm</param>
+        /// <param name="Loai">loại</param>
+        /// <param name="MaND"></param>
+        /// <returns></returns>
+        public static DataTable LayDtChungTuChiTietCuc(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem, String Loai = "", String MaND = "")
         {
             // HungPX: lấy giá trị chi tiết đến của chứng từ
             DataTable dtCapPhat;
             SqlCommand cmdCapPhat = new SqlCommand();
             String sqlCapPhat = "Select * from Cp_CapPhat where iID_MaCapPhat = @iID_MaCapPhat";
-            cmdCapPhat.Parameters.AddWithValue("@iID_MaCapPhat",iID_MaCapPhat);
+            cmdCapPhat.Parameters.AddWithValue("@iID_MaCapPhat", iID_MaCapPhat);
             cmdCapPhat.CommandText = sqlCapPhat;
             dtCapPhat = Connection.GetDataTable(cmdCapPhat);
-            String sLoai = Convert.ToString( dtCapPhat.Rows[0]["sLoai"] );
+            String sLoai = Convert.ToString(dtCapPhat.Rows[0]["sLoai"]);
             dtCapPhat.Dispose();
             cmdCapPhat.Dispose();
-            
+
             //HungPX : điều kiện chỉ lấy những hàng chứng từ nhập chi tiết đến "sLoai"
-            String DKsLoai="";
+            String DKsLoai = "";
             if (string.IsNullOrEmpty(sLoai) || sLoai != "sNG")
             {
                 int IndexChiTietDen = CapPhat_BangDuLieu.getIndex(sLoai);
                 String TenLoaiCon = MucLucNganSachModels.arrDSTruong[IndexChiTietDen + 1];
-                DKsLoai += String.Format(@"AND {0} = '' ",TenLoaiCon);
+                DKsLoai += String.Format(@"AND {0} = '' ", TenLoaiCon);
             }
-           
+
             DataTable vR;
             DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(MaND);
-            DataTable dtChungTu = GetChungTu(iID_MaCapPhat);
+            DataTable dtChungTu = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
             DataRow RChungTu = dtChungTu.Rows[0];
             String iLoai = Convert.ToString(dtChungTu.Rows[0]["iLoai"]);
             String sDSLNS = Convert.ToString(dtChungTu.Rows[0]["sDSLNS"]);
@@ -185,7 +91,7 @@ namespace VIETTEL.Models
             //ngan sach quoc phong tung loai ns 
             if (iLoai == "1")
             {
-               
+
                 if (!string.IsNullOrEmpty(sDSLNS))
                 {
                     DKLoai += String.Format("and sLNS = @sDSLNS");
@@ -202,8 +108,6 @@ namespace VIETTEL.Models
             //Lay toan bo Muc luc ngan sach-->
 
             DataColumn column;
-
-           
 
             for (int j = 0; j < arrDSTruongTien.Length; j++)
             {
@@ -241,7 +145,7 @@ namespace VIETTEL.Models
             //Lay Du Lieu Trong Bang QTA_ChungTuChiTiet
             DK = "iTrangThai=1 AND iID_MaCapPhat=@iID_MaCapPhat";
             DK += " AND (";
-            for (int i = 1; i < arrDSTruongTien.Length - 5;i++)
+            for (int i = 1; i < arrDSTruongTien.Length - 5; i++)
             {
                 DK += arrDSTruongTien[i] + "<>0 OR ";
             }
@@ -261,7 +165,7 @@ namespace VIETTEL.Models
                 int count = 0;
                 for (int j = cs0; j < dtChungTuChiTiet.Rows.Count; j++)
                 {
-                  
+
                     Boolean ok = true;
                     for (int k = 0; k < arrDSTruong.Length; k++)
                     {
@@ -283,12 +187,12 @@ namespace VIETTEL.Models
                         }
                         else
                         {
-                            DataRow row =vR.NewRow();
+                            DataRow row = vR.NewRow();
                             for (int k = 0; k < vR.Columns.Count - 1; k++)
                             {
                                 row[k] = dtChungTuChiTiet.Rows[j][vR.Columns[k].ColumnName];
                             }
-                            vR.Rows.InsertAt(row,i+1);
+                            vR.Rows.InsertAt(row, i + 1);
                             i++;
                             vRCount++;
                         }
@@ -297,8 +201,8 @@ namespace VIETTEL.Models
 
             }
             //HungPX: Lấy thông tin cột tiền đã cấp
-            DataRow dr = dtChungTu.Rows[0];
-            Dien_TruongDaCapPhat(dr, vR);
+            //DataRow dr = dtChungTu.Rows[0];
+            DienTruongDaCapPhat(iID_MaCapPhat, vR);
 
 
             dtChungTu.Dispose();
@@ -308,17 +212,25 @@ namespace VIETTEL.Models
             //_Chitiet = vR.Copy();
             return vR;
         }
-
-        public static DataTable GetChungTu(String iID_MaCapPhat)
-        {
-            DataTable vR;
-            SqlCommand cmd = new SqlCommand("SELECT * FROM CP_CapPhat WHERE iTrangThai=1 AND iID_MaCapPhat=@iID_MaCapPhat");
-            cmd.Parameters.AddWithValue("@iID_MaCapPhat", iID_MaCapPhat);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable Get_dtTongCapPhatChoDonVi(String iID_MaMucLucNganSach,
+        /// <summary>
+        /// Hàm lấy tổng đã cấp phát cho đơn vị 
+        /// Dùng trong trường hợp người dùng nhập một đơn vị mới vào chứng từ chi tiết 
+        /// thì hệ thống phải load thông tin đã cấp phát của đơn vị đó lên lưới
+        /// </summary>
+        /// <param name="iDM_MaLoaiCapPhat"></param>
+        /// <param name="iID_MaTinhChatCapThu"></param>
+        /// <param name="sDSLNS"></param>
+        /// <param name="iID_MaMucLucNganSach"></param>
+        /// <param name="iID_MaDonVi"></param>
+        /// <param name="iNamLamViec"></param>
+        /// <param name="dNgayCapPhat"></param>
+        /// <param name="iID_MaNguonNganSach"></param>
+        /// <param name="iID_MaNamNganSach"></param>
+        /// <returns></returns>
+        public static DataTable LayDtTongCapPhatChoDonVi(String iDM_MaLoaiCapPhat,
+                                                         String iID_MaTinhChatCapThu,
+                                                         String sDSLNS,
+                                                         String iID_MaMucLucNganSach,
                                                          String iID_MaDonVi,
                                                          int iNamLamViec,
                                                          String dNgayCapPhat,
@@ -335,10 +247,24 @@ namespace VIETTEL.Models
             cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
             DK += " AND iID_MaNamNganSach=@iID_MaNamNganSach";
             cmd.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
-            DK += " AND iID_MaMucLucNganSach=@iID_MaMucLucNganSach";
-            cmd.Parameters.AddWithValue("@iID_MaMucLucNganSach", iID_MaMucLucNganSach);
-            DK += " AND iID_MaDonVi=@iID_MaDonVi";
-            cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
+
+            DK += " AND iDM_MaLoaiCapPhat=@iDM_MaLoaiCapPhat";
+            cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", iDM_MaLoaiCapPhat);
+            DK += " AND iID_MaTinhChatCapThu=@iID_MaTinhChatCapThu";
+            cmd.Parameters.AddWithValue("@iID_MaTinhChatCapThu", iID_MaTinhChatCapThu);
+            DK += " AND sLNS=@sLNS";
+            cmd.Parameters.AddWithValue("@sLNS", sDSLNS);
+
+            if (!string.IsNullOrEmpty(iID_MaMucLucNganSach))
+            {
+                DK += " AND iID_MaMucLucNganSach=@iID_MaMucLucNganSach";
+                cmd.Parameters.AddWithValue("@iID_MaMucLucNganSach", iID_MaMucLucNganSach);
+            }
+            if (!string.IsNullOrEmpty(iID_MaDonVi))
+            {
+                DK += " AND iID_MaDonVi=@iID_MaDonVi";
+                cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
+            }
             DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat <= @dNgayCapPhat)";
             cmd.Parameters.AddWithValue("@dNgayCapPhat", dNgayCapPhat);
 
@@ -347,7 +273,7 @@ namespace VIETTEL.Models
             for (int i = 0; i < arrDSTruongTien_So.Length; i++)
             {
                 if (i > 0) strTruong += ",";
-                strTruong += String.Format("SUM({0}) AS Sum{0}",arrDSTruongTien_So[i]);
+                strTruong += String.Format("SUM({0}) AS Sum{0}", arrDSTruongTien_So[i]);
             }
 
             cmd.CommandText = String.Format("SELECT {0} FROM CP_CapPhatChiTiet WHERE {1}", strTruong, DK);
@@ -355,27 +281,37 @@ namespace VIETTEL.Models
             cmd.Dispose();
             return vR;
         }
-        private static void Dien_TruongDaCapPhat(DataRow RChungTuCP, DataTable dtChiTiet)
+        /// <summary>
+        /// Lấy thông tin trường đã cấp phát của chứng từ cấp phát hiện tại
+        /// Giá trị đã cấp phát của đợt này là lũy kế cấp phát đã được duyệt của các đợt trước
+        /// </summary>
+        /// <param name="iID_MaCapPhat">Mã chứng từ cấp phát</param>
+        /// <param name="dtChiTiet"></param>
+        private static void DienTruongDaCapPhat(String iID_MaCapPhat, DataTable dtChiTiet)
         {
-            DataRow R_ChiTiet, R_CP;
+            DataRow RChungTuCP = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat).Rows[0];
+
+            DataRow R_dtChiTiet, R_dtCapPhat;
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
-            DataTable dtCapPhat = Get_dtTongDaCapPhat(Convert.ToString(RChungTuCP["iNamLamViec"]), Convert.ToString(RChungTuCP["iDM_MaLoaiCapPhat"]), Convert.ToString(RChungTuCP["iID_MaTinhChatCapThu"]), Convert.ToString(RChungTuCP["sDSLNS"]), Convert.ToString(RChungTuCP["sLoai"]), Convert.ToString(RChungTuCP["dNgayCapPhat"]));
+            DataTable dtCapPhat = LayDtTongDaCapPhat(RChungTuCP);
+
             _Chitiet = dtCapPhat.Copy();
+
             int tg = 0;
             for (int i = 0; i < dtCapPhat.Rows.Count; i++)
             {
 
-                R_CP = dtCapPhat.Rows[i];
+                R_dtCapPhat = dtCapPhat.Rows[i];
 
                 for (int j = tg; j < dtChiTiet.Rows.Count; j++)
                 {
-                    R_ChiTiet = dtChiTiet.Rows[j];
-                    if ( Convert.ToString(R_ChiTiet["iID_MaMucLucNganSach"]) == Convert.ToString(R_CP["iID_MaMucLucNganSach"]) &&
-                        Convert.ToString(R_CP["iID_MaDonVi"]) == Convert.ToString(R_ChiTiet["iID_MaDonVi"])) 
+                    R_dtChiTiet = dtChiTiet.Rows[j];
+                    if (Convert.ToString(R_dtChiTiet["iID_MaMucLucNganSach"]) == Convert.ToString(R_dtCapPhat["iID_MaMucLucNganSach"]) &&
+                        Convert.ToString(R_dtCapPhat["iID_MaDonVi"]) == Convert.ToString(R_dtChiTiet["iID_MaDonVi"]))
                     {
                         Double rValues = 0;
-                        rValues = Convert.ToDouble(R_CP["rTuChi"]);
-                        R_ChiTiet["rTuChi_DaCap"] = rValues;
+                        rValues = Convert.ToDouble(R_dtCapPhat["rTuChi"]);
+                        R_dtChiTiet["rTuChi_DaCap"] = rValues;
                         tg = j++;
                         break;
                     }
@@ -387,22 +323,35 @@ namespace VIETTEL.Models
             dtCapPhat.Dispose();
         }
 
-        //hungpx
-        /*
-         * <summary>
-         * hàm lấy dữ liệu từ bảng CP_ChungTuChiTiet. Các hàng được lấy thuộc về các chứng từ cùng loại và thuộc đợt trược.
-         * Dữ liệu lấy về là tổng trường tiền cấp phát vào đợt trước, giá trị này sẽ trở thành đã cấp ở đợt này
-         * </summary>
-         */
-        private static DataTable Get_dtTongDaCapPhat(String iNamLamViec,
-                                                String iDM_MaLoaiCapPhat,
-                                                String iID_MaTinhChatCapThu,
-                                                String sDSLNS,
-                                                String sChiTietDen,
-                                                String dNgayCapPhat)
+        /// <summary>
+        /// Hàm lấy dữ liệu từ bảng CP_ChungTuChiTiet. Các hàng được lấy thuộc về các chứng từ cùng loại và thuộc đợt trược.
+        /// Dữ liệu lấy về là tổng trường tiền cấp phát vào đợt trước, giá trị này sẽ trở thành đã cấp ở đợt này
+        /// Hàm sử dụng trong trường hợp lưới nhập được load lên lần đầu hoặc reload, giá trị đã cấp phát được lưu vào dtChiTiet
+        /// </summary>
+        /// <param name="RChungTuCP"></param>
+        /// <returns></returns>
+        private static DataTable LayDtTongDaCapPhat(DataRow RChungTuCP)
         {
+            //String iID_MaMucLucNganSach,
+            String iID_MaNamNganSach = Convert.ToString(RChungTuCP["iID_MaNamNganSach"]);
+            String iID_MaNguonNganSach = Convert.ToString(RChungTuCP["iID_MaNguonNganSach"]);
+            String iNamLamViec = Convert.ToString(RChungTuCP["iNamLamViec"]);
+            String iDM_MaLoaiCapPhat = Convert.ToString(RChungTuCP["iDM_MaLoaiCapPhat"]);
+            String iID_MaTinhChatCapThu = Convert.ToString(RChungTuCP["iID_MaTinhChatCapThu"]);
+            String sDSLNS = Convert.ToString(RChungTuCP["sDSLNS"]);
+            String sChiTietDen = Convert.ToString(RChungTuCP["sLoai"]);
+            String dNgayCapPhat = Convert.ToString(RChungTuCP["dNgayCapPhat"]);
+
             SqlCommand cmd = new SqlCommand();
             String DK = "iTrangThai = 1";
+
+            DK += " AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet";
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyet_DaDuyet(CapPhatModels.iID_MaPhanHe));
+
+            DK += " AND iID_MaNguonNganSach=@iID_MaNguonNganSach";
+            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
+            DK += " AND iID_MaNamNganSach=@iID_MaNamNganSach";
+            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
 
             DK += " AND iNamLamViec=@iNamLamViec";
             cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
@@ -414,7 +363,8 @@ namespace VIETTEL.Models
             cmd.Parameters.AddWithValue("@sLNS", sDSLNS);
             //DK += " AND sChiTietDen=@sChiTietDen";
             //cmd.Parameters.AddWithValue("@sChiTietDen", sChiTietDen);
-            DK += " AND dNgayCapPhat<@dNgayCapPhat";
+            //DK += " AND dNgayCapPhat<=@dNgayCapPhat";
+            DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat <= @dNgayCapPhat)";
             cmd.Parameters.AddWithValue("@dNgayCapPhat", dNgayCapPhat);
 
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
@@ -427,37 +377,36 @@ namespace VIETTEL.Models
 
             String selectTable = String.Format("SELECT iID_MaMucLucNganSach,sLNS,sL,sK,sM,sTM,sTTM,sNG,iID_MaDonVi,{0} FROM CP_CapPhatChiTiet WHERE {1} GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,iID_MaMucLucNganSach,iID_MaDonVi", strTruong, DK);
             String orderTable = "SELECT * FROM (" + selectTable + ") A ORDER BY sLNS,sL,sK,sM,sTM,sTTM,sNG,iID_MaMucLucNganSach";
-            cmd.CommandText = orderTable ;
+            cmd.CommandText = orderTable;
             DataTable vR = Connection.GetDataTable(cmd);
             cmd.Dispose();
-            return vR;    
+            return vR;
         }
-        //HungPx: lay tien da cap tu chi
-        public static string getTienDaCap(String sLNS,
-                                        String sL,
-                                        String sK,
-                                        String sM,
-                                        String sTM,
-                                        String sTTM,
-                                        String sNG,
-                                        String iID_MaDonVi)
+        
+        /// <summary>
+        /// HungPX QUP
+        /// Hàm cập nhật chứng từ chi tiết sau khi cập nhật chứng từ
+        /// </summary>
+        /// <param name="iID_MaCapPhat"></param>
+        public static void DongBoChungTuChiTiet(string iID_MaCapPhat)
         {
-                for (int i = 0; i < _Chitiet.Rows.Count; i++)
-                {
-                        if (Convert.ToString(_Chitiet.Rows[i]["sLNS"]) == sLNS &&
-                    Convert.ToString(_Chitiet.Rows[i]["sL"]) == sL &&
-                    Convert.ToString(_Chitiet.Rows[i]["sK"]) == sK &&
-                    Convert.ToString(_Chitiet.Rows[i]["sM"]) == sM &&
-                    Convert.ToString(_Chitiet.Rows[i]["sTM"]) == sTM &&
-                    Convert.ToString(_Chitiet.Rows[i]["sTTM"]) == sTTM &&
-                    Convert.ToString(_Chitiet.Rows[i]["sNG"]) == sNG &&
-                    Convert.ToString(_Chitiet.Rows[i]["iID_MaDonVi"]) == iID_MaDonVi
-                    )
-                        {
-                            return Convert.ToString(_Chitiet.Rows[i]["rTuChi"]);
-                        }
-                }
-                return "";
+            DataTable dtChungTu = CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
+
+            SqlCommand cmd = new SqlCommand();
+
+            String SQL = "UPDATE CP_CapPhatChiTiet " +
+                        "set dNgayCapPhat = @dNgayCapPhat , " +
+                        "iDM_MaLoaiCapPhat = @iDM_MaLoaiCapPhat, " +
+                        "iID_MaTinhChatCapThu = @iID_MaTinhChatCapThu " +
+                        "where iID_MaCapPhat = @iID_MaCapPhat";
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@dNgayCapPhat", dtChungTu.Rows[0]["dNgayCapPhat"]);
+            cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", dtChungTu.Rows[0]["iDM_MaLoaiCapPhat"]);
+            cmd.Parameters.AddWithValue("@iID_MaTinhChatCapThu", dtChungTu.Rows[0]["iID_MaTinhChatCapThu"]);
+            cmd.Parameters.AddWithValue("@iID_MaCapPhat", dtChungTu.Rows[0]["iID_MaCapPhat"]);
+            Connection.UpdateDatabase(cmd);
+            cmd.Dispose();
+            dtChungTu.Dispose();
         }
     }
 }

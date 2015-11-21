@@ -11,227 +11,8 @@ using DomainModel.Abstract;
 
 namespace VIETTEL.Models
 {
-    public class CapPhat_ChungTuChiTiet_DonViModels
+    public class CapPhat_ChungTuChiTiet_DonViModels : CapPhatChungTuChiTietCha
     {
-        /// <summary>
-        /// Get_DanhSachChungTu
-        /// </summary>
-        /// <param name="MaPhongBan"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="MaND"></param>
-        /// <param name="SoChungTu"></param>
-        /// <param name="TuNgay"></param>
-        /// <param name="DenNgay"></param>
-        /// <param name="iID_MaTrangThaiDuyet"></param>
-        /// <param name="iDM_MaLoaiCapPhat"></param>
-        /// <param name="LayTheoMaNDTao"></param>
-        /// <param name="Trang"></param>
-        /// <param name="SoBanGhi"></param>
-        /// <returns></returns>
-        public static DataTable Get_DanhSachChungTu(String MaPhongBan, String iID_MaDonVi, String MaND, String SoChungTu, String TuNgay, String DenNgay, String iID_MaTrangThaiDuyet, String iDM_MaLoaiCapPhat, Boolean LayTheoMaNDTao = false, int Trang = 1, int SoBanGhi = 0)
-        {
-            DataTable vR;
-            SqlCommand cmd = new SqlCommand();
-            String DK = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeCapPhat, MaND);
-
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-            DK += " AND iNamLamViec=@iNamLamViec";
-            DK += " AND iID_MaNamNganSach=@iID_MaNamNganSach";
-            DK += " AND iID_MaNguonNganSach=@iID_MaNguonNganSach";
-            cmd.Parameters.AddWithValue("@iNamLamViec", dtCauHinh.Rows[0]["iNamLamViec"]);
-            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-
-            if (MaPhongBan != Convert.ToString(Guid.Empty) && String.IsNullOrEmpty(MaPhongBan) == false && MaPhongBan != "")
-            {
-                DK += " AND iID_MaPhongBan = @iID_MaPhongBan";
-                cmd.Parameters.AddWithValue("@iID_MaPhongBan", MaPhongBan);
-            }
-            if (String.IsNullOrEmpty(iID_MaDonVi) == false && iID_MaDonVi != "")
-            {
-                DK += " AND iID_MaDonVi = @iID_MaDonVi";
-                cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            }
-            else
-            {
-                DK += " AND iID_MaDonVi IS NOT NULL";
-            }
-            if (LayTheoMaNDTao && BaoMat.KiemTraNguoiDungQuanTri(MaND) == false)
-            {
-                DK += " AND sID_MaNguoiDungTao = @sID_MaNguoiDungTao";
-                cmd.Parameters.AddWithValue("@sID_MaNguoiDungTao", MaND);
-            }
-            if (iDM_MaLoaiCapPhat != Convert.ToString(Guid.Empty) && String.IsNullOrEmpty(iDM_MaLoaiCapPhat) == false && iDM_MaLoaiCapPhat != "")
-            {
-                DK += " AND iDM_MaLoaiCapPhat = @iDM_MaLoaiCapPhat";
-                cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", iDM_MaLoaiCapPhat);
-            }
-            if (CommonFunction.IsNumeric(SoChungTu))
-            {
-                DK += " AND iSoCapPhat = @iSoCapPhat";
-                cmd.Parameters.AddWithValue("@iSoCapPhat", SoChungTu);
-            }
-            if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) == false && iID_MaTrangThaiDuyet != "" && iID_MaTrangThaiDuyet != "-1")
-            {
-                DK += " AND iID_MaTrangThaiDuyet = @iID_MaTrangThaiDuyet";
-                cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            }
-            if (String.IsNullOrEmpty(TuNgay) == false && TuNgay != "")
-            {
-                DK += " AND dNgayCapPhat >= @dTuNgayCapPhat";
-                cmd.Parameters.AddWithValue("@dTuNgayCapPhat", CommonFunction.LayNgayTuXau(TuNgay));
-            }
-            if (String.IsNullOrEmpty(DenNgay) == false && DenNgay != "")
-            {
-                DK += " AND dNgayCapPhat <= @dDenNgayCapPhat";
-                cmd.Parameters.AddWithValue("@dDenNgayCapPhat", CommonFunction.LayNgayTuXau(DenNgay));
-            }
-
-            String SQL = String.Format("SELECT * FROM CP_CapPhat WHERE iTrangThai=1 AND {0}", DK);
-            cmd.CommandText = SQL;
-            vR = CommonFunction.dtData(cmd, "iID_MaTrangThaiDuyet,iSoCapPhat DESC", Trang, SoBanGhi);
-            cmd.Dispose();
-            return vR;
-        }
-        /// <summary>
-        /// Get_DanhSachChungTu_Count
-        /// </summary>
-        /// <param name="MaPhongBan"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="MaND"></param>
-        /// <param name="SoChungTu"></param>
-        /// <param name="TuNgay"></param>
-        /// <param name="DenNgay"></param>
-        /// <param name="iID_MaTrangThaiDuyet"></param>
-        /// <param name="iDM_MaLoaiCapPhat"></param>
-        /// <param name="LayTheoMaNDTao"></param>
-        /// <returns></returns>
-        public static int Get_DanhSachChungTu_Count(String MaPhongBan = "", String iID_MaDonVi = "", String MaND = "", String SoChungTu = "", String TuNgay = "", String DenNgay = "", String iID_MaTrangThaiDuyet = "", String iDM_MaLoaiCapPhat = "", Boolean LayTheoMaNDTao = false)
-        {
-            int vR;
-            SqlCommand cmd = new SqlCommand();
-            String DK = LuongCongViecModel.Get_DieuKien_TrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeCapPhat, MaND);
-
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-            DK += " AND iNamLamViec=@iNamLamViec";
-            DK += " AND iID_MaNamNganSach=@iID_MaNamNganSach";
-            DK += " AND iID_MaNguonNganSach=@iID_MaNguonNganSach";
-            cmd.Parameters.AddWithValue("@iNamLamViec", dtCauHinh.Rows[0]["iNamLamViec"]);
-            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-
-            if (MaPhongBan != Convert.ToString(Guid.Empty) && String.IsNullOrEmpty(MaPhongBan) == false && MaPhongBan != "")
-            {
-                DK += " AND iID_MaPhongBan = @iID_MaPhongBan";
-                cmd.Parameters.AddWithValue("@iID_MaPhongBan", MaPhongBan);
-            }
-            if (String.IsNullOrEmpty(iID_MaDonVi) == false && iID_MaDonVi != "")
-            {
-                DK += " AND iID_MaDonVi = @iID_MaDonVi";
-                cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            }
-            else
-            {
-                DK += " AND iID_MaDonVi IS NOT NULL";
-            }
-            if (LayTheoMaNDTao && BaoMat.KiemTraNguoiDungQuanTri(MaND) == false)
-            {
-                DK += " AND sID_MaNguoiDungTao = @sID_MaNguoiDungTao";
-                cmd.Parameters.AddWithValue("@sID_MaNguoiDungTao", MaND);
-            }
-            if (iDM_MaLoaiCapPhat != Convert.ToString(Guid.Empty) && String.IsNullOrEmpty(iDM_MaLoaiCapPhat) == false && iDM_MaLoaiCapPhat != "")
-            {
-                DK += " AND iDM_MaLoaiCapPhat = @iDM_MaLoaiCapPhat";
-                cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", iDM_MaLoaiCapPhat);
-            }
-            if (CommonFunction.IsNumeric(SoChungTu))
-            {
-                DK += " AND iSoCapPhat = @iSoCapPhat";
-                cmd.Parameters.AddWithValue("@iSoCapPhat", SoChungTu);
-            }
-            if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) == false && iID_MaTrangThaiDuyet != "" && iID_MaTrangThaiDuyet != "-1")
-            {
-                DK += " AND iID_MaTrangThaiDuyet = @iID_MaTrangThaiDuyet";
-                cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            }
-            if (String.IsNullOrEmpty(TuNgay) == false && TuNgay != "")
-            {
-                DK += " AND dNgayCapPhat >= @dTuNgayChungTu";
-                cmd.Parameters.AddWithValue("@dTuNgayChungTu", CommonFunction.LayNgayTuXau(TuNgay));
-            }
-            if (String.IsNullOrEmpty(DenNgay) == false && DenNgay != "")
-            {
-                DK += " AND dNgayCapPhat <= @dDenNgayCapPhat";
-                cmd.Parameters.AddWithValue("@dDenNgayCapPhat", CommonFunction.LayNgayTuXau(DenNgay));
-            }
-
-            String SQL = String.Format("SELECT COUNT(*) FROM CP_CapPhat WHERE iTrangThai=1 AND iID_MaDonVi IS NOT NULL AND {0}", DK);
-            cmd.CommandText = SQL;
-            vR = Convert.ToInt32(Connection.GetValue(cmd, 0));
-            cmd.Dispose();
-            return vR;
-        }
-        /// <summary>
-        /// GetChungTu
-        /// </summary>
-        /// <param name="iID_MaCapPhat"></param>
-        /// <returns></returns>
-        public static DataTable GetChungTu(String iID_MaCapPhat)
-        {
-            DataTable vR;
-            SqlCommand cmd = new SqlCommand("SELECT * FROM CP_CapPhat WHERE iTrangThai=1 AND iID_MaCapPhat=@iID_MaCapPhat");
-            cmd.Parameters.AddWithValue("@iID_MaCapPhat", iID_MaCapPhat);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
-        /// <summary>
-        /// Get_dtTongPhanBoChoDonVi
-        /// </summary>
-        /// <param name="iID_MaMucLucNganSach"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="iNamLamViec"></param>
-        /// <param name="dNgayDotPhanBo"></param>
-        /// <param name="iID_MaNguonNganSach"></param>
-        /// <param name="iID_MaNamNganSach"></param>
-        /// <returns></returns>    
-        public static DataTable Get_dtTongPhanBoChoDonVi(String iID_MaMucLucNganSach,
-                                                         String iID_MaDonVi,
-                                                         int iNamLamViec,
-                                                         String dNgayDotPhanBo,
-                                                         int iID_MaNguonNganSach,
-                                                         int iID_MaNamNganSach)
-        {
-            SqlCommand cmd = new SqlCommand();
-            String DK = "iTrangThai = 1";
-            DK += " AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet";
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyet_DaDuyet(PhanBoModels.iID_MaPhanHePhanBo));
-            DK += " AND iNamLamViec=@iNamLamViec";
-            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-            DK += " AND iID_MaNguonNganSach=@iID_MaNguonNganSach";
-            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
-            DK += " AND iID_MaNamNganSach=@iID_MaNamNganSach";
-            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
-            DK += " AND iID_MaMucLucNganSach=@iID_MaMucLucNganSach";
-            cmd.Parameters.AddWithValue("@iID_MaMucLucNganSach", iID_MaMucLucNganSach);
-            DK += " AND iID_MaDonVi=@iID_MaDonVi";
-            cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            DK += " AND iID_MaDotPhanBo IN (SELECT iID_MaDotPhanBo FROM PB_DotPhanBo WHERE iNamLamViec=@iNamLamViec  AND iID_MaNamNganSach=@iID_MaNamNganSach AND iID_MaNguonNganSach=@iID_MaNguonNganSach AND dNgayDotPhanBo <= @dNgayDotPhanBo)";
-            cmd.Parameters.AddWithValue("@dNgayDotPhanBo", dNgayDotPhanBo);
-
-            String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
-            String strTruong = "";
-            for (int i = 0; i < arrDSTruongTien_So.Length; i++)
-            {
-                if (i > 0) strTruong += ",";
-                strTruong += String.Format("SUM({0}) AS {0}", arrDSTruongTien_So[i]);
-            }
-
-            cmd.CommandText = String.Format("SELECT {0} FROM PB_PhanBoChiTiet WHERE {1}", strTruong, DK);
-            DataTable vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
         /// <summary>
         /// Get_dtTongCapPhatChoDonVi
         /// </summary>
@@ -287,40 +68,13 @@ namespace VIETTEL.Models
             cmd.Dispose();
             return vR;
         }
-        /// <summary>
-        /// Dien_TruongPhanBo
-        /// </summary>
-        /// <param name="RChungTu"></param>
-        /// <param name="dt"></param>
-        private static void Dien_TruongPhanBo(DataRow RChungTu, DataTable dt)
-        {
-            DataRow R;
-            String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                R = dt.Rows[i];
-                DataTable dtPhanBo = Get_dtTongPhanBoChoDonVi(Convert.ToString(R["iID_MaMucLucNganSach"]), Convert.ToString(RChungTu["iID_MaDonVi"]), Convert.ToInt32(RChungTu["iNamLamViec"]), Convert.ToString(RChungTu["dNgayCapPhat"]), Convert.ToInt32(RChungTu["iID_MaNguonNganSach"]), Convert.ToInt32(RChungTu["iID_MaNamNganSach"]));
-                for (int j = 0; j < arrDSTruongTien_So.Length; j++)
-                {
-                    if (dt.Columns.IndexOf(arrDSTruongTien_So[j] + "_PhanBo") >= 0)
-                    {
-                        Double rValues = 0;
-                        if (Convert.ToString(dtPhanBo.Rows[0][arrDSTruongTien_So[j]]) != null && Convert.ToString(dtPhanBo.Rows[0][arrDSTruongTien_So[j]]) != "")
-                        {
-                            rValues = Convert.ToDouble(dtPhanBo.Rows[0][arrDSTruongTien_So[j]]);
-                        }
-                        R[arrDSTruongTien_So[j] + "_PhanBo"] = rValues;
-                    }
-                }
-                dtPhanBo.Dispose();
-            }
-        }
+        
         /// <summary>
         /// Dien_TruongDaCap
         /// </summary>
         /// <param name="RChungTu"></param>
         /// <param name="dt"></param>
-        private static void Dien_TruongDaCap(DataRow RChungTu, DataTable dt)
+        private static void DienTruongDaCap(DataRow RChungTu, DataTable dt)
         {
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
             DataRow R;
@@ -367,16 +121,17 @@ namespace VIETTEL.Models
             dtChiTieu.Dispose();
         }
         /// <summary>
-        /// Get_dtCapPhatChiTiet
+        /// Hàm lấy toàn bộ thông tin chi tiết của Chứng từ cấp phát chi tiết
+        /// trong danh sách chứng từ đơn vị để hiện thị lên lưới nhập
         /// </summary>
         /// <param name="iID_MaCapPhat"></param>
         /// <param name="arrGiaTriTimKiem"></param>
         /// <returns></returns>
-        public static DataTable Get_dtCapPhatChiTiet(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem, String MaND)
+        public static DataTable LayDtCapPhatChiTietDonVi(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem, String sMaND)
         {
             DataTable vR;
-            DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(MaND);
-            DataTable dtChungTu = GetChungTu(iID_MaCapPhat);
+            DataTable dt = NganSach_HamChungModels.DSLNSCuaPhongBan(sMaND);
+            DataTable dtChungTu = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
             DataRow RChungTu = dtChungTu.Rows[0];
             //VungNV: 2015/10/27 get sLoai and sLNS
             String sLoai = Convert.ToString(RChungTu["sLoai"]);
@@ -533,8 +288,7 @@ namespace VIETTEL.Models
 
             }
 
-            Dien_TruongDaCap(RChungTu, vR);
-            //Dien_TruongPhanBo(RChungTu, vR);
+            DienTruongDaCap(RChungTu, vR);
             cmd.Dispose();
 
             dtChungTuChiTiet.Dispose();
@@ -543,6 +297,7 @@ namespace VIETTEL.Models
         }
         /// <summary>
         /// Get_dtCapPhatChiTiet_CapThu
+        /// Hàm nằm ngoài scope phân hệ
         /// </summary>
         /// <param name="iID_MaCapPhat"></param>
         /// <returns></returns>
@@ -578,6 +333,7 @@ namespace VIETTEL.Models
         }
         /// <summary>
         /// Check_ChungTuCapThu
+        /// Hàm nằm ngoài scope phân hệ
         /// </summary>
         /// <param name="iID_MaCapPhat"></param>
         /// <returns></returns>
@@ -615,7 +371,16 @@ namespace VIETTEL.Models
             }
             return vR;
         }
-
+        /// <summary>
+        /// Hàm nằm ngoài scope phân hệ
+        /// </summary>
+        /// <param name="iNamLamViec"></param>
+        /// <param name="iID_MaDonVi"></param>
+        /// <param name="TuNgay"></param>
+        /// <param name="DenNgay"></param>
+        /// <param name="iID_MaTinhChatThu"></param>
+        /// <param name="chkTatCa"></param>
+        /// <returns></returns>
         public static DataTable GetDanhSachCapPhat_CapThu(String iNamLamViec, String iID_MaDonVi, String TuNgay, String DenNgay, String iID_MaTinhChatThu, String chkTatCa)
         {
             DataTable vR;
@@ -647,19 +412,53 @@ namespace VIETTEL.Models
             }
             String SQL = "";
             SQL = String.Format(@"SELECT DISTINCT TENHT,CP_CapPhat.iID_MaCapPhat FROM (
-SELECT iID_MaCapPhat, sTienToChungTu + '' + Convert(nvarchar, iSoCapPhat) + ' - ' + sNoiDung AS TENHT 
- FROM CP_CapPhat WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {1} ) as CP_CapPhat
-INNER JOIN
-(
-SELECT iID_MaCapPhat FROM CP_CapPhatChiTiet WHERE iTrangThai=1  {0} ) as CP_CapPhatChiTiet
-ON CP_CapPhat.iID_MaCapPhat=CP_CapPhatChiTiet.iID_MaCapPhat
-ORDER BY TENHT DESC
-SELECT * FROM CP_CapPhat", DK, DKNgayCapPhat);
+                SELECT iID_MaCapPhat, sTienToChungTu + '' + Convert(nvarchar, iSoCapPhat) + ' - ' + sNoiDung AS TENHT 
+                 FROM CP_CapPhat WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {1} ) as CP_CapPhat
+                INNER JOIN
+                (
+                SELECT iID_MaCapPhat FROM CP_CapPhatChiTiet WHERE iTrangThai=1  {0} ) as CP_CapPhatChiTiet
+                ON CP_CapPhat.iID_MaCapPhat=CP_CapPhatChiTiet.iID_MaCapPhat
+                ORDER BY TENHT DESC
+                SELECT * FROM CP_CapPhat", DK, DKNgayCapPhat);
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
             vR = Connection.GetDataTable(cmd);
             cmd.Dispose();
             return vR;
+        }
+
+        /// <summary>
+        /// HungPX QUP
+        /// Hàm cập nhật chứng từ chi tiết sau khi cập nhật chứng từ
+        /// </summary>
+        /// <param name="iID_MaCapPhat"></param>
+        public static void DongBoChungTuChiTiet(string iID_MaCapPhat)
+        {
+            DataTable dtChungTu = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
+
+            String strTenDonVi = DonViModels.Get_TenDonVi(Convert.ToString(dtChungTu.Rows[0]["iID_MaDonVi"]));
+
+            SqlCommand cmd;
+            String SQL = "UPDATE CP_CapPhatChiTiet SET iDM_MaLoaiCapPhat=@iDM_MaLoaiCapPhat, iID_MaPhongBan=@iID_MaPhongBan, iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet, " +
+                    "iNamLamViec=@iNamLamViec,iID_MaNguonNganSach=@iID_MaNguonNganSach,iID_MaNamNganSach=@iID_MaNamNganSach,bChiNganSach=@bChiNganSach, " +
+                    "iID_MaDonVi=@iID_MaDonVi, sTenDonVi=@sTenDonVi " +
+                    "WHERE iID_MaCapPhat=@iID_MaCapPhat";
+
+            cmd = new SqlCommand();
+            cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", dtChungTu.Rows[0]["iDM_MaLoaiCapPhat"]);
+            cmd.Parameters.AddWithValue("@iID_MaPhongBan", dtChungTu.Rows[0]["iID_MaPhongBan"]);
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", dtChungTu.Rows[0]["iID_MaTrangThaiDuyet"]);
+            cmd.Parameters.AddWithValue("@iNamLamViec", dtChungTu.Rows[0]["iNamLamViec"]);
+            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", dtChungTu.Rows[0]["iID_MaNguonNganSach"]);
+            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", dtChungTu.Rows[0]["iID_MaNamNganSach"]);
+            cmd.Parameters.AddWithValue("@bChiNganSach", dtChungTu.Rows[0]["bChiNganSach"]);
+            cmd.Parameters.AddWithValue("@iID_MaDonVi", dtChungTu.Rows[0]["iID_MaDonVi"]);
+            cmd.Parameters.AddWithValue("@sTenDonVi", strTenDonVi);
+            cmd.Parameters.AddWithValue("@iID_MaCapPhat", iID_MaCapPhat);
+            cmd.CommandText = SQL;
+            Connection.UpdateDatabase(cmd);
+            cmd.Dispose();
+            dtChungTu.Dispose();
         }
     }
 }

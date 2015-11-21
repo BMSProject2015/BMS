@@ -56,7 +56,7 @@ namespace VIETTEL.Models
 
             _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(CapPhatModels.iID_MaPhanHe, MaND);
 
-            _dtChiTiet = CapPhat_ChungTuChiTiet_DonViModels.Get_dtCapPhatChiTiet(_iID_Ma, arrGiaTriTimKiem,MaND);
+            _dtChiTiet = CapPhat_ChungTuChiTiet_DonViModels.LayDtCapPhatChiTietDonVi(_iID_Ma, arrGiaTriTimKiem,MaND);
             _dtChiTiet_Cu = _dtChiTiet.Copy();
             DienDuLieu();
         }
@@ -143,7 +143,7 @@ namespace VIETTEL.Models
                 }
             }
             //VungNV: lấy giá trị của trường sLoai 
-            DataTable dtCapPhat = CapPhat_ChungTuChiTietModels.GetChungTu(_iID_Ma);
+            DataTable dtCapPhat = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(_iID_Ma);
             DataRow dr = dtCapPhat.Rows[0];
             int index = -1;
             if (dtCapPhat != null && dtCapPhat.Rows.Count > 0)
@@ -192,6 +192,12 @@ namespace VIETTEL.Models
 
                 if (arrDSTruongTien[j] == "rTuChi" && _arrCotTienDuocHienThi[arrDSTruongTien[j]])
                 {
+                    _arrDSMaCot.Add(arrDSTruongTien[j] + "_Phanbo");
+                    _arrTieuDe.Add("Phân Bổ");
+                    _arrWidth.Add(Convert.ToInt32(arrDSTruongTienDoRong[j]));
+                    _arrHienThiCot.Add(false);
+                    _arrSoCotCungNhom.Add(4);
+                    _arrTieuDeNhomCot.Add(arrDSTruongTienTieuDe[j]);
 
                     _arrDSMaCot.Add(arrDSTruongTien[j] + "_DaCap");
                     _arrTieuDe.Add("Đã cấp");
@@ -206,6 +212,13 @@ namespace VIETTEL.Models
                     //_arrWidth.Add(Convert.ToInt32(arrDSTruongTienDoRong[j]));
                     _arrWidth.Add(200);//VungNV: độ rộng 200
                     _arrHienThiCot.Add(true);
+                    _arrSoCotCungNhom.Add(4);
+                    _arrTieuDeNhomCot.Add(arrDSTruongTienTieuDe[j]);
+
+                    _arrDSMaCot.Add(arrDSTruongTien[j] + "_ConLai");
+                    _arrTieuDe.Add("Còn lại");
+                    _arrWidth.Add(Convert.ToInt32(arrDSTruongTienDoRong[j]));
+                    _arrHienThiCot.Add(false);
                     _arrSoCotCungNhom.Add(4);
                     _arrTieuDeNhomCot.Add(arrDSTruongTienTieuDe[j]);
 

@@ -601,7 +601,7 @@ namespace VIETTEL.Models
         {
             String vR = "";
             DataTable dtTongPhanBo = PhanBo_PhanBoChiTietModels.Get_dtTongPhanBoChoDonVi(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
-            DataTable dtTongDaCapPhat = CapPhat_ChungTuChiTietModels.Get_dtTongCapPhatChoDonVi(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
+            DataTable dtTongDaCapPhat =null;//= CapPhat_ChungTuChiTietModels.Get_dtTongCapPhatChoDonVi(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,dNgayCapPhat, iID_MaNguonNganSach, iID_MaNamNganSach);
 
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
             String strTruong = MucLucNganSachModels.strDSTruongTien_So;
