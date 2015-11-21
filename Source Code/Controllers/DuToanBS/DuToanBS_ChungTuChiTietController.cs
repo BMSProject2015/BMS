@@ -7,8 +7,10 @@ using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models;
+using System.IO;
+using System.Data.OleDb;
 
-namespace VIETTEL.Controllers.ChungTuChiTiet
+namespace VIETTEL.Controllers.DuToanBS
 {
     public class DuToanBS_ChungTuChiTietController : Controller
     {
@@ -89,7 +91,7 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
             NameValueCollection data;
             if (iLoai == "4")
             {
-                 data = DuToanBS_ChungTuModels.LayThongTin_KyThuatLan2(iID_MaChungTu);
+                 data = DuToanBS_ChungTuModels.LayThongTinChungTuKyThuatLan2(iID_MaChungTu);
             }
 
             else
@@ -339,6 +341,305 @@ namespace VIETTEL.Controllers.ChungTuChiTiet
             String sTNG = Request.Form[ParentID + "_sTNG"];
 
             return RedirectToAction("Index", new { iID_MaChungTu = iID_MaChungTu, iID_MaDonVi = iID_MaDonVi, sLNS = sLNS, sL = sL, sK = sK, sM = sM, sTM = sTM, sTTM = sTTM, sNG = sNG, sTNG = sTNG });
+        }
+        
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpLoadExcel(string iID_MaChungTu, string iLoai)
+        {
+            string path = string.Empty;
+            string sTenKhoa = "TMTL";
+            path = TuLieuLichSuModels.ThuMucLuu(sTenKhoa);
+            String sFileName = "";
+            string newPath = AppDomain.CurrentDomain.BaseDirectory + path;
+            //string newPath = path + dateString;
+            if (Directory.Exists(newPath) == false)
+            {
+                Directory.CreateDirectory(newPath);
+            }
+            sFileName = Path.GetFileName(Request.Files["uploadFile"].FileName);
+            sFileName = Path.Combine(newPath, sFileName);
+            String ConnectionString = String.Format(ConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR=Yes'", sFileName);
+            OleDbConnection connExcel = new OleDbConnection(ConnectionString);
+            OleDbCommand cmd = new OleDbCommand();
+            OleDbConnection conn = null;
+            conn = new OleDbConnection(ConnectionString);
+            //try
+            //{
+            Request.Files["uploadFile"].SaveAs(Path.Combine(newPath, sFileName));
+            OleDbCommand cmdExcel = new OleDbCommand();
+            cmdExcel.Connection = connExcel;
+            connExcel.Open();
+
+
+            conn.Open();
+
+            DataTable dtSheet = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+            String Sheetname = Convert.ToString(dtSheet.Rows[0]["TABLE_NAME"]);
+
+            cmd.CommandText = String.Format(@"SELECT * FROM [{0}]", Sheetname);
+            cmd.Connection = conn;
+            OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
+            DataTable dt = new DataTable();
+
+            adapter.Fill(dt);
+            dt.Columns[0].ColumnName = "STT";
+            dt.Columns[1].ColumnName = "B";
+            dt.Columns[2].ColumnName = "DV";
+            dt.Columns[3].ColumnName = "TenDV";
+            dt.Columns[4].ColumnName = "sLNS";
+            dt.Columns[5].ColumnName = "sL";
+            dt.Columns[6].ColumnName = "sK";
+            dt.Columns[7].ColumnName = "sM";
+            dt.Columns[8].ColumnName = "sTM";
+            dt.Columns[9].ColumnName = "sTTM";
+            dt.Columns[10].ColumnName = "sNG";
+            dt.Columns[11].ColumnName = "TC";
+            dt.Columns[12].ColumnName = "HV";
+            SqlCommand cmd1;
+            if (iLoai == "PC")
+            {
+
+                String SQL = String.Format(@"SELECT *
+FROM DTBS_ChungTuChiTiet
+WHERE iTrangThai=1 AND iID_MaChungTuChiTiet=@iID_MaChungTu
+AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
+                cmd1 = new SqlCommand(SQL);
+                cmd1.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
+                DataTable dtChungTu = Connection.GetDataTable(cmd1);
+
+                String MaND = User.Identity.Name;
+                String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+                DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
+                String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
+                if (dtCauHinh.Rows.Count > 0)
+                {
+                    iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
+                    iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
+                    dtCauHinh.Dispose();
+                }
+                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
+                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+                {
+                    DataRow drPhongBan = dtPhongBan.Rows[0];
+                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
+                    sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
+                    dtPhongBan.Dispose();
+                }
+                for (int i = 0; i < dtChungTu.Rows.Count; i++)
+                {
+                    DataRow R = dtChungTu.Rows[i];
+                    String sXau = String.Format(@"sL='{0}' AND sK='{1}' AND sM='{2}' AND sTM='{3}' AND sTTM='{4}' AND sNG='{5}'", R["sL"], R["sK"], R["sM"], R["sTM"], R["sTTM"], R["sNG"]);
+                    DataRow[] dr = dt.Select(sXau);
+                    //check neu da co du lieu se xoa cai cu sau do them cai moi
+                    if (dr.Length > 0)
+                    {
+                        //Check bang DTBS_ChungTuchitiet_codulieu
+                        SQL = String.Format(@"SELECT COUNT(*) FROM DTBS_ChungTuChiTiet_PhanCap WHERE iID_MaChungTu=@iID_MaChungTu");
+                        cmd1 = new SqlCommand(SQL);
+                        cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+
+
+                        int count = Convert.ToInt32(Connection.GetValue(cmd1, 0));
+                        //neu co du lieu se xoa
+                        if (count > 0)
+                        {
+                            SQL = String.Format(@"DELETE DTBS_ChungTuChiTiet_PhanCap WHERE iID_MaChungTu=@iID_MaChungTu");
+                            cmd1 = new SqlCommand(SQL);
+                            cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+                            Connection.UpdateDatabase(cmd1);
+                        }
+                    }
+                    String sXauNoiMa = "1020100-" + R["sL"] + "-" + R["sK"] + "-" + R["sM"] + "-" + R["sTM"] + "-" + R["sTTM"] + "-" + R["sNG"];
+
+                    SQL = String.Format("SELECT * FROM NS_MucLucNganSach WHERE  sXauNoiMa=@sXauNoiMa AND iTrangThai=1");
+                    cmd1 = new SqlCommand(SQL);
+                    cmd1.Parameters.AddWithValue("@sXauNoiMa", sXauNoiMa);
+                    DataTable dtMucLuc = Connection.GetDataTable(cmd1);
+                    for (int j = 0; j < dr.Length; j++)
+                    {
+                        SQL = String.Format(@"INSERT INTO DTBS_ChungTuChiTiet_PhanCap(iID_MaChungTu,iID_MaPhongBan,sTenPhongBan,iID_MaPhongBanDich,iID_MaTrangThaiDuyet,
+                        iNamLamViec,iID_MaNguonNganSach,iID_MaNamNganSach,iID_MaDonVi,sTenDonVi,iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,sXauNoiMa,sLNS,sL,sK,sM,sTM,sTTM,sNG,
+                        sMoTa,rTuChi,rHienVat,iID_MaNhomNguoiDung_DuocGiao,sID_MaNguoiDung_DuocGiao,sID_MaNguoiDungTao,sIPSua,sID_MaNguoiDungSua) VALUES (@iID_MaChungTu,@iID_MaPhongBan,@sTenPhongBan,@iID_MaPhongBanDich,@iID_MaTrangThaiDuyet,@iNamLamViec,@iID_MaNguonNganSach,@iID_MaNamNganSach,
+@iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
+                        cmd1 = new SqlCommand(SQL);
+                        cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+                        cmd1.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
+                        cmd1.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
+                        cmd1.Parameters.AddWithValue("@iID_MaPhongBanDich", Convert.ToString(dr[j]["b"]));
+                        cmd1.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
+                        cmd1.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+                        cmd1.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
+                        cmd1.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
+                        cmd1.Parameters.AddWithValue("@iID_MaDonVi", Convert.ToString(dr[j]["DV"]));
+                        String sTenDonVi = DonViModels.Get_TenDonVi(Convert.ToString(dr[j]["DV"]));
+                        cmd1.Parameters.AddWithValue("@sTenDonVi", Convert.ToString(dr[j]["DV"]) + "-" + sTenDonVi);
+
+
+
+                        cmd1.Parameters.AddWithValue("@iID_MaMucLucNganSach", dtMucLuc.Rows[0]["iID_MaMucLucNganSach"]);
+                        cmd1.Parameters.AddWithValue("@iID_MaMucLucNganSach_Cha", dtMucLuc.Rows[0]["iID_MaMucLucNganSach_Cha"]);
+                        cmd1.Parameters.AddWithValue("@sXauNoiMa", "1020100-" + R["sL"] + "-" + R["sK"] + "-" + R["sM"] + "-" + R["sTM"] + "-" + R["sTTM"] + "-" + R["sNG"]);
+                        cmd1.Parameters.AddWithValue("@sLNS", "1020100");
+                        cmd1.Parameters.AddWithValue("@sL", R["sL"]);
+                        cmd1.Parameters.AddWithValue("@sK", R["sK"]);
+                        cmd1.Parameters.AddWithValue("@sM", R["sM"]);
+                        cmd1.Parameters.AddWithValue("@sTM", R["sTM"]);
+                        cmd1.Parameters.AddWithValue("@sTTM", R["sTTM"]);
+                        cmd1.Parameters.AddWithValue("@sNG", R["sNG"]);
+                        cmd1.Parameters.AddWithValue("@sMoTa", R["sMoTa"]);
+                        if (!String.IsNullOrEmpty(Convert.ToString(dr[j]["TC"])))
+                        {
+                            cmd1.Parameters.AddWithValue("@rTuChi", Convert.ToDecimal(dr[j]["TC"]) * 1000);
+                        }
+                        else
+                            cmd1.Parameters.AddWithValue("@rTuChi", 0);
+                        if (!String.IsNullOrEmpty(Convert.ToString(dr[j]["HV"])))
+                        {
+                            cmd1.Parameters.AddWithValue("@rHienVat", Convert.ToDecimal(dr[j]["HV"]) * 1000);
+                        }
+                        else
+                            cmd1.Parameters.AddWithValue("@rHienVat", 0);
+
+                        cmd1.Parameters.AddWithValue("@iID_MaNhomNguoiDung_DuocGiao", R["iID_MaNhomNguoiDung_DuocGiao"]);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDung_DuocGiao", MaND);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDungTao", MaND);
+                        cmd1.Parameters.AddWithValue("@sIPSua", Request.UserHostAddress);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDungSua", MaND);
+                        Connection.UpdateDatabase(cmd1);
+                    }
+                    dtMucLuc.Dispose();
+                }
+            }
+            else
+            {
+                String SQL = String.Format(@"SELECT *
+FROM DTBS_ChungTuChiTiet
+WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu
+AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
+                cmd1 = new SqlCommand(SQL);
+                cmd1.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
+                DataTable dtChungTu = Connection.GetDataTable(cmd1);
+
+                String MaND = User.Identity.Name;
+                String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
+                DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
+                String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
+                if (dtCauHinh.Rows.Count > 0)
+                {
+                    iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
+                    iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
+                    dtCauHinh.Dispose();
+                }
+                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
+                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+                {
+                    DataRow drPhongBan = dtPhongBan.Rows[0];
+                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
+                    sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
+                    dtPhongBan.Dispose();
+                }
+                for (int i = 0; i < dtChungTu.Rows.Count; i++)
+                {
+                    DataRow R = dtChungTu.Rows[i];
+                    String sXau = String.Format(@"sL='{0}' AND sK='{1}' AND sM='{2}' AND sTM='{3}' AND sTTM='{4}' AND sNG='{5}'", R["sL"], R["sK"], R["sM"], R["sTM"], R["sTTM"], R["sNG"]);
+                    DataRow[] dr = dt.Select(sXau);
+                    //check neu da co du lieu se xoa cai cu sau do them cai moi
+                    if (dr.Length > 0)
+                    {
+                        //Check bang DTBS_ChungTuchitiet_codulieu
+                        SQL = String.Format(@"SELECT COUNT(*) FROM DTBS_ChungTuChiTiet_PhanCap WHERE iID_MaChungTu=@iID_MaChungTu");
+                        cmd1 = new SqlCommand(SQL);
+                        cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+
+
+                        int count = Convert.ToInt32(Connection.GetValue(cmd1, 0));
+                        //neu co du lieu se xoa
+                        if (count > 0)
+                        {
+                            SQL = String.Format(@"DELETE DTBS_ChungTuChiTiet_PhanCap WHERE iID_MaChungTu=@iID_MaChungTu");
+                            cmd1 = new SqlCommand(SQL);
+                            cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+                            Connection.UpdateDatabase(cmd1);
+                        }
+                    }
+                    String sXauNoiMa = "1020100-" + R["sL"] + "-" + R["sK"] + "-" + R["sM"] + "-" + R["sTM"] + "-" + R["sTTM"] + "-" + R["sNG"];
+
+                    SQL = String.Format("SELECT * FROM NS_MucLucNganSach WHERE  sXauNoiMa=@sXauNoiMa AND iTrangThai=1");
+                    cmd1 = new SqlCommand(SQL);
+                    cmd1.Parameters.AddWithValue("@sXauNoiMa", sXauNoiMa);
+                    DataTable dtMucLuc = Connection.GetDataTable(cmd1);
+                    for (int j = 0; j < dr.Length; j++)
+                    {
+                        SQL = String.Format(@"INSERT INTO DTBS_ChungTuChiTiet_PhanCap(iID_MaChungTu,iID_MaPhongBan,sTenPhongBan,iID_MaPhongBanDich,iID_MaTrangThaiDuyet,
+                        iNamLamViec,iID_MaNguonNganSach,iID_MaNamNganSach,iID_MaDonVi,sTenDonVi,iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,sXauNoiMa,sLNS,sL,sK,sM,sTM,sTTM,sNG,
+                        sMoTa,rTuChi,rHienVat,iID_MaNhomNguoiDung_DuocGiao,sID_MaNguoiDung_DuocGiao,sID_MaNguoiDungTao,sIPSua,sID_MaNguoiDungSua) VALUES (@iID_MaChungTu,@iID_MaPhongBan,@sTenPhongBan,@iID_MaPhongBanDich,@iID_MaTrangThaiDuyet,@iNamLamViec,@iID_MaNguonNganSach,@iID_MaNamNganSach,
+@iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
+                        cmd1 = new SqlCommand(SQL);
+                        cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
+                        cmd1.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
+                        cmd1.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
+                        cmd1.Parameters.AddWithValue("@iID_MaPhongBanDich", Convert.ToString(dr[j]["b"]));
+                        cmd1.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
+                        cmd1.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+                        cmd1.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
+                        cmd1.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
+                        cmd1.Parameters.AddWithValue("@iID_MaDonVi", Convert.ToString(dr[j]["DV"]));
+                        String sTenDonVi = DonViModels.Get_TenDonVi(Convert.ToString(dr[j]["DV"]));
+                        cmd1.Parameters.AddWithValue("@sTenDonVi", Convert.ToString(dr[j]["DV"]) + "-" + sTenDonVi);
+                        cmd1.Parameters.AddWithValue("@iID_MaMucLucNganSach", dtMucLuc.Rows[0]["iID_MaMucLucNganSach"]);
+                        cmd1.Parameters.AddWithValue("@iID_MaMucLucNganSach_Cha", dtMucLuc.Rows[0]["iID_MaMucLucNganSach_Cha"]);
+                        cmd1.Parameters.AddWithValue("@sXauNoiMa", "1020100-" + R["sL"] + "-" + R["sK"] + "-" + R["sM"] + "-" + R["sTM"] + "-" + R["sTTM"] + "-" + R["sNG"]);
+                        cmd1.Parameters.AddWithValue("@sLNS", "1020100");
+                        cmd1.Parameters.AddWithValue("@sL", R["sL"]);
+                        cmd1.Parameters.AddWithValue("@sK", R["sK"]);
+                        cmd1.Parameters.AddWithValue("@sM", R["sM"]);
+                        cmd1.Parameters.AddWithValue("@sTM", R["sTM"]);
+                        cmd1.Parameters.AddWithValue("@sTTM", R["sTTM"]);
+                        cmd1.Parameters.AddWithValue("@sNG", R["sNG"]);
+                        cmd1.Parameters.AddWithValue("@sMoTa", R["sMoTa"]);
+                        if (!String.IsNullOrEmpty(Convert.ToString(dr[j]["TC"])))
+                        {
+                            cmd1.Parameters.AddWithValue("@rTuChi", Convert.ToDecimal(dr[j]["TC"]) * 1000);
+                        }
+                        else
+                            cmd1.Parameters.AddWithValue("@rTuChi", 0);
+                        if (!String.IsNullOrEmpty(Convert.ToString(dr[j]["HV"])))
+                        {
+                            cmd1.Parameters.AddWithValue("@rHienVat", Convert.ToDecimal(dr[j]["HV"]) * 1000);
+                        }
+                        else
+                            cmd1.Parameters.AddWithValue("@rHienVat", 0);
+                        cmd1.Parameters.AddWithValue("@iID_MaNhomNguoiDung_DuocGiao", R["iID_MaNhomNguoiDung_DuocGiao"]);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDung_DuocGiao", MaND);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDungTao", MaND);
+                        cmd1.Parameters.AddWithValue("@sIPSua", Request.UserHostAddress);
+                        cmd1.Parameters.AddWithValue("@sID_MaNguoiDungSua", MaND);
+                        Connection.UpdateDatabase(cmd1);
+                    }
+                    dtMucLuc.Dispose();
+                }
+
+            }
+            cmd.Dispose();
+            cmd1.Dispose();
+
+            //}
+            //catch (Exception Exception) { throw Exception; }
+            //finally
+            //{
+            conn.Close();
+            connExcel.Close();
+            conn.Dispose();
+            connExcel.Dispose();
+
+            string url = newPath + "/" + Path.GetFileName(Request.Files["uploadFile"].FileName);
+            System.IO.File.Delete(url);
+
+            //}
+            if (iLoai == "PC")
+                return RedirectToAction("ChungTuChiTiet_Frame", "DuToan_phanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
+            return RedirectToAction("ChungTuChiTiet_Frame", "DuToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
         }
 
         #region Lấy 1 hang AJAX: rTongSoNamTruoc

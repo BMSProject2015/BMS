@@ -1,49 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using FlexCel.Core;
-using FlexCel.Report;
-using FlexCel.Render;
-using FlexCel.XlsAdapter;
+using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
-using DomainModel;
-using VIETTEL.Models;
-using VIETTEL.Controllers;
 using System.IO;
-using System.Collections.Specialized;
-using System.Collections;
+using System.Web.Mvc;
+using DomainModel;
+using FlexCel.Core;
+using FlexCel.Render;
+using FlexCel.Report;
+using FlexCel.XlsAdapter;
+using VIETTEL.Models;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
     public class rptDuToanBS_BieuKiem_1010000Controller : Controller
     {
-        public static String SQL = "";
+        public static String sql = "";
         public static SqlCommand cmd;
         public static DataTable dt;
         public static ArrayList data;
-        public static String iID_MaDonVi, iID_MaChungTu, sKieuXem, iDonViTinh,iChiTapTrung;
+        public static String idMaDonVi, idMaChungTu, sKieuXem, iDonViTinh,iChiTapTrung;
 
         public string sViewPath = "~/Report_Views/DuToanBS/";
-        private const String sFilePathDV1 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV1.xls";
-        private const String sFilePathDV2 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV2.xls";
-        private const String sFilePathDV3 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV3.xls";
-        private const String sFilePathDV4 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV4.xls";
-        private const String sFilePathDV5 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV5.xls";
-        private const String sFilePathDV6 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV6.xls";
-        private const String sFilePathDV7 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV7.xls";
-        private const String sFilePathDV8 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV8.xls";
+        private const string sFilePathDV1 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV1.xls";
+        private const string sFilePathDV2 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV2.xls";
+        private const string sFilePathDV3 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV3.xls";
+        private const string sFilePathDV4 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV4.xls";
+        private const string sFilePathDV5 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV5.xls";
+        private const string sFilePathDV6 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV6.xls";
+        private const string sFilePathDV7 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV7.xls";
+        private const string sFilePathDV8 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_DV8.xls";
 
-        private const String sFilePathNS1 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS1.xls";
-        private const String sFilePathNS2 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS2.xls";
-        private const String sFilePathNS3 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS3.xls";
-        private const String sFilePathNS4 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS4.xls";
-        private const String sFilePathNS5 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS5.xls";
-        private const String sFilePathNS6 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS6.xls";
-        private const String sFilePathNS7 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS7.xls";
-        private const String sFilePathNS8 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS8.xls";
+        private const string sFilePathNS1 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS1.xls";
+        private const string sFilePathNS2 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS2.xls";
+        private const string sFilePathNS3 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS3.xls";
+        private const string sFilePathNS4 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS4.xls";
+        private const string sFilePathNS5 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS5.xls";
+        private const string sFilePathNS6 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS6.xls";
+        private const string sFilePathNS7 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS7.xls";
+        private const string sFilePathNS8 = "/Report_ExcelFrom/DuToanBS/rptDuToanBS_BieuKiem_1010000_NS8.xls";
 
 
         public ActionResult Index()
@@ -92,7 +87,7 @@ namespace VIETTEL.Controllers.DuToanBS
             String sTenDonVi = "B " + NguoiDung_PhongBanModels.getMoTaPhongBan_NguoiDung(MaND);
             String dNgayChungTu = "";
             dNgayChungTu =
-                Convert.ToString(CommonFunction.LayTruong("DT_ChungTu", "iID_MaChungTu", iID_MaChungTu, "dNgayChungTu"));
+                Convert.ToString(CommonFunction.LayTruong("DT_ChungTu", "iID_MaChungTu", idMaChungTu, "dNgayChungTu"));
             if (!String.IsNullOrEmpty(dNgayChungTu))
             {
                 dNgayChungTu = dNgayChungTu.Substring(0, 2) + "-" + dNgayChungTu.Substring(3, 2) + "-" +
@@ -181,14 +176,14 @@ namespace VIETTEL.Controllers.DuToanBS
 
             //Lay sLNS trong chung tu
 
-            sLNS = Convert.ToString(CommonFunction.LayTruong("DT_ChungTu", "iID_MaChungTu", iID_MaChungTu, "sDSLNS"));
+            sLNS = Convert.ToString(CommonFunction.LayTruong("DT_ChungTu", "iID_MaChungTu", idMaChungTu, "sDSLNS"));
             if (String.IsNullOrEmpty(sLNS)) sLNS = Guid.Empty.ToString();
             //Lấy danh sách các trường được nhập
-            SQL = @"SELECT DISTINCT brTonKho,brTuChi, brChiTapTrung
+            sql = @"SELECT DISTINCT brTonKho,brTuChi, brChiTapTrung
                     ,brHangNhap,brHangMua,brHienVat,brDuPhong,brPhanCap
                     FROM NS_MucLucNganSach
                     WHERE sLNS=@sLNS";
-            cmd = new SqlCommand(SQL);
+            cmd = new SqlCommand(sql);
             cmd.Parameters.AddWithValue("@sLNS", sLNS);
             dt = Connection.GetDataTable(cmd);
             if (dt.Rows.Count > 0)
@@ -220,13 +215,13 @@ namespace VIETTEL.Controllers.DuToanBS
             if (!String.IsNullOrEmpty(DKHAVING))
                 DKHAVING = DKHAVING.Substring(0, DKHAVING.Length - 2);
 
-            SQL = String.Format(@"SELECT sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
+            sql = String.Format(@"SELECT sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
 {1}
  FROM DTBS_ChungTuChiTiet
  WHERE iTrangThai=1   AND iID_MaDonVi IN ({0}) AND iID_MaChungTu=@iID_MaChungTu
- GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi {2}", iID_MaDonVi, DKSELECT,DKHAVING);
-            cmd = new SqlCommand(SQL);
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
+ GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi {2}", idMaDonVi, DKSELECT,DKHAVING);
+            cmd = new SqlCommand(sql);
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", idMaChungTu);
             dt = Connection.GetDataTable(cmd);
             cmd.Dispose();
             return dt;
@@ -291,8 +286,8 @@ namespace VIETTEL.Controllers.DuToanBS
         public clsExcelResult ExportToExcel(String MaDonVi, String MaChungTu, String KieuXem, String DonViTinh, String ChiTapTrung)
         {
             clsExcelResult clsResult = new clsExcelResult();
-            iID_MaDonVi = MaDonVi;
-            iID_MaChungTu = MaChungTu;
+            idMaDonVi = MaDonVi;
+            idMaChungTu = MaChungTu;
             sKieuXem = KieuXem;
             iDonViTinh = DonViTinh;
             iChiTapTrung = ChiTapTrung;
@@ -317,8 +312,8 @@ namespace VIETTEL.Controllers.DuToanBS
         public ActionResult ViewPDF(String MaDonVi, String MaChungTu, String KieuXem, String DonViTinh,String ChiTapTrung)
         {
             HamChung.Language();
-            iID_MaDonVi = MaDonVi;
-            iID_MaChungTu = MaChungTu;
+            idMaDonVi = MaDonVi;
+            idMaChungTu = MaChungTu;
             sKieuXem = KieuXem;
             iDonViTinh = DonViTinh;
             iChiTapTrung = ChiTapTrung;

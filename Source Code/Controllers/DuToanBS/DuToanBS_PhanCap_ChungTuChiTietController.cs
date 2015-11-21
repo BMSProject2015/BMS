@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models;
 
-namespace VIETTEL.Controllers.ChungTuChiTiet
+namespace VIETTEL.Controllers.DuToanBS
 {
     public class DuToanBS_PhanCapChungTuChiTietController : Controller
     {
