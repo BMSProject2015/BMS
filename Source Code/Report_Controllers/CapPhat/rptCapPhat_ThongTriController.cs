@@ -391,7 +391,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/LNS_DanhSach_ThongTri.ascx";
 
-            DataTable dt = CapPhat_ChungTuModels.dtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
+            DataTable dt = CapPhat_ChungTuModels.LayDtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(sLNS))
             {
@@ -419,7 +419,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/DonVi_DanhSach_ThongTri.ascx";
             
-            DataTable dt = CapPhat_ChungTuModels.dtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
+            DataTable dt = CapPhat_ChungTuModels.LayDtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(iID_MaDonVi))
             {
