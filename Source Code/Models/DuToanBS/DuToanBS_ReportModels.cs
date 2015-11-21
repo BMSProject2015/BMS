@@ -8,7 +8,7 @@ using DomainModel;
 using DomainModel.Controls;
 using System.Collections.Specialized;
 using DomainModel.Abstract;
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     public class DuToanBS_ReportModels
     {

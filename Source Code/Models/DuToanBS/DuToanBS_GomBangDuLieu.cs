@@ -9,7 +9,7 @@ using System.Data;
 using DomainModel.Controls;
 using System.Data.SqlClient;
 
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     /// <summary>
     /// Lớp DuToanBS_GomBangDuLieu cho phần bảng của Phân bổ chỉ tiêu

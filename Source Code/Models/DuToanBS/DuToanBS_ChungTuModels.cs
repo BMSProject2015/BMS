@@ -6,7 +6,7 @@ using DomainModel;
 using DomainModel.Abstract;
 using VIETTEL.Models.DungChung;
 
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     public class DuToanBS_ChungTuModels
     {
@@ -1149,7 +1149,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Loại ngân sách</param>
         /// <returns>Mã chứng từ mới</returns>
-        public static string ThemChungTu(Bang bang, string maND, string sLNS)
+        public static string ThemChungTu(Bang bang, string maND, string sLNS, string iKyThuat)
         {
             String iNamLamViec = ReportModels.LayNamLamViec(maND);
             DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
@@ -1180,6 +1180,15 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
                 sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
                 dtPhongBan.Dispose();
             }
+            int maTrangThai;
+            if (iKyThuat == "1")
+            {
+                maTrangThai = LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeChiTieu);
+            }
+            else
+            { 
+                maTrangThai =LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(DuToanModels.iID_MaPhanHe);
+            }
             //Gán giá trị trường
             bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
             bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
@@ -1188,8 +1197,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
             bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
             bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBanDich", iID_MaPhongBan);
             bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
-            bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet",
-                LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(DuToanModels.iID_MaPhanHe));
+            bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet",maTrangThai);
 
             return Convert.ToString(bang.Save());
         }

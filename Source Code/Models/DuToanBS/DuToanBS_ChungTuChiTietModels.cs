@@ -9,7 +9,7 @@ using DomainModel.Controls;
 using DomainModel.Abstract;
 using System.Collections.Specialized;
 
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     public class DuToanBS_ChungTuChiTietModels
     {
