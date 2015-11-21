@@ -136,20 +136,6 @@ function BangDuLieu_onCellAfterEdit(h, c) {
                     for (i = Bang_nC_Fixed + 1; i < Bang_nC - 1; i++) {
                         Bang_arrThayDoi[h][i] = true;
                     }
-                    jQuery.ajaxSetup({ cache: false });
-                    var url = jsGetTienDaCap;
-                    var sLNS = Bang_arrGiaTri[h][0];
-                    var sL = Bang_arrGiaTri[h][1];
-                    var sK = Bang_arrGiaTri[h][2];
-                    var sM = Bang_arrGiaTri[h][3];
-                    var sTM = Bang_arrGiaTri[h][4];
-                    var sTTM = Bang_arrGiaTri[h][5];
-                    var sNG =Bang_arrGiaTri[h][6];
-                    url += "?sLNS=" + sLNS + "&sL=" + sL + "&sK=" + sK + "&sM=" + sM + "&sTM=" + sTM + "&sTTM=" + sTTM + "&sNG=" + sNG + "&iID_MaDonVi=" + Bang_arrGiaTri[h][c];
-                    $.getJSON(url, function (item) {
-                        Bang_GanGiaTriThatChoO(h, c + 4, item.value);
-                        BangDuLieu_CapNhapLaiHangCha(h, c);
-                    });
                 }
                 else {
                     Bang_GanGiaTriThatChoO_colName(h, "sTenDonVi", TenDonVi);
@@ -160,6 +146,7 @@ function BangDuLieu_onCellAfterEdit(h, c) {
         BangDuLieu_DienPhanBo_DaCapPhat(h);
     }
     else {
+        if (Bang_arrMaCot[c] == "sTenDonVi") 
             BangDuLieu_CapNhapLaiHangCha(h, c);
     }
     return true;
@@ -180,7 +167,7 @@ function BangDuLieu_CapNhapLaiHangCha(h, c) {
     while (Bang_arrCSCha[csCha] >= 0) {
         csCha = Bang_arrCSCha[csCha];
         
-        for (j = Bang_nC_Fixed + 2; j < cMax; j = j + 4) {
+        for (j = Bang_nC_Fixed + 3; j < cMax; j = j + 4) {
             //Tính tổng các ô con của cột phân bổ
             GiaTri = BangDuLieu_TinhTongHangCon(csCha, j - 1);
             Bang_GanGiaTriThatChoO(csCha, j - 1, GiaTri);
@@ -229,7 +216,7 @@ function BangDuLieu_TinhTongHangCon(csCha, c) {
     var h, vR = 0;
     //tuannn sua them dk cot sTenCongTrinh 31/7/12
     for (h = 0; h < Bang_arrCSCha.length; h++) {
-        if (csCha == Bang_arrCSCha[h] && Bang_arrMaCot[c] != "sTenCongTrinh" && Bang_arrMaCot[c] != "sTenDonVi") {
+        if (csCha == Bang_arrCSCha[h] && Bang_arrMaCot[c] != "sTenCongTrinh") {
             vR += parseFloat(Bang_arrGiaTri[h][c]);
         }
     }
