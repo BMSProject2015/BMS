@@ -235,7 +235,7 @@ namespace VIETTEL.Controllers.CapPhat
             int iThangCapPhat = dNgayCapPhat.Month;
             Object item = new
             {
-                data = CapPhat_BangDuLieu.LayGiaTri_ChiTieu_DaCap(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,Convert.ToString(dNgayCapPhat), iID_MaNguonNganSach, iID_MaNamNganSach)
+                data = CapPhat_BangDuLieu_Cuc.LayGiaTri_ChiTieu_DaCap(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,Convert.ToString(dNgayCapPhat), iID_MaNguonNganSach, iID_MaNamNganSach)
             };
 
             return Json(item, JsonRequestBehavior.AllowGet);

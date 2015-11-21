@@ -11,13 +11,22 @@ using DomainModel;
 using System.Collections.Specialized;
 using VIETTEL.Models;
 
-namespace VIETTEL.Controllers.DuToan
+//HungPX QUP: sửa namespace thành cấp phát
+namespace VIETTEL.Controllers.CapPhat
 {
     public class CapPhat_ChungTuController : Controller
     {
         //
         // GET: /CapPhat_ChungTu/
-        public string sViewPath = "~/Views/CapPhat/ChungTu/";
+        public static readonly string CREATE = "Create";
+        public static readonly string EDIT = "Edit";
+        public static readonly string DELETE = "Delete";
+        public static readonly string VIEW_ROOTPATH = "~/Views/CapPhat/ChungTu/";
+        public static readonly string VIEW_CAPPHAT_CHUNGTU_INDEX = "CapPhat_ChungTu_Index.aspx";
+        public static readonly string VIEW_CAPPHAT_CHUNGTU_CHUYENNAMSAU = "CapPhat_ChungTu_ChuyenNamSau.aspx";
+        public static readonly string VIEW_CAPPHAT_CHUNGTU_EDIT = "CapPhat_ChungTu_Edit.aspx";
+        public static readonly string VIEW_CAPPHAT_CHUNGTU_DUYET = "CapPhat_ChungTu_Duyet.aspx";
+
         /// <summary>
         /// Action Index Cấp phát chứng từ
         /// </summary>
@@ -27,29 +36,34 @@ namespace VIETTEL.Controllers.DuToan
         [Authorize]
         public ActionResult Index(String MaDotNganSach, String sLNS, String DonVi)
         {
-
             if (HamChung.CoQuyenXemTheoMenu(Request.Url.AbsolutePath, User.Identity.Name))
             {
                 ViewData["MaDotNganSach"] = MaDotNganSach;
                 ViewData["sLNS"] = sLNS;
                 ViewData["DonVi"] = DonVi;
-                return View(sViewPath + "CapPhat_ChungTu_Index.aspx");
+                return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_INDEX);
             }
             else
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
         }
+        /// <summary>
+        /// chưa rõ nghiệp vụ
+        /// </summary>
+        /// <param name="MaDotNganSach"></param>
+        /// <param name="sLNS"></param>
+        /// <param name="DonVi"></param>
+        /// <returns></returns>
         [Authorize]
         public ActionResult ChuyenNamSau(String MaDotNganSach, String sLNS, String DonVi)
         {
-
             if (HamChung.CoQuyenXemTheoMenu(Request.Url.AbsolutePath, User.Identity.Name))
             {
                 ViewData["MaDotNganSach"] = MaDotNganSach;
                 ViewData["sLNS"] = sLNS;
                 ViewData["DonVi"] = DonVi;
-                return View(sViewPath + "CapPhat_ChungTu_ChuyenNamSau.aspx");
+                return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_CHUYENNAMSAU);
             }
             else
             {
@@ -59,7 +73,7 @@ namespace VIETTEL.Controllers.DuToan
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchSubmit(String ParentID, String DonVi, String Loai)
+        public ActionResult TimKiemChungTu(String ParentID, String DonVi, String Loai)
         {
             String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
             String DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
@@ -69,9 +83,15 @@ namespace VIETTEL.Controllers.DuToan
             String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(User.Identity.Name);
             return RedirectToAction("Index", "CapPhat_ChungTu", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi, Loai = Loai });
         }
-
+        /// <summary>
+        /// Hàm sửa chứng từ cấp phát khi người dùng click sửa chứng từ
+        /// Trong trường hợp tạo mới, mã cấp phát bằng null
+        /// </summary>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <param name="Loai">Loại ngân sách cấp phát</param>
+        /// <returns></returns>
         [Authorize]
-        public ActionResult Edit(String iID_MaCapPhat, String Loai)
+        public ActionResult SuaChungTu(String iID_MaCapPhat, String Loai)
         {
             String MaND = User.Identity.Name;
             if (String.IsNullOrEmpty(iID_MaCapPhat) && LuongCongViecModel.NguoiDung_DuocThemChungTu(CapPhatModels.iID_MaPhanHe, MaND) == false)
@@ -79,7 +99,7 @@ namespace VIETTEL.Controllers.DuToan
                 //Phải có quyền thêm chứng từ
                 return RedirectToAction("Index", "PermitionMessage");
             }
-            if (BaoMat.ChoPhepLamViec(MaND, "CP_CapPhat", "Edit") == false)
+            if (BaoMat.ChoPhepLamViec(MaND, "CP_CapPhat", EDIT) == false)
             {
                 //Phải có quyền thêm chứng từ
                 return RedirectToAction("Index", "PermitionMessage");
@@ -91,22 +111,29 @@ namespace VIETTEL.Controllers.DuToan
             }
             ViewData["iID_MaCapPhat"] = iID_MaCapPhat;
             ViewData["Loai"] = Loai;
-            return View(sViewPath + "CapPhat_ChungTu_Edit.aspx");
+            return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_EDIT);
         }
-
+        /// <summary>
+        /// Lưu chứng từ sau khi thực hiện sửa hoặc tạo mới
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <param name="DonVi"></param>
+        /// <param name="Loai"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit(String ParentID, String iID_MaCapPhat, String DonVi,String Loai)
+        public ActionResult LuuChungTu(String ParentID, String iID_MaCapPhat, String DonVi, String Loai)
         {
             String MaND = User.Identity.Name;
-            string sChucNang = "Edit";
+            string sChucNang = EDIT;
             if (Request.Form[ParentID + "_DuLieuMoi"] == "1" && LuongCongViecModel.NguoiDung_DuocThemChungTu(CapPhatModels.iID_MaPhanHe, MaND) == false)
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
             if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
             {
-                sChucNang = "Create";
+                sChucNang = CREATE;
             }
             Bang bang = new Bang("CP_CapPhat");
             //Kiểm tra quyền của người dùng với chức năng
@@ -133,7 +160,7 @@ namespace VIETTEL.Controllers.DuToan
             {
                 arrLoi.Add("err_dNgayCapPhat", "Bạn chưa nhập ngày chứng từ!");
             }
-            if (String.IsNullOrEmpty(iID_MaTinhChatCapThu) || iID_MaTinhChatCapThu =="-1")
+            if (String.IsNullOrEmpty(iID_MaTinhChatCapThu) || iID_MaTinhChatCapThu == "-1")
             {
                 arrLoi.Add("err_iID_MaTinhChatCapThu", "Bạn chưa chọn tính chất cấp thu");
             }
@@ -146,11 +173,10 @@ namespace VIETTEL.Controllers.DuToan
                 ViewData["DonVi"] = DonVi;
                 ViewData["iID_MaCapPhat"] = iID_MaCapPhat;
                 ViewData["DuLieuMoi"] = Request.Form[ParentID + "_DuLieuMoi"];
-                return View(sViewPath + "CapPhat_ChungTu_Edit.aspx");
+                return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_EDIT);
             }
             else
             {
-
                 DataTable dtNguoiDungCauHinh = NguoiDungCauHinhModels.LayCauHinh(User.Identity.Name);
                 bang.MaNguoiDungSua = User.Identity.Name;
                 bang.IPSua = Request.UserHostAddress;
@@ -166,58 +192,51 @@ namespace VIETTEL.Controllers.DuToan
                     bang.CmdParams.Parameters.AddWithValue("@iLoai", Loai);
                     bang.CmdParams.Parameters.AddWithValue("@sLoai", sLoai);
                     String MaChungTuAddNew = Convert.ToString(bang.Save());
-                  //  CapPhat_ChungTuChiTietModels.ThemChiTiet(MaChungTuAddNew, MaND, Request.UserHostAddress);
-                    CapPhat_ChungTuModels.InsertDuyetChungTu(MaChungTuAddNew, "Tạo mới", User.Identity.Name, Request.UserHostAddress);
+                    CapPhat_ChungTuModels.CapNhatBangDuyetChungTu(MaChungTuAddNew, "Tạo mới", User.Identity.Name, Request.UserHostAddress);
                 }
                 else
                 {
                     bang.GiaTriKhoa = iID_MaCapPhat;
                     bang.Save();
 
-                    DataTable dtChungTu = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
-
-                    SqlCommand cmd = new SqlCommand();
-
-                    String SQL = "UPDATE CP_CapPhatChiTiet " +
-                                "set dNgayCapPhat = @dNgayCapPhat , " +
-                                "iDM_MaLoaiCapPhat = @iDM_MaLoaiCapPhat, " +
-                                "iID_MaTinhChatCapThu = @iID_MaTinhChatCapThu " +
-                                "where iID_MaCapPhat = @iID_MaCapPhat";
-                    cmd.CommandText = SQL;
-                    cmd.Parameters.AddWithValue("@dNgayCapPhat",dtChungTu.Rows[0]["dNgayCapPhat"]);
-                    cmd.Parameters.AddWithValue("@iDM_MaLoaiCapPhat", dtChungTu.Rows[0]["iDM_MaLoaiCapPhat"]);
-                    cmd.Parameters.AddWithValue("@iID_MaTinhChatCapThu", dtChungTu.Rows[0]["iID_MaTinhChatCapThu"]);
-                    cmd.Parameters.AddWithValue("@iID_MaCapPhat", dtChungTu.Rows[0]["iID_MaCapPhat"]);
-                    Connection.UpdateDatabase(cmd);
-                    cmd.Dispose();
-                    dtChungTu.Dispose();
-
+                    // HungPX QUP: Update bảng chứng từ chi tiết tương ứng với chứng từ vừa edit
+                    CapPhat_ChungTuChiTietModels.DongBoChungTuChiTiet(iID_MaCapPhat);
                 }
             }
-            return RedirectToAction("Index", "CapPhat_ChungTu", new { DonVi = DonVi , Loai = Loai});
+            return RedirectToAction("Index", "CapPhat_ChungTu", new { DonVi = DonVi, Loai = Loai });
         }
-
+        /// <summary>
+        /// xóa chứng từ
+        /// </summary>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <param name="DonVi"></param>
+        /// <returns></returns>
         [Authorize]
-        public ActionResult Delete(String iID_MaCapPhat,String DonVi)
+        public ActionResult XoaChungTu(String iID_MaCapPhat, String DonVi)
         {
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "CP_CapPhat", "Delete") == false)
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "CP_CapPhat", DELETE) == false)
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
             //Xóa bảng cấp phát và chi tiết
-            CapPhat_ChungTuModels.Delete_ChungTu(iID_MaCapPhat, Request.UserHostAddress, User.Identity.Name);
+            CapPhat_ChungTuModels.XoaChungTu(iID_MaCapPhat, Request.UserHostAddress, User.Identity.Name);
             return RedirectToAction("Index", "CapPhat_ChungTu", new { MaDotNganSach = iID_MaCapPhat, DonVi = DonVi });
         }
 
         [Authorize]
         public ActionResult Duyet()
         {
-            return View(sViewPath + "CapPhat_ChungTu_Duyet.aspx");
+            return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_DUYET);
         }
-
+        /// <summary>
+        /// Chưa rõ nghiệp vụ
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="ChiNganSach"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchDuyetSubmit(String ParentID, String ChiNganSach)
+        public ActionResult TimKiemDuyetChungTu(String ParentID, String ChiNganSach)
         {
             String MaPhongBan = Request.Form[ParentID + "_iID_MaPhongBan"];
             String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
@@ -228,13 +247,18 @@ namespace VIETTEL.Controllers.DuToan
 
             return RedirectToAction("Duyet", "CapPhat_ChungTu", new { MaPhongBan = MaPhongBan, SoChungTu = SoChungTu, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat });
         }
-
+        /// <summary>
+        /// Xử lý hoạt động trình duyệt (duyệt) chứng từ của người dùng
+        /// </summary>
+        /// <param name="ChiNganSach"></param>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <returns></returns>
         [Authorize]
         public ActionResult TrinhDuyet(String ChiNganSach, String iID_MaCapPhat)
         {
             String MaND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
-            int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaCapPhat);
+            int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTrinhDuyet(MaND, iID_MaCapPhat);
             if (iID_MaTrangThaiDuyet_TrinhDuyet <= 0)
             {
                 return RedirectToAction("Index", "PermitionMessage");
@@ -244,28 +268,32 @@ namespace VIETTEL.Controllers.DuToan
             dtTrangThaiDuyet.Dispose();
 
             ///Update trạng thái cho bảng chứng từ
-            CapPhat_ChungTuModels.Update_iID_MaTrangThaiDuyet(iID_MaCapPhat, iID_MaTrangThaiDuyet_TrinhDuyet, true, MaND, Request.UserHostAddress);
+            CapPhat_ChungTuModels.CapNhatMaTrangThaiDuyet(iID_MaCapPhat, iID_MaTrangThaiDuyet_TrinhDuyet, true, MaND, Request.UserHostAddress);
 
             ///Thêm dữ liệu vào bảng duyệt chứng từ - Lấy mã duyệt chứng từ
-            String MaDuyetChungTu = CapPhat_ChungTuModels.InsertDuyetChungTu(iID_MaCapPhat, NoiDung, MaND, Request.UserHostAddress);
+            String MaDuyetChungTu = CapPhat_ChungTuModels.CapNhatBangDuyetChungTu(iID_MaCapPhat, NoiDung, MaND, Request.UserHostAddress);
 
             ///Update Mã duyệt chứng từ cuối vào bảng chứng từ
             SqlCommand cmd;
             cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@iID_MaDuyetCapPhatCuoiCung", MaDuyetChungTu);
-            CapPhat_ChungTuModels.UpdateRecord(iID_MaCapPhat, cmd.Parameters, User.Identity.Name, Request.UserHostAddress);
+            CapPhat_ChungTuModels.CapNhatBanGhi(iID_MaCapPhat, cmd.Parameters, User.Identity.Name, Request.UserHostAddress);
             cmd.Dispose();
-
 
             return RedirectToAction("CapPhatChiTiet_Frame", "CapPhat_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat });
         }
-
+        /// <summary>
+        /// Xử lý hoạt động từ chối chứng từ của người dùng
+        /// </summary>
+        /// <param name="ChiNganSach"></param>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <returns></returns>
         [Authorize]
         public ActionResult TuChoi(String ChiNganSach, String iID_MaCapPhat)
         {
             String MaND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
-            int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaCapPhat);
+            int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTuChoi(MaND, iID_MaCapPhat);
             if (iID_MaTrangThaiDuyet_TuChoi <= 0)
             {
                 return RedirectToAction("Index", "PermitionMessage");
@@ -278,39 +306,43 @@ namespace VIETTEL.Controllers.DuToan
             CapPhat_ChungTuModels.CapNhapLaiTruong_sSua(iID_MaCapPhat);
 
             ///Update trạng thái cho bảng chứng từ
-            CapPhat_ChungTuModels.Update_iID_MaTrangThaiDuyet(iID_MaCapPhat, iID_MaTrangThaiDuyet_TuChoi, false, MaND, Request.UserHostAddress);
+            CapPhat_ChungTuModels.CapNhatMaTrangThaiDuyet(iID_MaCapPhat, iID_MaTrangThaiDuyet_TuChoi, false, MaND, Request.UserHostAddress);
 
             ///Thêm dữ liệu vào bảng duyệt chứng từ - Lấy mã duyệt chứng từ
-            String MaDuyetChungTu = CapPhat_ChungTuModels.InsertDuyetChungTu(iID_MaCapPhat, NoiDung, NoiDung, Request.UserHostAddress);
+            String MaDuyetChungTu = CapPhat_ChungTuModels.CapNhatBangDuyetChungTu(iID_MaCapPhat, NoiDung, NoiDung, Request.UserHostAddress);
 
             ///Update Mã duyệt chứng từ cuối vào bảng chứng từ
             SqlCommand cmd;
             cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@iID_MaDuyetCapPhatCuoiCung", MaDuyetChungTu);
-            CapPhat_ChungTuModels.UpdateRecord(iID_MaCapPhat, cmd.Parameters, MaND, Request.UserHostAddress);
+            CapPhat_ChungTuModels.CapNhatBanGhi(iID_MaCapPhat, cmd.Parameters, MaND, Request.UserHostAddress);
             cmd.Dispose();
 
-             return RedirectToAction("CapPhatChiTiet_Frame", "CapPhat_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat });
+            return RedirectToAction("CapPhatChiTiet_Frame", "CapPhat_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat });
         }
-
+        /// <summary>
+        /// chưa rõ nghiệp vụ
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubmit_ThongTri(String ParentID, String iID_MaCapPhat)
         {
-
             return RedirectToAction("Index", "CapPhat_Report", new { iID_MaCapPhat = iID_MaCapPhat });
         }
-
+        /// <summary>
+        /// chưa rõ nghiệp vụ
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSubmit_ChuyenNamSau()
         {
-            String MaND=User.Identity.Name;
+            String MaND = User.Identity.Name;
             CapPhatModels.ChuyenNamSau(MaND);
             return RedirectToAction("Index");
-
         }
-     
-
     }
 }

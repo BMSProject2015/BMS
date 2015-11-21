@@ -15,27 +15,35 @@ namespace VIETTEL.Controllers.CapPhat
 {
     public class CapPhat_ChungTuChiTietController : Controller
     {
-        //
-        // GET: /CapPhat_ChungTuChiTiet/
-        public string sViewPath = "~/Views/CapPhat/ChungTuChiTiet/";
+        public static readonly string VIEW_ROOTPATH = "~/Views/CapPhat/ChungTuChiTiet/";
+        public static readonly string VIEW_CAPPHATCHITIET_INDEX_DONVI = "CapPhatChiTiet_Index_DonVi.aspx";
+        public static readonly string VIEW_CAPPHATCHITIET_INDEX = "CapPhatChiTiet_Index.aspx";
+        public static readonly string VIEW_CAPPHATCHITIET_DANHSACH_FRAME = "CapPhatChiTiet_Index_DanhSach_Frame.aspx";
+
         [Authorize]
         public ActionResult Index(String DonVi,String iID_MaCapPhat)
         {
             if (String.IsNullOrEmpty(DonVi) == false)
             {
-                return View(sViewPath + "CapPhatChiTiet_Index_DonVi.aspx");
+                return View(VIEW_ROOTPATH + VIEW_CAPPHATCHITIET_INDEX_DONVI);
             }
-            return View(sViewPath + "CapPhatChiTiet_Index.aspx");
+            return View(VIEW_ROOTPATH + VIEW_CAPPHATCHITIET_INDEX);
         }
         [Authorize]
         public ActionResult CapPhatChiTiet_Frame(String iID_MaCapPhat)
         {
-            return View(sViewPath + "CapPhatChiTiet_Index_DanhSach_Frame.aspx");
+            return View(VIEW_ROOTPATH + VIEW_CAPPHATCHITIET_DANHSACH_FRAME);
         }
-
+        /// <summary>
+        /// Lưu chứng từ chi tiết
+        /// </summary>
+        /// <param name="ChiNganSach"></param>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <param name="DonVi"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult DetailSubmit(String ChiNganSach,String iID_MaCapPhat,String DonVi)
+        public ActionResult LuuChungTuChiTiet(String ChiNganSach,String iID_MaCapPhat,String DonVi)
         {
             NameValueCollection data = CapPhat_ChungTuModels.LayThongTin(iID_MaCapPhat);
 
@@ -160,7 +168,6 @@ namespace VIETTEL.Controllers.CapPhat
                                 dtMucLuc.Dispose();
                             }
 
-
                             //Them tham so
                             for (int j = 0; j < arrMaCot.Length; j++)
                             {
@@ -213,36 +220,30 @@ namespace VIETTEL.Controllers.CapPhat
             }
             return RedirectToAction("CapPhatChiTiet_Frame", new { iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi });
         }
-
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchSubmit(String ParentID, String iID_MaCapPhat,String DonVi)
-        {
-            String iID_MaDonVi = Request.Form[ParentID + "_iID_MaDonVi"];
-            String sLNS = Request.Form[ParentID + "_sLNS"];
-            String sL = Request.Form[ParentID + "_sL"];
-            String sK = Request.Form[ParentID + "_sK"];
-            String sM = Request.Form[ParentID + "_sM"];
-            String sTM = Request.Form[ParentID + "_sTM"];
-            String sTTM = Request.Form[ParentID + "_sTTM"];
-            String sNG = Request.Form[ParentID + "_sNG"];
-            String sTNG = Request.Form[ParentID + "_sTNG"];
-
-            return RedirectToAction("Index", new { iID_MaCapPhat = iID_MaCapPhat, iID_MaDonVi = iID_MaDonVi, sLNS = sLNS, sL = sL, sK = sK, sM = sM, sTM = sTM, sTTM = sTTM, sNG = sNG, sTNG = sTNG, DonVi = DonVi });
-        }
-
+        /// <summary>
+        /// get_GiaTri
+        /// </summary>
+        /// <param name="Truong"></param>
+        /// <param name="GiaTri"></param>
+        /// <param name="DSGiaTri"></param>
+        /// <returns></returns>
         #region Lấy 1 hang AJAX: rTongSoNamTruoc
         [Authorize]
         public JsonResult get_GiaTri(String Truong, String GiaTri, String DSGiaTri)
         {
             if (Truong == "PhanBo_DaCapPhat")
             {
-                return get_PhanBo_DaCapPhat(GiaTri, DSGiaTri);
+                return LayGiaTriDaCapPhat(GiaTri, DSGiaTri);
             }
             return null;
         }
-
-        private JsonResult get_PhanBo_DaCapPhat(String GiaTri, String DSGiaTri)
+        /// <summary>
+        /// Hàm lấy giá trị đã cấp phát của chứng từ chi tiết
+        /// </summary>
+        /// <param name="GiaTri"></param>
+        /// <param name="DSGiaTri"></param>
+        /// <returns></returns>
+        private JsonResult LayGiaTriDaCapPhat(String GiaTri, String DSGiaTri)
         {
             String iID_MaCapPhat = GiaTri;
             String[] arrDSGiaTri = DSGiaTri.Split(',');
@@ -253,37 +254,21 @@ namespace VIETTEL.Controllers.CapPhat
             int iNamLamViec = Convert.ToInt32(data["iNamLamViec"]);
             int iID_MaNguonNganSach = Convert.ToInt32(data["iID_MaNguonNganSach"]);
             int iID_MaNamNganSach = Convert.ToInt32(data["iID_MaNamNganSach"]);
+            String iDM_MaLoaiCapPhat = Convert.ToString(data["iDM_MaLoaiCapPhat"]);
+            String iID_MaTinhChatCapThu = Convert.ToString(data["iID_MaTinhChatCapThu"]);
+            String sDSLNS = Convert.ToString(data["sDSLNS"]);
+
             Object obNgayCapPhat=data["dNgayCapPhat"];
             DateTime dNgayCapPhat = Convert.ToDateTime(obNgayCapPhat);
             int iThangCapPhat = dNgayCapPhat.Month;
             Object item = new
             {
-                data = CapPhat_BangDuLieu.LayGiaTri_ChiTieu_DaCap(iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec,Convert.ToString(dNgayCapPhat), iID_MaNguonNganSach, iID_MaNamNganSach)
+                data = CapPhat_BangDuLieu.LayGiaTri_ChiTieu_DaCap(iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu, sDSLNS, iID_MaMucLucNganSach, iID_MaDonVi, iNamLamViec, Convert.ToString(dNgayCapPhat), iID_MaNguonNganSach, iID_MaNamNganSach)
             };
 
             return Json(item, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
-
-        [Authorize]
-        public JsonResult getTienDaCap(String sLNS, 
-                                        String sL, 
-                                        String sK, 
-                                        String sM, 
-                                        String sTM, 
-                                        String sTTM,
-                                        String sNG,
-                                        String iID_MaDonVi)
-        {
-            
-            //CapPhat_BangDuLieu.ge
-            Object item = new
-            {        
-                value = CapPhat_ChungTuChiTietModels.getTienDaCap(sLNS,sL,sK,sM,sTM,sTTM,sNG,iID_MaDonVi) 
-            };
-            return Json(item, JsonRequestBehavior.AllowGet);
-            //return Json(strGiaTri, JsonRequestBehavior.AllowGet);
-        }
     }
 }
