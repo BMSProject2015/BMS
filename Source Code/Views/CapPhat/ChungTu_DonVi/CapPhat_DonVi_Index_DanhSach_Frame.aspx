@@ -34,8 +34,8 @@
     int Bang_Height = 470;
     int Bang_FixedRow_Height = 50;
     //String strDSDonVi = bang.strDSDonVi;
-    int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaCapPhat);
-    int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaCapPhat);
+    int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTiet_DonViModels.LayMaTrangThaiDuyetTuChoi(MaND, iID_MaCapPhat);
+    int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTiet_DonViModels.LayMaTrangThaiDuyetTrinhDuyet(MaND, iID_MaCapPhat);
    %>
             
 <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>    
@@ -55,7 +55,7 @@
     {
     %>
     
-    <form action="<%=Url.Action("DetailSubmit", "CapPhat_ChungTu_DonVi", new{iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
+    <form action="<%=Url.Action("LuuChungTuChiTiet", "CapPhat_ChungTu_DonVi", new{iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
     <%
     } %>
         <input type="hidden" id="idAction" name="idAction" value="0" />

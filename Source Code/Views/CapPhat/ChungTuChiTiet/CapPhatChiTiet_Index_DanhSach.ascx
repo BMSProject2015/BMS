@@ -15,7 +15,7 @@
     String ChiNganSach = Request.QueryString["ChiNganSach"];
 
     //HungPX: lấy giá trị loại chi tiết đến của chứng từ
-    DataTable dtCapPhat = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
+    DataTable dtCapPhat = CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
     String sLoai = Convert.ToString(dtCapPhat.Rows[0]["sLoai"]);
     int indexChiTietDen = CapPhat_BangDuLieu.getIndex(sLoai);
     String[] arrDSTruong = MucLucNganSachModels.arrDSTruong;

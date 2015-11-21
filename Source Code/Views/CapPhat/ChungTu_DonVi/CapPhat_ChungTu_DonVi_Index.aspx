@@ -42,15 +42,15 @@
         CurrentPage = Convert.ToInt32(page);
     }
 
-    DataTable dt = CapPhat_ChungTuChiTiet_DonViModels.Get_DanhSachChungTu("", iID_MaDonVi, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false, CurrentPage, Globals.PageSize);
+    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuDonVi("", iID_MaDonVi, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false, CurrentPage, Globals.PageSize);
 
-    double nums = CapPhat_ChungTuChiTiet_DonViModels.Get_DanhSachChungTu_Count("", iID_MaDonVi, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false);
+    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatDonViCount("", iID_MaDonVi, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false);
     int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
     String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { iID_MaDonVi = iID_MaDonVi, MaND = MaND, SoCapPhat = iSoCapPhat, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
-    String strThemMoi = Url.Action("Edit", "CapPhat_ChungTu_DonVi", new { Loai = Loai });
+    String strThemMoi = Url.Action("SuaChungTu", "CapPhat_ChungTu_DonVi", new { Loai = Loai });
     DataTable dtLoaiCapPhat = DanhMucModels.DT_DanhMuc("LoaiCapPhat",true,"---Chọn loại cấp phát---");
     SelectOptionList slLoaiCapPhat = new SelectOptionList(dtLoaiCapPhat, "iID_MaDanhMuc", "sTen");
-    using (Html.BeginForm("SearchSubmit", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID}))
+    using (Html.BeginForm("TimKiemChungTu", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID }))
     {
 %>
 <div class="box_tong">
@@ -210,7 +210,7 @@
             if (LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeCapPhat, MaND) &&
                                 LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeCapPhat, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])))
             {
-                strEdit = MyHtmlHelper.ActionLink(Url.Action("Edit", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "");
+                strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "");
                 strDelete = MyHtmlHelper.ActionLink(Url.Action("Delete", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "");
             }
             
@@ -219,7 +219,7 @@
                 <td align="center"><%=R["rownum"]%></td>            
                 <td align="center"><%=NgayChungTu %></td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Detail", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"] }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("ChungTuChiTiet", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"] }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b>
                 </td>
                 <td><%=LoaiCapPhat %></td>
                 <td><%=sLNS %></td>

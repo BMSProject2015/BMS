@@ -35,8 +35,8 @@
     int Bang_FixedRow_Height = 50;
     String strDSDonVi = bang.strDSDonVi;
 
-    int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaCapPhat);
-    int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaCapPhat);
+    int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTuChoi(MaND, iID_MaCapPhat);
+    int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTrinhDuyet(MaND, iID_MaCapPhat);
     
     
 
@@ -59,7 +59,7 @@
     if (bang.ChiDoc==false)
     {
     %>
-    <form action="<%=Url.Action("DetailSubmit", "CapPhat_ChungTuChiTiet", new {ChiNganSach=ChiNganSach,iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
+    <form action="<%=Url.Action("LuuChungTuChiTiet", "CapPhat_ChungTuChiTiet", new {ChiNganSach=ChiNganSach,iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
     <%
     } %>
         <input type="hidden" id="idAction" name="idAction" value="0" />
@@ -146,7 +146,6 @@ if (bang.ChiDoc == false)
         BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "CapPhat_ChungTuChiTiet")%>';
         BangDuLieu_iID_MaChungTu = '<%=iID_MaCapPhat%>';
         BangDuLieu_DuocSuaChiTiet = <%=bang.DuocSuaChiTiet?"true":"false"%>;
-        jsGetTienDaCap = '<%=Url.Action("getTienDaCap", "CapPhat_ChungTuChiTiet")%>';
         <%=bang.DuocSuaChiTiet?"":"Bang_keys.fnSetFocus(null, null);"%>
     });
 </script>

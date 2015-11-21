@@ -51,7 +51,7 @@
     dtLNS.Dispose();
 
     //Danh sách chi tiết đến
-    DataTable dtLoai = CapPhat_ChungTuModels.getLoaiNganSachCon();
+    DataTable dtLoai = CapPhat_ChungTuModels.LayLoaiNganSachCon();
     SelectOptionList slLoai = new SelectOptionList(dtLoai, "iID_Loai", "TenHT");
     dtLoai.Dispose();
      
@@ -77,7 +77,7 @@
      //Nếu là update chứng từ
      else {
          //Lấy thông tin chứng từ cấp phát. 
-         DataTable dtCapPhat = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
+         DataTable dtCapPhat = CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
          if (dtCapPhat != null && dtCapPhat.Rows.Count > 0)
          {
              DataRow R = dtCapPhat.Rows[0];
@@ -98,7 +98,7 @@
           
      }
 
-     using (Html.BeginForm("EditSubmit", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, Loai=Loai}))
+     using (Html.BeginForm("LuuChungTu", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, Loai = Loai }))
     {
 %>
 <%= Html.Hidden(ParentID + "_DuLieuMoi", ViewData["DuLieuMoi"])%>
@@ -168,7 +168,7 @@
                         <td class="td_form2_td5">
                             <div id="<%= ParentID %>_divDonVi">
                               
-                                <%= CapPhat_ChungTu_DonViController.get_objDonVi_PhongBan(ParentID, UserID, iID_MaDonVi, iNamLamViec)%>
+                                <%= CapPhat_ChungTu_DonViController.LayDoiTuongDonVi_PhongBan(ParentID, UserID, iID_MaDonVi, iNamLamViec)%>
                             </div>
                             <%= Html.ValidationMessage(ParentID + "_" + "err_iID_MaDonVi")%>
                         </td>

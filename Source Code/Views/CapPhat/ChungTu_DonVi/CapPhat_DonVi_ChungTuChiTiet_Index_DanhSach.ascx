@@ -26,7 +26,7 @@
     }
     
     //VungNV: 2015/10/28 lấy giá trị sLoai
-    DataTable dtChungTu = CapPhat_ChungTuChiTiet_DonViModels.GetChungTu(iID_MaCapPhat);
+    DataTable dtChungTu = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
     DataRow RChungTu = dtChungTu.Rows[0];
     String sLoai = Convert.ToString(RChungTu["sLoai"]);
     dtChungTu.Dispose();

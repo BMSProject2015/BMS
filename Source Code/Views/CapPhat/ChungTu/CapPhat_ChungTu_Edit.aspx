@@ -27,12 +27,12 @@
     SelectOptionList slLNS = new SelectOptionList(dtLNS, "sLNS", "TenHT");
     dtLNS.Dispose();
 
-    DataTable dtLoai = CapPhat_ChungTuModels.getLoaiNganSachCon();
+    DataTable dtLoai = CapPhat_ChungTuModels.LayLoaiNganSachCon();
     SelectOptionList slLoai = new SelectOptionList(dtLoai, "iID_Loai", "TenHT");
 
     dtLoai.Dispose();
 
-    DataTable dtCapPhat = CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
+    DataTable dtCapPhat = CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
     DataRow R;
     String sLoai = "", iSoCapPhat = "", sTienToChungTu = "", dNgayCapPhat = "", sNoiDung = "", sLyDo = "", iID_MaTrangThaiDuyet = "", iDM_MaLoaiCapPhat = "", iID_MaTinhChatCapThu = ""; ;
     String ReadOnly = "";
@@ -74,7 +74,7 @@
      
      DataTable dtLoaiCapPhat=CommonFunction.Lay_dtDanhMuc("LoaiCapPhat");         
      SelectOptionList slLoaiCapPhat= new SelectOptionList(dtLoaiCapPhat,"iID_MaDanhMuc","sTen");
-     using (Html.BeginForm("EditSubmit", "CapPhat_ChungTu", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, sLNS = sLNS, DonVi = DonVi, Loai = Loai }))
+     using (Html.BeginForm("LuuChungTu", "CapPhat_ChungTu", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, sLNS = sLNS, DonVi = DonVi, Loai = Loai }))
     {
  %>
 <%= Html.Hidden(ParentID + "_DuLieuMoi", ViewData["DuLieuMoi"])%>

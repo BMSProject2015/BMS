@@ -16,7 +16,7 @@
         <%
             String ParentID = "CapPhat_ThongTri";
             String iID_MaCapPhat = Request.QueryString["iID_MaCapPhat"];
-            DataTable dt = CapPhat_ChungTuModels.dt_DonViCapPhat(iID_MaCapPhat);
+            DataTable dt = CapPhat_ChungTuModels.LayDtDonViCapPhat(iID_MaCapPhat);
             String sLoaiThongTri = Request.QueryString["sLoaiThongTri"];
             String sLyDo = "";
             sLyDo =Convert.ToString(CommonFunction.LayTruong("CP_CapPhat", "iID_MaCapPhat", iID_MaCapPhat, "sLyDo"));

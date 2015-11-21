@@ -58,13 +58,13 @@
     DataTable dtLoaiCapPhat = DanhMucModels.DT_DanhMuc("LoaiCapPhat", true, "---Chọn loại cấp phát---");
     SelectOptionList slLoaiCapPhat = new SelectOptionList(dtLoaiCapPhat, "iID_MaDanhMuc", "sTen");
 
-    DataTable dt = CapPhat_ChungTuModels.Get_DanhSachChungTu(MaPhongBan, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat,false,CurrentPage, Globals.PageSize);
+    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuCuc(MaPhongBan, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false, CurrentPage, Globals.PageSize);
 
-    double nums = CapPhat_ChungTuModels.Get_DanhSachChungTu_Count(MaPhongBan, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat,false);
+    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatCucCount(MaPhongBan, MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, false);
     int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
     String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Duyet", new { MaND = MaND, SoCapPhat = iSoCapPhat, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
 
-    using (Html.BeginForm("SearchDuyetSubmit", "CapPhat_ChungTu", new { ParentID = ParentID }))
+    using (Html.BeginForm("TimKiemDuyetChungTu", "CapPhat_ChungTu", new { ParentID = ParentID }))
     {
 %>
 <div class="box_tong">
