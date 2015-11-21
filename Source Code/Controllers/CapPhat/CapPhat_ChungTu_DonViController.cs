@@ -57,29 +57,6 @@ namespace VIETTEL.Controllers.CapPhat
             return RedirectToAction("Index", "CapPhat_ChungTu_Donvi", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi });
         }
 
-        [Authorize]
-        public ActionResult Duyet()
-        {
-            return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_DONVI_DUYET);
-        }
-        /// <summary>
-        /// chưa rõ nghiệp vụ
-        /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="DonVi"></param>
-        /// <returns></returns>
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchDuyetSubmit(String ParentID, String DonVi)
-        {
-            String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
-            String DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-            String SoCapPhat = Request.Form[ParentID + "_iSoCapPhat"];
-            String iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
-            String iDM_MaLoaiCapPhat = Request.Form[ParentID + "_iDM_MaLoaiCapPhat"];
-            String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(User.Identity.Name);
-            return RedirectToAction("Duyet", "CapPhat_ChungTu_Donvi", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi });
-        }
         /// <summary>
         /// HÀm xử lý hoạt động thêm mới hoặc sửa chứng từ 
         /// </summary>

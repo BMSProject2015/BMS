@@ -223,30 +223,6 @@ namespace VIETTEL.Controllers.CapPhat
             return RedirectToAction("Index", "CapPhat_ChungTu", new { MaDotNganSach = iID_MaCapPhat, DonVi = DonVi });
         }
 
-        [Authorize]
-        public ActionResult Duyet()
-        {
-            return View(VIEW_ROOTPATH + VIEW_CAPPHAT_CHUNGTU_DUYET);
-        }
-        /// <summary>
-        /// Chưa rõ nghiệp vụ
-        /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="ChiNganSach"></param>
-        /// <returns></returns>
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TimKiemDuyetChungTu(String ParentID, String ChiNganSach)
-        {
-            String MaPhongBan = Request.Form[ParentID + "_iID_MaPhongBan"];
-            String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
-            String DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-            String SoChungTu = Request.Form[ParentID + "_iSoChungTu"];
-            String iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
-            String iDM_MaLoaiCapPhat = Request.Form[ParentID + "_iDM_MaLoaiCapPhat"];
-
-            return RedirectToAction("Duyet", "CapPhat_ChungTu", new { MaPhongBan = MaPhongBan, SoChungTu = SoChungTu, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat });
-        }
         /// <summary>
         /// Xử lý hoạt động trình duyệt (duyệt) chứng từ của người dùng
         /// </summary>
