@@ -147,7 +147,7 @@
             <%--Button Nhập Excel--%>
             <td align="right" style="padding-right:10px;width:5%">        
                 <div onclick="OnInit_CT_NEW(500, 'Nhập excel');">
-                    <%= Ajax.ActionLink("Nhập Excel", "Index", "NhapNhanh", new { id = "DuToan_NhapExcel", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
+                    <%= Ajax.ActionLink("Nhập Excel", "Index", "NhapNhanh", new { id = "DuToanBS_NhapExcel", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
             </td>
             <%} %>

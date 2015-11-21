@@ -215,6 +215,7 @@
     <Compile Include="Controllers\DuToanBS\DuToanBS_ChungTuController.cs" />
     <Compile Include="Controllers\DuToanBS\DuToanBS_ChungTu_BaoDamController.cs" />
     <Compile Include="Controllers\DuToanBS\DuToanBS_PhanCap_ChungTuChiTietController.cs" />
+    <Compile Include="Models\CapPhat\CapPhat_ReportModels.cs" />
     <Compile Include="Models\DungChung\MessageModels.cs" />
     <Compile Include="Controllers\DuToan\DuToan_ChungTu_BaoDamController.cs" />
     <Compile Include="Controllers\DuToan\DuToan_ChungTuChiTiet_GomController.cs" />
@@ -771,7 +772,6 @@
     <Compile Include="Models\DungChung\DanhMuc_BaoCao_ChuKyModels.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\DungChung\BangModels.cs" />
     <Compile Include="Models\DungChung\DonViModels.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2763,7 +2763,9 @@
     <Content Include="Report_Views\TinDung\Report_Index.aspx" />
     <Content Include="Report_Views\TinDung\rptTinDungTinhHinhDauTuTinDung.aspx" />
     <Content Include="Scripts\CapPhat\CapPhat_ChungTu_DonVi.js" />
+    <Content Include="Scripts\jsBang_DuToanBS.js" />
     <Content Include="Scripts\jsBang_MucLucDuAn.js" />
+    <Content Include="Scripts\jsDuToanBS.js" />
     <Content Include="Scripts\jsMucLucDuAn.js" />
     <Content Include="Scripts\jsDuToan_Gom.js" />
     <Content Include="Scripts\jsBang_DuToan_Gom.js" />
@@ -3106,30 +3108,15 @@
     <Content Include="Views\DungChung\TaiSan\TaiSan_Edit.aspx" />
     <Content Include="Views\DungChung\TaiSan\TaiSan_Index.aspx" />
     <Content Include="Views\DungChung\TaiSan\TaiSan_List.ascx" />
-    <Content Include="Views\DuToanBS\ChiTapTrung\ChungTu_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChiTapTrung\ChungTu_NhanKyThuat_Detail.aspx" />
-    <Content Include="Views\DuToanBS\ChiTapTrung\ChungTu_NhanKyThuat_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Edit.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_GomLan2_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Gom_Edit.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Gom_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Gom_NhanBKhac_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Gom_THCuc_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_NhanKyThuat_Detail.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuBaoDam\ChungTu_NhanKyThuat_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Gom_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_Cay.ascx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach.ascx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Frame.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Frame_Gom.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Gom.ascx" />
-    <Content Include="Views\DuToanBS\ChungTuChiTiet\ChungTuChiTiet_Index_LichSuVaNhap.ascx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_BaoCaoInKiem.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_BaoCaoInKiem_gom.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_Nhapexcel.aspx" />
-    <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_PhanCap_TuyChinh.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_TrinhDuyetChiTiet.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_TrinhDuyetChungTu.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\DuToan_TrinhDuyetChungTu_Gom.aspx" />
@@ -3142,16 +3129,17 @@
     <Content Include="Views\DuToanBS\ChungTuChiTiet\PhanCap_ChungTuChiTiet_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\PhanCap_ChungTuChiTiet_Index_DanhSach.ascx" />
     <Content Include="Views\DuToanBS\ChungTuChiTiet\PhanCap_ChungTuChiTiet_Index_DanhSach_Frame.aspx" />
-    <Content Include="Views\DuToanBS\ChungTu\ChungTu_Duyet.aspx" />
+    <Content Include="Views\DuToanBS\ChungTu\ChungTuBD_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Edit.aspx" />
+    <Content Include="Views\DuToanBS\ChungTu\ChungTu_GomLan2_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Gom_Edit.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Gom_Index.aspx" />
+    <Content Include="Views\DuToanBS\ChungTu\ChungTu_Gom_NhanBKhac_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Gom_THCuc_Edit.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Gom_THCuc_Index.aspx" />
     <Content Include="Views\DuToanBS\ChungTu\ChungTu_Index.aspx" />
-    <Content Include="Views\DuToanBS\DotNganSach\DotNganSach_Edit.aspx" />
-    <Content Include="Views\DuToanBS\DotNganSach\DotNganSach_Index.aspx" />
-    <Content Include="Views\DuToanBS\DuToan_Index.aspx" />
+    <Content Include="Views\DuToanBS\ChungTu\ChungTu_NhanKyThuat_Detail.aspx" />
+    <Content Include="Views\DuToanBS\ChungTu\ChungTu_NhanKyThuat_Index.aspx" />
     <Content Include="Views\DuToan\ChungTuBaoDam\ChungTu_GomLan2_Index.aspx" />
     <Content Include="Views\DuToan\ChungTuBaoDam\ChungTu_Gom_NhanBKhac_Index.aspx" />
     <Content Include="Views\DuToan\ChungTuBaoDam\ChungTu_NhanKyThuat_Index.aspx" />
@@ -3160,10 +3148,10 @@
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_Cay.ascx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach.ascx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Frame.aspx" />
-    <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_LichSuVaNhap.ascx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Gom_Index.aspx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Gom.ascx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_DanhSach_Frame_Gom.aspx" />
+    <Content Include="Views\DuToan\ChungTuChiTiet\ChungTuChiTiet_Index_LichSuVaNhap.ascx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\DuToan_TuChoiChungTu_Gom_THCuc.aspx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\DuToan_TrinhDuyetChungTu_Gom_THCuc.aspx" />
     <Content Include="Views\DuToan\ChungTuChiTiet\DuToan_TuChoiChungTu_Gom.aspx" />
@@ -3196,6 +3184,7 @@
     <Content Include="Views\DuToan\DuToan_Index.aspx" />
     <Content Include="Views\Home\About.aspx" />
     <Content Include="Views\Home\Blank.aspx" />
+    <Content Include="Views\Home\Index_fake.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\KeToanChiTiet\CapThu\CapThu_ChiTiet_DanhSach.ascx" />
     <Content Include="Views\KeToanChiTiet\CapThu\CapThu_Edit.aspx" />

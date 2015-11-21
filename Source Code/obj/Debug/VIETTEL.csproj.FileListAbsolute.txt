@@ -105,3 +105,10 @@ D:\DO AN\CTC\VIETTEL_NS1\bin\FlexCel.dll
 D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
 D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.dll
 D:\DO AN\CTC\VIETTEL_NS1\obj\Debug\VIETTEL.pdb
+D:\DO AN\BMS-Project\BMS\Source Code\bin\VIETTEL.dll
+D:\DO AN\BMS-Project\BMS\Source Code\bin\VIETTEL.pdb
+D:\DO AN\BMS-Project\BMS\Source Code\bin\FlexCel.AspNet.dll
+D:\DO AN\BMS-Project\BMS\Source Code\bin\FlexCel.dll
+D:\DO AN\BMS-Project\BMS\Source Code\obj\Debug\VIETTEL.csprojResolveAssemblyReference.cache
+D:\DO AN\BMS-Project\BMS\Source Code\obj\Debug\VIETTEL.dll
+D:\DO AN\BMS-Project\BMS\Source Code\obj\Debug\VIETTEL.pdb

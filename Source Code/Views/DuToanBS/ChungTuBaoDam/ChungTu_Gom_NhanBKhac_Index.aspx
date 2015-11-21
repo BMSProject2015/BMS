@@ -70,9 +70,9 @@
         bool CheckNDtao=false;
         if (check) CheckNDtao = true;
 
-        DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom(iKyThuat,iLoai,"",iID_MaPhongBan, MaND, sTuNgay, sDenNgay,iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize,sLNS);
-
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom_Count(iID_MaPhongBan, MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize, sLNS);
+        //DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom(iKyThuat,iLoai,"",iID_MaPhongBan, MaND, sTuNgay, sDenNgay,iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize,sLNS);
+        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize).Rows.Count;
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
         string strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
 

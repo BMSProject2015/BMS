@@ -13,7 +13,7 @@
     <%
         string MaND = User.Identity.Name;
         string ParentID = "DuToanBS_ChungTu_BD";
-        
+        string sLNS1 = "104";
         string ChiNganSach = Request.QueryString["ChiNganSach"];
         string iID_MaChungTu_TLTH = Request.QueryString["iID_MaChungTu"];
         string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
@@ -142,7 +142,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, sLNS = sLNS, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -210,7 +210,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, sLNS = sLNS, iKyThuat = iKyThuat }))
+                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iKyThuat = iKyThuat }))
                     {       
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1)%>

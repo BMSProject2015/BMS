@@ -21,7 +21,6 @@
         string MaLoaiNganSach = Request.QueryString["sLNS"];
         string sLNS = Request.QueryString["sLNS"];
         if (String.IsNullOrEmpty(sLNS)) sLNS = "-1";
-        sLNS = "1040100";
         string iSoChungTu = Request.QueryString["SoChungTu"];
         string sTuNgay = Request.QueryString["TuNgay"];
         string sDenNgay = Request.QueryString["DenNgay"];
@@ -30,6 +29,8 @@
         string page = Request.QueryString["page"];
         string iKyThuat = Request.QueryString["iKyThuat"];
         string iID_MaPhongBan = "";
+        sLNS = "1040100";
+        
         DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
         if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
         {
@@ -87,9 +88,10 @@
         }
         //kiem tra nguoi dung co phan tro ly phong ban
         Boolean CheckNDtao = false;
-        DataTable dt = DuToanBS_ChungTuModels.getDanhSachChungTuKyThuat_Bia(MaND);
+        DataTable dt = DuToanBS_ChungTuModels.LayDSChungTuKyThuatBia(MaND);
 
-        double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, "", MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
+        //double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, "", MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
+        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
         String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
         String strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
@@ -104,8 +106,7 @@
         <tr>
             <td align="left" style="width: 9%;">
                 <div style="padding-left: 22px; padding-bottom: 5px; text-transform: uppercase; color: #ec3237;">
-                    <b>
-                        <%=NgonNgu.LayXau("Liên kết nhanh: ")%></b>
+                    <b><%=NgonNgu.LayXau("Liên kết nhanh: ")%></b>
                 </div>
             </td>
             <td align="left">
@@ -128,7 +129,6 @@
                             <%=sKyThuat %></span>
                     </td>
                     <td align="right" style="padding-right: 10px;">
-                        <%--<input id="Button1" type="submit" class="button_title" value="Trình duyệt" onclick="javascript:location.href=''" />--%>
                     </td>
                 </tr>
             </table>
@@ -164,7 +164,6 @@
                 for (i = 0; i < dt.Rows.Count; i++)
                 {
                     DataRow R = dt.Rows[i];
-                    String classtr = "";
                     int STT = i + 1;
                     String sTrangThai = "";
                     String strColor = "";
@@ -200,13 +199,10 @@
             %>
             <tr>
                 <td align="center">
-                    <b>
-                        <%=i+1%>
-                    </b>
+                    <b><%=STT%></b>
                 </td>
                 <td align="center">
-                    <b>
-                        <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu"],iLoai=4 }).ToString(),"Đợt ngày: " +  NgayChungTu, "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"],iLoai=4 }).ToString(),"Đợt ngày: " +  NgayChungTu, "Detail", "")%></b>
                 </td>
                 <td align="left">
                     <%=HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"])%>

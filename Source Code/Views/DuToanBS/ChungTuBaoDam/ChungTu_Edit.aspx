@@ -15,10 +15,9 @@
     string ChiNganSach = Convert.ToString(ViewData["ChiNganSach"]);
     string MaChungTu = Convert.ToString(ViewData["MaChungTu"]);
     string MaDotNganSach = Convert.ToString(ViewData["MaDotNganSach"]);
-    string sLNS = Convert.ToString(ViewData["sLNS"]);
     string iKyThuat = Convert.ToString(ViewData["iKyThuat"]);
     string MaPhongBanNguoiDung = NganSach_HamChungModels.MaPhongBanCuaMaND(UserID);
-
+    string sLNS1 = "104";
     DataTable dtChungTu = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
     DataRow R;
     string iSoChungTu = "", dNgayChungTu = "", sNoiDung = "";
@@ -34,7 +33,7 @@
         dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
     }
     string backURL = Url.Action("Index", "DuToanBS_ChungTu_BaoDam");
-    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu_BaoDam", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS, iKyThuat = iKyThuat }))
+    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1, iKyThuat = iKyThuat }))
     {
 %>
 <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
@@ -110,7 +109,7 @@
 %>
 <script type="text/javascript">
          function Huy() {
-        window.parent.location.href = '<%=BackURL %>';
+        window.parent.location.href = '<%=backURL %>';
 </script>
 </asp:Content>
 

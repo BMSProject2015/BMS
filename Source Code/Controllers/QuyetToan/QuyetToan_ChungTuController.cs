@@ -191,18 +191,25 @@ namespace VIETTEL.Controllers.QuyetToan
                
                 if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
                 {
-                    bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(QuyetToanModels.iID_MaPhanHeQuyetToan));
-                    bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", R["iNamLamViec"]);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", R["iID_MaNguonNganSach"]);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", R["iID_MaNamNganSach"]);
-                    bang.CmdParams.Parameters.AddWithValue("@sDSLNS", sLNS);
-                    bang.CmdParams.Parameters.AddWithValue("@iLoai", Loai);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
-                    bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(QuyetToanModels.iID_MaPhanHeQuyetToan));
-                     MaChungTuAddNew = Convert.ToString(bang.Save());
-                    //QuyetToan_ChungTuChiTietModels.ThemChiTiet(MaChungTuAddNew, MaND, Request.UserHostAddress);
-                   // QuyetToan_ChungTuModels.InsertDuyetChungTu(MaChungTuAddNew, "Mới mới", User.Identity.Name, Request.UserHostAddress);
+                    try
+                    {
+                        bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(QuyetToanModels.iID_MaPhanHeQuyetToan));
+                        bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", R["iNamLamViec"]);
+                        bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", R["iID_MaNguonNganSach"]);
+                        bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", R["iID_MaNamNganSach"]);
+                        bang.CmdParams.Parameters.AddWithValue("@sDSLNS", sLNS);
+                        bang.CmdParams.Parameters.AddWithValue("@iLoai", Loai);
+                        bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
+                        bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
+                        bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(QuyetToanModels.iID_MaPhanHeQuyetToan));
+                        MaChungTuAddNew = Convert.ToString(bang.Save());
+                        //QuyetToan_ChungTuChiTietModels.ThemChiTiet(MaChungTuAddNew, MaND, Request.UserHostAddress);
+                        // QuyetToan_ChungTuModels.InsertDuyetChungTu(MaChungTuAddNew, "Mới mới", User.Identity.Name, Request.UserHostAddress);
+                    }
+                    catch (Exception ex)
+                    { 
+
+                    }
                 }
                 else
                 {
