@@ -10,29 +10,6 @@ namespace VIETTEL.Models
 {
     public class DuToanBS_ChungTuModels
     {
-        public static NameValueCollection LayThongTin_KyThuatLan2(String iID_MaChungTu)
-        {
-            NameValueCollection Data = new NameValueCollection();
-            DataTable dt = GetChungTu_KyThuatLan2(iID_MaChungTu);
-            String colName = "";
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                colName = dt.Columns[i].ColumnName;
-                Data[colName] = Convert.ToString(dt.Rows[0][i]);
-            }
-
-            dt.Dispose();
-            return Data;
-        }
-        public static DataTable GetChungTu_KyThuatLan2(String iID_MaChungTu)
-        {
-            DataTable vR;
-            SqlCommand cmd = new SqlCommand("SELECT * FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTuChiTiet=@iID_MaChungTu");
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
         public static Boolean UpdateRecord(String iID_MaChungTu, SqlParameterCollection Params, String MaND, String IPSua)
         {
             Bang bang = new Bang("DTBS_ChungTu");
@@ -46,198 +23,6 @@ namespace VIETTEL.Models
             }
             bang.Save();
             return false;
-        }
-        public static DataTable getDanhSachChungTu_TongHopDuyet(String sMaND, String sLNS)
-        {
-            DataTable vR;
-            int iID_MaTrangThaiDuyet;
-            SqlCommand cmd = new SqlCommand();
-            bool bTrolyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(sMaND);
-            String iID_MaPhongBan = "";
-            String DK = "";
-            String[] arrLNS = sLNS.Split(',');
-            //DK += " AND ( ";
-            //for (int i = 0; i < arrLNS.Length; i++)
-            //{
-            //    DK += "  sDSLNS LIKE @sLNS" + i;
-            //    if (i < arrLNS.Length - 1)
-            //        DK += " OR ";
-            //    cmd.Parameters.AddWithValue("@sLNS" + i, arrLNS[i] + "%");
-            //}
-            //DK += " ) ";
-            if (bTrolyTongHop)
-            {
-
-                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(sMaND);
-                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-                {
-                    DataRow drPhongBan = dtPhongBan.Rows[0];
-                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                }
-                DK += " AND 1=1 AND iID_MaPhongBan=@iID_MaPhongBan";
-                cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                dtPhongBan.Dispose();
-
-            }
-            else
-            {
-                DK += " AND 0=1";
-            }
-            //nếu là ngân sách bảo đảm
-            if (sLNS == "1040100")
-            {
-                iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
-                DK += " AND sDSLNS LIKE '104%'";
-
-            }
-            else
-                iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
-            string SQL = 
-                String.Format(@"SELECT * 
-                                FROM 
-                                    DTBS_ChungTu 
-                                WHERE 
-                                    iTrangThai=1 AND 
-                                    iNamLamViec=@iNamLamViec {0} AND 
-                                    iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND 
-                                    iCheck=0", DK);
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable getDanhSachChungTu_TongHopDuyet_Sua(String sMaND, String sLNS,String iID_MaChungTu)
-        {
-            DataTable vR = getDanhSachChungTu_TongHopDuyet(sMaND,sLNS);
-            DataTable vR2;
-
-            //int iID_MaTrangThaiDuyet;
-            SqlCommand cmd = new SqlCommand();
-            //bool bTrolyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(sMaND);
-            //String iID_MaPhongBan = "";
-            //String DK = "", DKCT = "" ;
-            //String[] arrLNS = sLNS.Split(',');
-            //DK += " AND ( ";
-            //for (int i = 0; i < arrLNS.Length; i++)
-            //{
-            //    DK += "  sDSLNS LIKE @sLNS" + i;
-            //    if (i < arrLNS.Length - 1)
-            //        DK += " OR ";
-            //    cmd.Parameters.AddWithValue("@sLNS" + i, arrLNS[i] + "%");
-            //}
-            //DK += " ) ";
-
-            string DKCT ="";
-            String iID_MaChungTu_CT = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTH", "iID_MaChungTu_TLTH", iID_MaChungTu, "iID_MaChungTu"));
-            String[] arrChungtu = iID_MaChungTu_CT.Split(',');
-            DKCT += " (";
-            for (int j = 0; j < arrChungtu.Length; j++)
-            {
-                DKCT += " iID_MaChungTu =@iID_MaChungTu" + j;
-                if (j < arrChungtu.Length - 1)
-                    DKCT += " OR ";
-                cmd.Parameters.AddWithValue("@iID_MaChungTu" + j, arrChungtu[j]);
-
-            }
-            DKCT += " )";
-            string SQL = string.Format(@"SELECT * FROM DTBS_ChungTu 
-                                        WHERE 
-                                            iTrangThai=1 AND 
-                                            iNamLamViec=@iNamLamViec AND {0}", DKCT);
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-            vR2 = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            vR.Merge(vR2);
-//            DKCT += " )";
-//            if (bTrolyTongHop)
-//            {
-
-//                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(sMaND);
-//                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-//                {
-//                    DataRow drPhongBan = dtPhongBan.Rows[0];
-//                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-//                }
-//                DK += " AND 1=1 AND iID_MaPhongBan=@iID_MaPhongBan";
-//                cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-//                dtPhongBan.Dispose();
-
-//            }
-//            else
-//            {
-//                DK += " AND 0=1";
-//            }
-//            //nếu là ngân sách bảo đảm
-//            if (sLNS == "1040100")
-//            {
-//                iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
-//                DK += " AND sDSLNS LIKE '104%'";
-
-//            }
-//            else
-//                iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeDuToan));
-//            string SQL = String.Format(@"SELECT * FROM DTBS_ChungTu WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0}
-//AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND ( iCheck=0 OR {1} )   ", DK,DKCT);
-//            cmd.CommandText = SQL;
-//            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-//            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-//            vR = Connection.GetDataTable(cmd);
-//            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable getDanhSachChungTu_TongHopCucDuyet(String sMaND)
-        {
-            DataTable vR;
-            SqlCommand cmd = new SqlCommand();
-
-            //Ma trang thai duyet =3: trolytonghop duyet
-            int iID_MaTrangThaiDuyet = 3;
-            string SQL = @"SELECT * FROM DTBS_ChungTu_TLTH WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec 
-                         AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iCheck=0";
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable getDanhSachChungTu_TongHopCucDuyet_Sua(String sMaND, string iID_MaChungTu)
-        {
-            DataTable vR;
-            vR = getDanhSachChungTu_TongHopCucDuyet(sMaND);
-            DataTable vR2;
-            SqlCommand cmd = new SqlCommand();
-
-            string DKCT = "";
-            String iID_MaChungTu_CT = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu_TLTHCuc", "iID_MaChungTu_TLTHCuc", iID_MaChungTu, "iID_MaChungTu_TLTH"));
-            String[] arrChungtu = iID_MaChungTu_CT.Split(',');
-            DKCT += " (";
-            for (int j = 0; j < arrChungtu.Length; j++)
-            {
-                DKCT += " iID_MaChungTu_TLTH =@iID_MaChungTu_TLTH" + j;
-                if (j < arrChungtu.Length - 1)
-                    DKCT += " OR ";
-                cmd.Parameters.AddWithValue("@iID_MaChungTu_TLTH" + j, arrChungtu[j]);
-
-            }
-            DKCT += " )";
-
-            string SQL = String.Format(@" SELECT * 
-                            FROM 
-                                DTBS_ChungTu_TLTH 
-                            WHERE 
-                                iTrangThai=1 AND 
-                                iNamLamViec=@iNamLamViec AND {0}",DKCT);
-                         
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-            vR2 = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            vR.Merge(vR2);
-            return vR;
         }
         public static DataTable getDanhSachChungTuNganhKyThuatChuyenBKhac(String sMaND)
         {
@@ -302,232 +87,97 @@ ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
             Connection.UpdateDatabase(cmd);
             cmd.Dispose();
         }
-        public static DataTable getDanhSachChungTuKyThuat(String MaND,String iID_MaChungTu,String iID_MaDonVi,String sM,String sTM,String sTTM,String sNG)
-        {
-            DataTable vR;
-            String DK = "";
-            //Trang thai tro ly tong hop duyet lan 1
-            int iID_MaTrangThaiDuyet = DuToan_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
-            String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-            String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "", SQL = ""; ;
-
-            DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-            {
-                DataRow drPhongBan = dtPhongBan.Rows[0];
-                iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
-                dtPhongBan.Dispose();
-            }
-            
-            if (dtCauHinh.Rows.Count > 0)
-            {
-                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                dtCauHinh.Dispose();
-            }
-
-            DK = String.Format(@" iTrangThai=1 AND (iNamLamViec={0} AND iID_MaNamNganSach={1} AND iID_MaNguonNganSach={2}) "
-                               , iNamLamViec, iID_MaNamNganSach, iID_MaNguonNganSach);
-            SqlCommand cmd = new SqlCommand();
-            if (!String.IsNullOrEmpty(iID_MaDonVi))
-            {
-                DK += " AND iID_MaDonVi=@iID_MaDonVi";
-                cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
-            }
-            if (!String.IsNullOrEmpty(sM))
-            {
-                DK += " AND sM=@sM";
-                cmd.Parameters.AddWithValue("@sM", sM);
-            }
-            if (!String.IsNullOrEmpty(sTM))
-            {
-                DK += " AND sTM=@sTM";
-                cmd.Parameters.AddWithValue("@sTM", sTM);
-            }
-            if (!String.IsNullOrEmpty(sTTM))
-            {
-                DK += " AND sTTM=@sTTM";
-                cmd.Parameters.AddWithValue("@sTTM", sTTM);
-            }
-            if (!String.IsNullOrEmpty(sNG))
-            {
-                DK += " AND sNG=@sNG";
-                cmd.Parameters.AddWithValue("@sNG", sNG);
-            }
-            
-            //nếu là ngân sách bảo đảm nganh ky thuat
-            if (iID_MaPhongBan == "06")
-            {
-
-                 SQL = String.Format(@"SELECT * FROM DTBS_ChungTuChiTiet
-WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaPhongBanDich='06' AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
-ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", MaND, DK);
-            }
-            else
-            {
-                 SQL = String.Format(@"SELECT * FROM DTBS_ChungTuChiTiet
-WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaDonVi IN (SELECT iID_MaNganh FROM NS_MucLucNganSach_Nganh
-WHERE sMaNguoiQuanLy LIKE '%{0}%') AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
-ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", MaND, DK);
-            }
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-            vR = Connection.GetDataTable(cmd);
-          
-            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable getDanhSachDonViKyThuat(String MaND, String iID_MaChungTu)
-        {
-            DataTable vR;
-            String DK = "";
-            //Trang thai tro ly tong hop duyet lan 1
-            int iID_MaTrangThaiDuyet = DuToan_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
-            String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-            String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "", SQL = ""; ;
-
-            DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-            {
-                DataRow drPhongBan = dtPhongBan.Rows[0];
-                iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
-                dtPhongBan.Dispose();
-            }
-
-            if (dtCauHinh.Rows.Count > 0)
-            {
-                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                dtCauHinh.Dispose();
-            }
-
-            DK = String.Format(@" iTrangThai=1 AND (iNamLamViec={0} AND iID_MaNamNganSach={1} AND iID_MaNguonNganSach={2}) "
-                               , iNamLamViec, iID_MaNamNganSach, iID_MaNguonNganSach);
-            SqlCommand cmd = new SqlCommand();
-            //nếu là ngân sách bảo đảm nganh ky thuat
-            if (iID_MaPhongBan == "06")
-            {
-
-                SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi FROM DTBS_ChungTuChiTiet
-WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaPhongBanDich='06' AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
-ORDER BY iID_MaDonVi", MaND, DK);
-            }
-            else
-            {
-                SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi FROM DTBS_ChungTuChiTiet
-WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaDonVi IN (SELECT iID_MaNganh FROM NS_MucLucNganSach_Nganh
-WHERE sMaNguoiQuanLy LIKE '%{0}%') AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
-ORDER BY iID_MaDonVi", MaND, DK);
-            }
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-            vR = Connection.GetDataTable(cmd);
-
-            cmd.Dispose();
-            return vR;
-        }
-        public static DataTable getDanhSachChungTuKyThuat_Bia(String MaND)
-        {
-            DataTable vR;
-            String DK = "";
-            //Trang thai tro ly tong hop duyet lan 1
-            int iID_MaTrangThaiDuyet = DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
-            String iNamLamViec = NguoiDungCauHinhModels.iNamLamViec.ToString();
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-            // iSoChungTu = DuToanBS_ChungTuModels.iSoChungTu(iNamLamViec)+1;
-            //bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(DuToanModels.iID_MaPhanHe));
-            // bang.CmdParams.Parameters.AddWithValue("@iSoChungTu", iSoChungTu);
-            String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
-            if (dtCauHinh.Rows.Count > 0)
-            {
-                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                dtCauHinh.Dispose();
-            }
-            DK = String.Format(@" iTrangThai=1 AND (iNamLamViec={0} AND iID_MaNamNganSach={1} AND iID_MaNguonNganSach={2}) "
-                               , iNamLamViec, iID_MaNamNganSach, iID_MaNguonNganSach);
-            SqlCommand cmd = new SqlCommand();
-            //nếu là ngân sách bảo đảm nganh ky thuat
-            String SQL = String.Format(@"SELECT * FROM DTBS_ChungTu
-WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu DESC", DK);
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            vR = Connection.GetDataTable(cmd);
-
-            cmd.Dispose();
-            return vR;
-        }
-        public static void TaoDanhSachChungTuChiTapTrung(String MaND,String IP)
-        {
-            String iNamLamViec =Convert.ToString(NguoiDungCauHinhModels.LayCauHinhChiTiet(MaND, "iNamLamViec"));
-            String SQL = "";
-            SqlCommand cmd = new SqlCommand();
-            DataTable dt = new DataTable();
-            SQL = String.Format(@"SELECT DISTINCT NS_DonVi.iID_MaDonVi+' - '+NS_DonVi.sTen as TenHT, NS_DonVi.* FROM (SELECT * FROM NS_NguoiDung_DonVi
-		                  WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND sMaNguoiDung=@sMaND) AS NS_NguoiDung_DonVi 
-                          INNER JOIN (SELECT * FROM NS_DonVi WHERE iTrangThai=1 AND iNamLamViec_DonVi=@iNamLamViec) NS_DonVi
-                           ON (NS_NguoiDung_DonVi.iID_MaDonVi=NS_DonVi.iID_MaDonVi)
-                            WHERE NS_NguoiDung_DonVi.iTrangThai=1 AND NS_NguoiDung_DonVi.sMaNguoiDung=@sMaND
-                             AND NS_DonVi.iID_MaDonVi  NOT IN (SELECT iID_MaDonVi FROM DTBS_ChungTu WHERE iTrangThai=1 AND sID_MaNguoiDungTao=@sMaND AND iNamLamViec=@iNamLamViec AND iID_MaDonVi IS NOT NULL)
-                             ORDER BY NS_DonVi.iID_MaDonVi
-                          ");
-            cmd.Parameters.AddWithValue("@sMaND", MaND);
-            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-            cmd.CommandText = SQL;
-            dt = Connection.GetDataTable(cmd);
-
-            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(MaND);
-
-            // iSoChungTu = DuToanBS_ChungTuModels.iSoChungTu(iNamLamViec)+1;
-            //bang.CmdParams.Parameters.AddWithValue("@sTienToChungTu", PhanHeModels.LayTienToChungTu(DuToanModels.iID_MaPhanHe));
-            // bang.CmdParams.Parameters.AddWithValue("@iSoChungTu", iSoChungTu);
-            String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
-            if (dtCauHinh.Rows.Count > 0)
-            {
-                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
-                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
-                dtCauHinh.Dispose();
-            }
-            DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
-            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-            {
-                DataRow drPhongBan = dtPhongBan.Rows[0];
-                iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
-                dtPhongBan.Dispose();
-            }
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                Bang bang = new Bang("DTBS_ChungTu");
-                bang.MaNguoiDungSua = MaND;
-                bang.IPSua = IP;
-                bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-                bang.CmdParams.Parameters.AddWithValue("@sDSLNS", "1010000,1020000,1020100");
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaDonVi", dt.Rows[i]["iID_MaDonVi"]);
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBanDich", iID_MaPhongBan);
-                bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", sTenPhongBan);
-                bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(DuToanModels.iID_MaPhanHe));
-                bang.Save();
-            }
-        }
         public static DataTable getNguon()
         {
             String SQL = "SELECT iID_MaNguon,sKyHieu+sTen as TenHT FROM DT_Nguon";
             DataTable dt = Connection.GetDataTable(SQL);
             return dt;
         }
+
+        #region Lấy danh sách đơn vị ngành kỹ thuật
+        /// <summary>
+        /// Lấy danh sách đơn vị ngành kỹ thuật
+        /// </summary>
+        /// <param name="maND"></param>
+        /// <param name="maChungTu"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachDonViKyThuat(string maND, string maChungTu)
+        {
+            DataTable dtResult;
+            SqlCommand cmd = new SqlCommand();
+            string dk = "";
+            string dkCT = "";
+            string dkDV = "";
+            string sql = ""; 
+
+            //Trang thai tro ly tong hop duyet lan 1
+            int iID_MaTrangThaiDuyet = DuToan_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
+            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
+
+            string iID_MaNguonNganSach = "";
+            string iID_MaNamNganSach = "";
+            string iMaPhongBan = "";
+            string sTenPhongBan = "";
+
+            DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(maND);
+            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+            {
+                iMaPhongBan = Convert.ToString(dtPhongBan.Rows[0]["sKyHieu"]);
+                sTenPhongBan = Convert.ToString(dtPhongBan.Rows[0]["sTen"]);
+                dtPhongBan.Dispose();
+            }
+
+            if (dtCauHinh!=null && dtCauHinh.Rows.Count > 0)
+            {
+                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
+                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
+                dtCauHinh.Dispose();
+            }
+
+            dk = @" iTrangThai=1 AND 
+                    iNamLamViec=@iNamLamViec AND 
+                    iID_MaNamNganSach=@iID_MaNamNganSach AND 
+                    iID_MaNguonNganSach=@iID_MaNguonNganSach AND 
+                    iKyThuat=1 AND 
+                    MaLoai=1 AND 
+                    iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet";
+            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
+            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
+
+            dkCT = "iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)";
+
+            //nếu là ngân sách bảo đảm nganh ky thuat
+            if (iMaPhongBan == "06")
+            {
+                sql = String.Format(@"SELECT DISTINCT iID_MaDonVi 
+                                      FROM DTBS_ChungTuChiTiet
+                                      WHERE 
+                                            iID_MaPhongBanDich='06' AND                                         
+                                            {0} AND 
+                                            {1}
+                                      ORDER BY iID_MaDonVi", dk, dkCT);
+            }
+            else
+            {
+                sql = String.Format(@"SELECT DISTINCT iID_MaDonVi 
+                                      FROM DTBS_ChungTuChiTiet
+                                      WHERE 
+                                            {0} AND 
+                                            {1} AND
+                                            iID_MaDonVi IN (SELECT iID_MaNganh FROM NS_MucLucNganSach_Nganh WHERE sMaNguoiQuanLy LIKE '%{2}%') 
+                                      ORDER BY iID_MaDonVi", dk,dkCT,maND);
+            }
+            cmd.CommandText = sql;
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTu);
+            dtResult = Connection.GetDataTable(cmd);
+
+            cmd.Dispose();
+            return dtResult;
+        } 
+        #endregion
 
         #region Kiểm tra trạng thái chứng từ
         #region Kiểm tra trạng thái chứng từ TLTH sau khi thay đổi
@@ -740,6 +390,26 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             dt.Dispose();
             return Data;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iID_MaChungTu"></param>
+        /// <returns></returns>
+        public static NameValueCollection LayThongTinChungTuKyThuatLan2(String iID_MaChungTu)
+        {
+            NameValueCollection Data = new NameValueCollection();
+            DataTable dt = LayChungTuKyThuatLan2(iID_MaChungTu);
+            String colName = "";
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                colName = dt.Columns[i].ColumnName;
+                Data[colName] = Convert.ToString(dt.Rows[0][i]);
+            }
+
+            dt.Dispose();
+            return Data;
+        }
         #endregion 
 
         #region Lấy dữ liệu chứng từ theo mã
@@ -783,6 +453,21 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             DataTable vR;
             SqlCommand cmd = new SqlCommand("SELECT * FROM DTBS_ChungTu_TLTHCUc WHERE iTrangThai=1 AND iID_MaChungTu_TLTHCUc=@iID_MaChungTu");
             cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTuTLTHCuc);
+            vR = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return vR;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iID_MaChungTu"></param>
+        /// <returns></returns>
+        public static DataTable LayChungTuKyThuatLan2(String iID_MaChungTu)
+        {
+            DataTable vR;
+            SqlCommand cmd = new SqlCommand("SELECT * FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTuChiTiet=@iID_MaChungTu");
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
             vR = Connection.GetDataTable(cmd);
             cmd.Dispose();
             return vR;
@@ -1314,6 +999,143 @@ WHERE {0}  AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet  ORDER BY dNgayChungTu
             //Gộp kết quả
             result.Merge(dtChungTuChuaGom);
             return result;
+        } 
+        #endregion
+
+        #region Lấy tờ bìa danh sách chứng từ kỹ thuật
+        /// <summary>
+        /// Lấy tờ bìa danh sách chứng từ kỹ thuật
+        /// </summary>
+        /// <param name="maND"></param>
+        /// <returns></returns>
+        public static DataTable LayDSChungTuKyThuatBia(string maND)
+        {
+            DataTable dtResult;
+            SqlCommand cmd = new SqlCommand();
+            string dk = "";
+            //Trang thai tro ly tong hop duyet lan 1
+            int iID_MaTrangThaiDuyet = DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
+            string iID_MaNguonNganSach = "";
+            string iID_MaNamNganSach = "";
+            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
+
+            if (dtCauHinh != null && dtCauHinh.Rows.Count > 0)
+            {
+                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
+                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
+                dtCauHinh.Dispose();
+            }
+
+            dk = " iTrangThai=1";
+            dk += @" AND iNamLamViec=@iNamLamViec AND iID_MaNamNganSach=@iID_MaNamNganSach AND 
+                    iID_MaNguonNganSach = @iID_MaNguonNganSach AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet";
+            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+            cmd.Parameters.AddWithValue("@iID_MaNamNganSach", iID_MaNamNganSach);
+            cmd.Parameters.AddWithValue("@iID_MaNguonNganSach", iID_MaNguonNganSach);
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
+
+            string SQL = String.Format(@"SELECT * FROM DTBS_ChungTu
+                                         WHERE {0}   
+                                         ORDER BY dNgayChungTu DESC", dk);
+            cmd.CommandText = SQL;
+            dtResult = Connection.GetDataTable(cmd);
+
+            cmd.Dispose();
+            return dtResult;
+        } 
+        #endregion
+
+        #region Lấy danh sách chứng từ kỹ thuật
+        /// <summary>
+        /// Lấy danh sách chứng từ kỹ thuật
+        /// </summary>
+        /// <param name="maND"></param>
+        /// <param name="maChungTu"></param>
+        /// <param name="maDonVi"></param>
+        /// <param name="sM"></param>
+        /// <param name="sTM"></param>
+        /// <param name="sTTM"></param>
+        /// <param name="sNG"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachChungTuKyThuat(string maND, string maChungTu, string maDonVi, string sM, string sTM, string sTTM, string sNG)
+        {
+            DataTable dtResult;
+            string dk = "";
+            //Trang thai tro ly tong hop duyet lan 1
+            int iID_MaTrangThaiDuyet = DuToan_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
+            string iNamLamViec = ReportModels.LayNamLamViec(maND);
+            DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
+
+            String iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "", SQL = ""; ;
+
+            DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(maND);
+            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+            {
+                DataRow drPhongBan = dtPhongBan.Rows[0];
+                iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
+                sTenPhongBan = Convert.ToString(drPhongBan["sTen"]);
+                dtPhongBan.Dispose();
+            }
+
+            if (dtCauHinh.Rows.Count > 0)
+            {
+                iID_MaNguonNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNguonNganSach"]);
+                iID_MaNamNganSach = Convert.ToString(dtCauHinh.Rows[0]["iID_MaNamNganSach"]);
+                dtCauHinh.Dispose();
+            }
+
+            dk = String.Format(@" iTrangThai=1 AND (iNamLamViec={0} AND iID_MaNamNganSach={1} AND iID_MaNguonNganSach={2}) "
+                               , iNamLamViec, iID_MaNamNganSach, iID_MaNguonNganSach);
+            SqlCommand cmd = new SqlCommand();
+            if (!String.IsNullOrEmpty(maDonVi))
+            {
+                dk += " AND iID_MaDonVi=@iID_MaDonVi";
+                cmd.Parameters.AddWithValue("@iID_MaDonVi", maDonVi);
+            }
+            if (!String.IsNullOrEmpty(sM))
+            {
+                dk += " AND sM=@sM";
+                cmd.Parameters.AddWithValue("@sM", sM);
+            }
+            if (!String.IsNullOrEmpty(sTM))
+            {
+                dk += " AND sTM=@sTM";
+                cmd.Parameters.AddWithValue("@sTM", sTM);
+            }
+            if (!String.IsNullOrEmpty(sTTM))
+            {
+                dk += " AND sTTM=@sTTM";
+                cmd.Parameters.AddWithValue("@sTTM", sTTM);
+            }
+            if (!String.IsNullOrEmpty(sNG))
+            {
+                dk += " AND sNG=@sNG";
+                cmd.Parameters.AddWithValue("@sNG", sNG);
+            }
+
+            //nếu là ngân sách bảo đảm nganh ky thuat
+            if (iID_MaPhongBan == "06")
+            {
+
+                SQL = String.Format(@"SELECT * FROM DTBS_ChungTuChiTiet
+WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaPhongBanDich='06' AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
+ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
+            }
+            else
+            {
+                SQL = String.Format(@"SELECT * FROM DTBS_ChungTuChiTiet
+WHERE {1} AND iKyThuat=1 AND MaLoai=1 AND iID_MaTrangThaiDuyet=@iID_MaTrangThaiDuyet AND iID_MaDonVi IN (SELECT iID_MaNganh FROM NS_MucLucNganSach_Nganh
+WHERE sMaNguoiQuanLy LIKE '%{0}%') AND iID_MaChungTu IN ( SELECT iID_MaChungTuChiTiet FROM DTBS_ChungTuChiTiet WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu)
+ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
+            }
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTu);
+            dtResult = Connection.GetDataTable(cmd);
+
+            cmd.Dispose();
+            return dtResult;
         } 
         #endregion
         #endregion
