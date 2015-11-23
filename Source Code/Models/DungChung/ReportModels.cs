@@ -15,7 +15,7 @@ namespace VIETTEL.Models
 {
     public class ReportModels
     {
-
+        #region Source cũ, trước khi udpate code ngày 19/11/2015
         public static String DieuKien_NganSach(String MaND)
         {
             DataTable dt = NguoiDungCauHinhModels.LayCauHinh(MaND);
@@ -4847,5 +4847,31 @@ namespace VIETTEL.Models
             sMoTa = Connection.GetValueString(SQL, "");
             return sMoTa;
         }
+        #endregion
+        #region Source mới, VungNV: udpate code ngày 19/11/2015
+        /// <summary>
+        /// Hàm lấy quý hiện tại
+        /// </summary>
+        /// <returns></returns>
+        /// VungNV: 19/11/2015
+        public static String LayQuyHienTai()
+        {
+            String sQuy = "";
+            String mon = DateTime.Now.Month.ToString();
+            
+            if (mon == "1" || mon == "2" || mon == "3")
+                sQuy = "1";
+            else if (mon == "4" || mon == "5" || mon == "6")
+                    sQuy = "2";
+                else if (mon == "7" || mon == "8" || mon == "9")
+                     sQuy = "3";
+                    else
+                        sQuy = "4";
+
+            return sQuy;
+        }
+
+        #endregion
+        
     }
 }

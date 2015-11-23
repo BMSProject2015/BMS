@@ -89,55 +89,5 @@ namespace VIETTEL.Models
             }
         }
         
-        //VungNV: 2015/09/28 lấy danh sách phòng ban
-        public static DataTable LayDSPhongBan(String MaND)
-        {
-            SqlCommand cmd = new SqlCommand();
-            String DKPhongBan="";
-            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-            
-            String SQL = String.Format(
-                        @"SELECT DISTINCT iID_MaPhongBan,sTenPhongBan
-                        FROM CP_CapPhatChiTiet
-                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} 
-                        ", DKPhongBan);
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
-            DataTable dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            DataRow dr = dt.NewRow();
-            dr["iID_MaPhongBan"] = "-1";
-            dr["sTenPhongBan"] = "--Chọn tất cả các B--";
-            dt.Rows.InsertAt(dr, 0);
-
-            return dt;
-        }
-
-        //VungNV: 2015/09/28 lấy danh sách các đợt cấp phát
-        public static DataTable LayNamCapPhat(String MaND) 
-        {
-            SqlCommand cmd = new SqlCommand();
-            String DKPhongBan="";
-            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-
-            String SQL = String.Format(
-                @"SELECT DISTINCT CONVERT(VARCHAR(10), CP_CapPhat.dNgayCapPhat, 103) AS iNamCapPhat
-                        ,CP_CapPhat.dNgayCapPhat
-                FROM CP_CapPhat JOIN CP_CapPhatChiTiet 
-                        ON CP_CapPhat.iID_MaCapPhat = CP_CapPhatChiTiet.iID_MaCapPhat
-                WHERE CP_CapPhatChiTiet.iTrangThai=1 
-                        AND CP_CapPhatChiTiet.iNamLamViec=@iNamLamViec {0}
-                ORDER BY CP_CapPhat.dNgayCapPhat DESC", DKPhongBan);
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
-            DataTable dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-
-            return dt;
-
-        }
-
     }
 }

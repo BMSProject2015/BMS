@@ -1,18 +1,17 @@
-﻿    using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
 using System.Data;
 using DomainModel;
-using DomainModel.Controls;
-using System.Collections.Specialized;
-using DomainModel.Abstract;
-namespace VIETTEL.Models
+
+namespace VIETTEL.Models.DuToan
 {
     public class DuToan_ReportModels
     {
         public static int DVT = 1000;
+        #region Source cũ, khi chưa update code
         public static DataTable NS_NguonNganSach()
         {
             String SQL = "SELECT sLNS,sMoTa FROM NS_MucLucNganSach WHERE LEN(sLNS)=1 AND sL='' ORDER BY sLNS";
@@ -1097,6 +1096,279 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
 
             return dt;
         }
-        
+        #endregion
+
+        #region Source mới, khi chuyển method từ Controller xuống Models
+        #region HungPH: rptDuToan_TongHop_PhongBan_DonVi ngày 19/11/2015
+        /// <summary>
+        /// Lấy dữ liệu từ data
+        /// </summary>
+        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iID_MaDonVi">Mã đơn vị</param>
+        /// <param name="iID_MaDot">Mã đợt</param>
+        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
+        /// <param name="LoaiTongHop">Xuất chi tiết hoặc tổng hợp</param>
+        /// HungPH
+        public static DataTable rptDuToan_TongHop_PhongBan_DonVi(String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot, String iID_MaPhongBan, String LoaiTongHop)
+        {
+            SqlCommand cmd = new SqlCommand();
+            String DKPhongBan = "";
+            String DKDonVi = "";
+            String DK = "";
+            String DKDot = "";
+            String SQL = "";
+            int DVT = 1000;
+
+            DKDonVi += ThuNopModels.DKDonVi(MaND, cmd);
+            DKPhongBan += ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
+
+            //dk LNS
+            if (String.IsNullOrEmpty(sLNS))
+            {
+                sLNS = "-100";
+                DK += "sLNS=@sLNS";
+                cmd.Parameters.AddWithValue("@sLNS", sLNS);
+            }
+            else
+            {
+                String[] arrLNS = sLNS.Split(',');
+                for (int i = 0; i < arrLNS.Length; i++)
+                {
+                    DK += "sLNS=@sLNS" + i;
+                    cmd.Parameters.AddWithValue("@sLNS" + i, arrLNS[i]);
+                    if (i < arrLNS.Length - 1)
+                    {
+                        DK += " OR ";
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(DK))
+            {
+                DK = " AND (" + DK + ")";
+            }
+
+            //dk Dot
+            if (!String.IsNullOrEmpty(iID_MaDot) && iID_MaDot != "-1")
+            {
+                DK += " AND CONVERT(VARCHAR(24),dNgayChungTu,105)=@MaDot ";
+                cmd.Parameters.AddWithValue("@MaDot", iID_MaDot);
+            }
+
+            //dk phong ban
+            if (iID_MaPhongBan != "-1")
+            {
+                DKPhongBan += " AND iID_MaPhongBan=@MaPhongBan ";
+                cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
+            }
+
+            //dk donvi
+            if (LoaiTongHop == "ChiTiet")
+            {
+                if (!String.IsNullOrEmpty(iID_MaDonVi) && iID_MaDonVi != "-1")
+                {
+                    DKDonVi += " AND iID_MaDonVi=@iID_MaDonVi ";
+                    cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
+                }
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(iID_MaDonVi))
+                    iID_MaDonVi = Guid.Empty.ToString();
+                String[] arrDonVi = iID_MaDonVi.Split(',');
+                for (int i = 0; i < arrDonVi.Length; i++)
+                {
+                    DKDonVi += " iID_MaDonVi=@MaDonVi" + i;
+                    cmd.Parameters.AddWithValue("@MaDonVi" + i, arrDonVi[i]);
+                    if (i < arrDonVi.Length - 1)
+                        DKDonVi += " OR ";
+                }
+                if (String.IsNullOrEmpty(DKDonVi) == false)
+                    DKDonVi = " AND (" + DKDonVi + ") ";
+            }
+
+            SQL = String.Format(@"
+                        SELECT sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
+                                ,rTuChi=SUM(rTuChi)/{3}
+                                ,rHienVat=SUM(rHienVat)/{3}
+                                ,rHangNhap=SUM(rHangNhap)/{3}
+                                ,rHangMua=SUM(rHangMua)/{3}
+                                ,rPhanCap=SUM(rPhanCap)/{3}
+                                ,rDuPhong=SUM(rDuPhong)/{3}
+                        FROM DT_ChungTuChiTiet 
+                        WHERE iTrangThai=1 
+                                AND iNamLamViec=@iNamLamViec 
+                                AND iID_MaChungTu IN (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} {2} {4}
+                        GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
+                        HAVING SUM(rTuChi)<>0 
+                                OR SUM(rHangNhap)<>0 
+                                OR SUM(rHienVat)<>0  
+                                OR SUM(rHangMua)<>0  
+                                OR SUM(rPhanCap)<>0 
+                                OR SUM(rDuPhong)<>0", DK, DKDonVi, DKPhongBan, DVT, DKDot);
+
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
+            DataTable dtAll = Connection.GetDataTable(cmd);
+
+            return dtAll;
+        }
+
+        /// <summary>
+        /// Lấy danh sách đơn vị từ đợt, phòng ban, SLN
+        /// </summary>
+        /// <param name="MaND"></param>
+        /// <param name="iID_MaDot"></param>
+        /// <param name="iID_MaPhongBan"></param>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        public static DataTable laydtPhongBan_LNS_DonVi(String MaND, String iID_MaDot, String iID_MaPhongBan, String sLNS)
+        {
+            String DKPhongBan = "";
+            String DKDot = "";
+            String DKLNS = "";
+            String DKDonVi = "";
+            SqlCommand cmd = new SqlCommand();
+            String SQL = "";
+            String iID_MaPhongBanND = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
+            //DKLNS += ThuNopModels.DKLNS(MaND, cmd, iID_MaPhongBanND);
+            //DKPhongBan += ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
+            //DKDonVi += ThuNopModels.DKDonVi(MaND, cmd);
+            if (!String.IsNullOrEmpty(iID_MaDot) && iID_MaDot != "-1")
+            {
+                DKDot += " AND CONVERT(VARCHAR(24),dNgayChungTu,105)=@MaDot";
+                cmd.Parameters.AddWithValue("@MaDot", iID_MaDot);
+            }
+            if (!String.IsNullOrEmpty(iID_MaPhongBan) && iID_MaPhongBan != "-1")
+            {
+                DKPhongBan += " AND iID_MaPhongBan=@MaPhongBan";
+                cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
+            }
+
+            if (String.IsNullOrEmpty(sLNS))
+            {
+                sLNS = "-100";
+            }
+
+            String[] arrDonVi = sLNS.Split(',');
+            for (int i = 0; i < arrDonVi.Length; i++)
+            {
+                DKLNS += " sLNS=@LNS" + i;
+                cmd.Parameters.AddWithValue("@LNS" + i, arrDonVi[i]);
+                if (i < arrDonVi.Length - 1)
+                {
+                    DKLNS += " OR ";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(DKLNS))
+            {
+                DKLNS = " AND (" + DKLNS + ")";
+            }
+
+            SQL = String.Format(@"
+                                    SELECT DISTINCT iID_MaDonVi,sTenDonVi as TenHT
+                                    FROM DT_ChungTuChiTiet
+                                    WHERE iTrangThai=1 AND sTenDonVi<>'' 
+                                                        AND iID_MaDonVi<>'' 
+                                                        AND iID_MaChungTu 
+                                                        IN (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} {2} {3}
+                                    GROUP BY iID_MaDonVi,sTenDonVi
+                                    HAVING SUM(rTuChi)<>0 
+										OR SUM(rHangNhap)<>0 
+										OR SUM(rHienVat)<>0  
+										OR SUM(rHangMua)<>0  
+										OR SUM(rPhanCap)<>0 
+										OR SUM(rDuPhong)<>0
+                                    ORDER BY iID_MaDonVi
+                                    ", DKDot, DKPhongBan, DKLNS, DKDonVi);
+
+            cmd.CommandText = SQL;
+            DataTable dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return dt;
+        }
+
+        //HungPH: lấy danh sách đợt dự toán
+        public static DataTable LayDotDuToan(String iNamLamViec, String MaND)
+        {
+            String DK = "";
+            SqlCommand cmd = new SqlCommand();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("MaDot", typeof(String));
+            dt.Columns.Add("iDotCap", typeof(String));
+            DataRow dr = dt.NewRow();
+            String SQL = String.Format(@"
+                SELECT DISTINCT CONVERT(VARCHAR(24),dNgayChungTu,105) as iDotCap,dNgayChungTu
+                FROM DT_ChungTu
+                WHERE iTrangThai=1 
+                    AND iNamLamViec=@iNamLamViec
+                    AND iID_MaChungTu IN 
+                    (
+                        SELECT iID_MaChungTu 
+                        FROM DT_ChungTuChiTiet 
+                        WHERE iTrangThai=1 AND rTuChi<>0 AND iID_MaDonVi<>''
+                    ) 
+                ORDER BY dNgayChungTu");
+
+            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+            cmd.CommandText = SQL;
+            dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return dt;
+        }
+
+        #endregion
+
+        #region HungPX: VungNV update code
+
+        public static DataTable get_dtDuToan_1050000_Nganh(String MaND, String Nganh, String ToSo, String MaDot, String iID_MaPhongBan)
+        {
+            String DSNganh = "", DK = "", DKPB = "";
+            SqlCommand cmdNG = new SqlCommand();
+            if (!String.IsNullOrEmpty(MaDot) && MaDot != "-1")
+            {
+
+                DK += "and iID_MaDotNganSach = @MaDot";
+                cmdNG.Parameters.AddWithValue("@MaDot", MaDot);
+            }
+            String iID_MaNganhMLNS =
+                Convert.ToString(CommonFunction.LayTruong("NS_MucLucNganSach_Nganh", "iID", Nganh, "iID_MaNganhMLNS"));
+
+            if (iID_MaPhongBan != "0")
+            {
+                DKPB = " AND iID_MaPhongBanDich=@iID_MaPhongBan";
+                cmdNG.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
+            }
+
+            DSNganh = " AND sNG IN (@iID_MaNganhMLNS)";
+            cmdNG.Parameters.AddWithValue("@iID_MaNganhMLNS", iID_MaNganhMLNS);
+
+            if (String.IsNullOrEmpty(iID_MaNganhMLNS)) DSNganh = " AND sNG IN (123)";
+            String SQLNganh = "SELECT distinct sLNS,sL,sK,sM,sTM,sTTM,sNG,sTNG,sMoTa";
+            SQLNganh += ",sM +'.'+ sTM +'.'+ sTTM +'.'+ sNG AS NG";
+            SQLNganh +=
+                " FROM DT_ChungTuChiTiet_PhanCap WHERE sLNS='1020100' AND MaLoai<>'1' {1} AND iTrangThai=1 {2}  {0} {3} {4}";
+
+            SQLNganh += " UNION SELECT distinct sLNS,sL,sK,sM,sTM,sTTM,sNG,sTNG,sMoTa";
+            SQLNganh += ",sM +'.'+ sTM +'.'+ sTTM +'.'+ sNG AS NG";
+            SQLNganh +=
+                " FROM DT_ChungTuChiTiet WHERE sLNS=1040100 AND iKyThuat=1 AND MaLoai=1 {1} AND iTrangThai=1 {2}  {0}  {3} {4} ORDER BY sM,sTM,sTTM,sNG";
+            SQLNganh = String.Format(SQLNganh, DSNganh, ReportModels.DieuKien_NganSach_KhongDV(MaND), "", DKPB, DK);
+
+            cmdNG.CommandText = SQLNganh;
+
+            DataTable dtNG = Connection.GetDataTable(cmdNG);
+            cmdNG.Dispose();
+
+            return dtNG;
+        }
+
+       
+        #endregion
+
+        #endregion
+
     }
 }

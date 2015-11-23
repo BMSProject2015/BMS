@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using DomainModel.Abstract;
 using DomainModel;
-namespace VIETTEL.Models
+namespace VIETTEL.Models.CapPhat
 {
     public class CapPhat_ReportModels
     {
@@ -145,28 +145,6 @@ namespace VIETTEL.Models
             cmd.Dispose();
 
             return dt;
-        }
-        /// <summary>
-        /// Lấy mô tả của Loại ngân sách
-        /// </summary>
-        /// <param name="sLNS">Mã ngân sách</param>
-        /// <returns>Tên loại ngân sách</returns>
-        /// VungNV: 2015/11/11
-        public static String LayMoTaLNS(String sLNS)
-        {
-            String sMoTa = "";
-            SqlCommand cmd = new SqlCommand();
-            
-            String SQL = 
-                String.Format(
-                  @"SELECT sMoTa 
-                    FROM NS_MucLucNganSach 
-                    WHERE iTrangThai=1 AND sLNS=@sLNS");
-
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@sLNS", sLNS);
-            sMoTa = Connection.GetValueString(cmd, "");
-            return sMoTa;
         }
 
         /// <summary>
