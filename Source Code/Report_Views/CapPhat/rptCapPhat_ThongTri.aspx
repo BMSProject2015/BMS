@@ -335,7 +335,7 @@
 
                 jQuery.ajaxSetup({ cache: false });
                
-                var url = unescape('<%= Url.Action("Ds_LNS?ParentID=#0&iNamCapPhat=#1&LoaiThongTri=#2&sLNS=#3&iID_MaPhongBan=#4", "rptCapPhat_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&iNamCapPhat=#1&LoaiThongTri=#2&sLNS=#3&iID_MaPhongBan=#4", "rptCapPhat_ThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", NamCapPhat));
                 url = unescape(url.replace("#2",LoaiThongTri));
@@ -364,7 +364,7 @@
                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iNamCapPhat=#1&LoaiThongTri=#2&sLNS=#3&iID_MaDonVi=#4&iID_MaPhongBan=#5", "rptCapPhat_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iNamCapPhat=#1&LoaiThongTri=#2&sLNS=#3&iID_MaDonVi=#4&iID_MaPhongBan=#5", "rptCapPhat_ThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", NamCapPhat));
                 url = unescape(url.replace("#2",LoaiThongTri));
