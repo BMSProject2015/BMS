@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
-
 using System.Data;
-
 using VIETTEL.Models;
 using System.Data.SqlClient;
 using DomainModel;
@@ -16,6 +13,7 @@ using FlexCel.Report;
 using FlexCel.Render;
 using System.IO;
 using VIETTEL.Controllers;
+using VIETTEL.Models.DuToanBS;
 
 
 namespace VIETTEL.Report_Controllers.DuToanBS

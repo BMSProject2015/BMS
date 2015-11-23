@@ -217,21 +217,21 @@ namespace VIETTEL.Report_Controllers.CapPhat
             for (int i = 0; i < dtsLNS5.Rows.Count; i++)
             {
                 r = dtsLNS5.Rows[i];
-                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS5"]));
+                r["sMoTa"] = ReportModels.LayMoTa(Convert.ToString(r["sLNS5"]));
             }
 
             DataTable dtsLNS3 = HamChung.SelectDistinct("dtsLNS3", dtsLNS5, "sLNS1,sLNS3", "sLNS1,sLNS3,sMoTa");
             for (int i = 0; i < dtsLNS3.Rows.Count; i++)
             {
                 r = dtsLNS3.Rows[i];
-                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS3"]));
+                r["sMoTa"] = ReportModels.LayMoTa(Convert.ToString(r["sLNS3"]));
             }
 
             DataTable dtsLNS1 = HamChung.SelectDistinct("dtsLNS1", dtsLNS3, "sLNS1", "sLNS1,sMoTa");
             for (int i = 0; i < dtsLNS1.Rows.Count; i++)
             {
                 r = dtsLNS1.Rows[i];
-                r["sMoTa"] = CapPhat_ReportModels.LayMoTaLNS(Convert.ToString(r["sLNS1"]));
+                r["sMoTa"] = ReportModels.LayMoTa(Convert.ToString(r["sLNS1"]));
             }
 
             long TongTien = 0;
@@ -391,7 +391,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/LNS_DanhSach_ThongTri.ascx";
 
-            DataTable dt = CapPhat_ChungTuModels.LayDtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
+            DataTable dt = CapPhat_ChungTuModels.dtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(sLNS))
             {
@@ -419,7 +419,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/DonVi_DanhSach_ThongTri.ascx";
             
-            DataTable dt = CapPhat_ChungTuModels.LayDtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
+            DataTable dt = CapPhat_ChungTuModels.dtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(iID_MaDonVi))
             {

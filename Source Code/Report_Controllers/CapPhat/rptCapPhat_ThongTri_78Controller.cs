@@ -88,7 +88,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
             XlsFile Result = new XlsFile(true);
             Result.Open(path);
 
-                DataTable dt=  CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
+                DataTable dt=  CapPhat_ChungTuModels.GetCapPhat(iID_MaCapPhat);
                 String dNgayCapPhat = Convert.ToString(dt.Rows[0]["dNgayCapPhat"]);
                 String NgayThang = ReportModels.Ngay_Thang_Nam_HienTai();
                 String LoaiCapPhat = Convert.ToString(CommonFunction.LayTruong("DC_DanhMuc", "iID_MaDanhMuc", Convert.ToString(dt.Rows[0]["iDM_MaLoaiCapPhat"]), "sGhiChu"));/* CommonFunction.LayTenDanhMuc(Convert.ToString(dt.Rows[0]["iDM_MaLoaiCapPhat"])); */
