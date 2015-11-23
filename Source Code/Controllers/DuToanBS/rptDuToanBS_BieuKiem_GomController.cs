@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using FlexCel.Core;
 using FlexCel.Report;
@@ -11,10 +8,9 @@ using System.Data;
 using System.Data.SqlClient;
 using DomainModel;
 using VIETTEL.Models;
-using VIETTEL.Controllers;
 using System.IO;
-using System.Collections.Specialized;
 using System.Collections;
+using VIETTEL.Models.DuToanBS;
 
 namespace VIETTEL.Controllers.DuToanBS
 {

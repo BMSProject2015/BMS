@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models;
+using VIETTEL.Models.DuToanBS;
 
 namespace VIETTEL.Controllers.DuToanBS
 {

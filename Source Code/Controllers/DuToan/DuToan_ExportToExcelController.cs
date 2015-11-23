@@ -13,6 +13,7 @@ using DomainModel;
 using VIETTEL.Models;
 using System.Diagnostics;
 using System.Reflection;
+using VIETTEL.Models.DuToan;
 namespace VIETTEL.Controllers
 {
     public class DuToan_ExportToExcelController : Controller
