@@ -1,11 +1,8 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.DuToan" %>
-
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -29,20 +26,14 @@
         String ParentID = "QuyetToan";
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
-        //dtQuy
+        
+        //lấy danh sách quý
         String iThang_Quy = Convert.ToString(ViewData["iThang_Quy"]);
         if (String.IsNullOrEmpty(iThang_Quy))
         {
-            String mon = DateTime.Now.Month.ToString();
-            if (mon == "1" || mon == "2" || mon == "3")
-                iThang_Quy = "1";
-            else if (mon == "4" || mon == "5" || mon == "6")
-                iThang_Quy = "2";
-            else if (mon == "7" || mon == "8" || mon == "9")
-                iThang_Quy = "3";
-            else
-                iThang_Quy = "4";
+            ReportModels.LayQuyHienTai();
         }
+        
         DataTable dtQuy = DanhMucModels.DT_Quy_QuyetToan();
         DataRow R1 = dtQuy.NewRow();
         R1["MaQuy"] = "5";
@@ -51,13 +42,13 @@
         SelectOptionList slQuy = new SelectOptionList(dtQuy, "MaQuy", "TenQuy");
         dtQuy.Dispose();
         
-        //dtNam
+        //lấy năm
         String iID_MaNamNganSach = Convert.ToString(ViewData["iID_MaNamNganSach"]);
         DataTable dtNamNganSach = QuyetToanModels.getDSNamNganSach();
         SelectOptionList slNamNganSach = new SelectOptionList(dtNamNganSach, "MaLoai", "sTen");
         dtNamNganSach.Dispose();
         
-        //dtPhongBan
+        //lấy danh sách phòng ban
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
         DataTable dtPhongBan = QuyetToanModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
@@ -68,16 +59,19 @@
         {
             PageLoad = "0";
         }
+        
         String Chuoi = "";
         String View = "";
+        
         if (PageLoad == "1")
         {
             View = String.Format(@"/rptQuyetToan_TongHop_NhapSoLieu/viewpdf?iThang_Quy={0}&iID_MaNamNganSach={1}&iID_MaPhongBan={2}&MaND={3}",
                                             iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan, MaND);
             Chuoi += View;
         }
+        
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_TongHop_NhapSoLieu", new { });
+        
         using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongHop_NhapSoLieu", new { ParentID = ParentID }))
         {
         %>
@@ -146,7 +140,7 @@
                         </tr>
                        
                         <tr>
-                            <td colspan="6" align="center">
+                            <td style="text-align: center;" colspan="6">
                                 <table cellpadding="0" cellspacing="0" border="0" align="center">
                                     <tr>
                                         <td>
@@ -183,9 +177,6 @@
                     window.location.href = '<%=BackURL%>';
                 }
             </script>
-            <div>
-                <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel")%>
-            </div>
         </div>
         <%} %>
 </body>

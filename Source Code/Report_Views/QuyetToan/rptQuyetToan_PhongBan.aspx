@@ -1,20 +1,12 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.QuyetToan" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<script runat="server">
 
-    protected void Page_Load(object sender, EventArgs e)
-    {
-
-    }
-</script>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title></title>
@@ -41,53 +33,39 @@
         String ParentID = "QuyetToanNganSach";
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
+        
+        //danh sách quý
         DataTable dtQuy = DanhMucModels.DT_Quy_QuyetToan();
         DataRow R1 = dtQuy.NewRow();
         R1["MaQuy"] = "5";
         R1["TenQuy"] = "Bổ sung";
         dtQuy.Rows.Add(R1);
         SelectOptionList slQuy = new SelectOptionList(dtQuy, "MaQuy", "TenQuy");
+        
         dtQuy.Dispose();
 
-        String iID_MaNamNganSach = Convert.ToString(ViewData["iID_MaNamNganSach"]);
-        DataTable dtNamNganSach = QuyetToanModels.getDSNamNganSach();
-        SelectOptionList slNamNganSach = new SelectOptionList(dtNamNganSach, "MaLoai", "sTen");
-        dtNamNganSach.Dispose();
         String iThang_Quy = Convert.ToString(ViewData["iThang_Quy"]);
 
         //dt Loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaPhongBan1 = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
         DataTable dtLNS = DanhMucModels.NS_LoaiNganSach_PhongBan(iID_MaPhongBan1);
-
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
-
-        //if (String.IsNullOrEmpty(sLNS))
-        //{
-        //    if (dtLNS.Rows.Count > 0)
-        //    {
-        //        sLNS = Convert.ToString(dtLNS.Rows[0]["sLNS"]);
-        //    }
-        //    else
-        //    {
-        //        sLNS = Guid.Empty.ToString();
-        //    }
-        //}
+        
         dtLNS.Dispose();
+        
         //tunb
         DataTable dt = DonViModels.DanhSach_DonVi_QuyetToan_PhongBan(iID_MaPhongBan, MaND);
         SelectOptionList slDonvi = new SelectOptionList(dt, "iID_MaDonVi", "sTen");
 
         String[] arrLNS = sLNS.Split(',');        
         
-        
-        //phong ban
+        //danh sách phòng ban
         DataTable dtPhongBan = QuyetToanModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();        
 
-
-        //don vi
+        //lấy đơn vị
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
         SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
@@ -96,13 +74,13 @@
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
         String[] arrView = new String[arrLNS.Length];
         String Chuoi = "";
+        
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
         if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
         if (PageLoad == "1")
         {
-
             for (int i = 0; i < arrLNS.Length; i++)
             {
                 arrView[i] =
@@ -118,7 +96,6 @@
         int SoCot = 1;
         String[] arrMaDonVi = sLNS.Split(',');
         
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_PhongBan", new { });
         using (Html.BeginForm("EditSubmit", "rptQuyetToan_PhongBan", new { ParentID = ParentID,MaND = MaND }))
         {
     %>
@@ -147,7 +124,7 @@
                             <div>
                                 <b>Chọn Quý :</b></div>
                         </td>
-                        <td style="width: 10%>
+                        <td style="width:10%">
                             <div style="margin-right: 10px;">
                                 <%=MyHtmlHelper.DropDownList(ParentID, slQuy, iThang_Quy, "iThang_Quy", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
@@ -170,12 +147,9 @@
                                     <%} %>
                                 </tr>
                                 <%
-                
-String strsTen = "", MaDonVi = "", strChecked = "";
-for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
-{
-                    
-                    
+                                String strsTen = "", MaDonVi = "", strChecked = "";
+                                for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
+                                {
                                 %>
                                 <tr>
                                     <%for (int c = 0; c < SoCot; c++)
@@ -434,17 +408,15 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                 $("input:checkbox[check-group='LNS']").each(function (i) {
                     this.checked = value;
                 });
-                
             }                                            
         </script>
-        
          <script type="text/javascript">
              function CheckAllTO(value) {
                  $("input:checkbox[check-group='To']").each(function (i) {
                      this.checked = value;
                  });
              }                                            
- </script>
+        </script>
         <script type="text/javascript">
             $(document).ready(function () {
                    $('.title_tong a').click(function () {
@@ -455,12 +427,15 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                 var count = <%=arrView.Length%>;
                 var Chuoi = '<%=Chuoi%>';
                 var Mang=Chuoi.split("+");
-                   var pageLoad = <%=PageLoad %>;
-                   if(pageLoad=="1") {
-                var siteArray = new Array(count);
-                for (var i = 0; i < count; i++) {
-                    siteArray[i] = Mang[i];
-                }
+                var pageLoad = <%=PageLoad %>;
+                
+                if(pageLoad=="1") {
+                    var siteArray = new Array(count);
+
+                    for (var i = 0; i < count; i++) {
+                        siteArray[i] = Mang[i];
+                    }
+                    
                     for (var i = 0; i < count; i++) {
                         window.open(siteArray[i], '_blank');
                     }
@@ -469,10 +444,10 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
             
             function Chon() {
                 Thang = document.getElementById("<%= ParentID %>_iThang_Quy").value;
-                //var sLNS = document.getElementById("<%=ParentID %>_sLNS").value;
-                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+                var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&iID_MaPhongBan=#3&MaND=#4", "rptQuyetToan_PhongBan") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&iID_MaPhongBan=#3&MaND=#4", "rptQuyetToan_PhongBan") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2", "<%= iID_MaDonVi %>"));
@@ -489,9 +464,12 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel") %>
-        </div>
+        <script runat="server">
+            protected void Page_Load(object sender, EventArgs e)
+            {
+
+            }
+        </script>
     </div>
     <%} %>
 </body>

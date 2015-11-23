@@ -1,12 +1,9 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.QuyetToan" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -18,6 +15,8 @@
         String ParentID = "QuyetToanNganSach";
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
+        
+        //lấy danh sách quý
         DataTable dtQuy = DanhMucModels.DT_Quy_QuyetToan();
         DataRow R1 = dtQuy.NewRow();
         R1["MaQuy"] = "5";
@@ -26,10 +25,13 @@
         SelectOptionList slQuy = new SelectOptionList(dtQuy, "MaQuy", "TenQuy");
         dtQuy.Dispose();
 
+        //Lấy năm ngân sách
         String iID_MaNamNganSach = Convert.ToString(ViewData["iID_MaNamNganSach"]);
         DataTable dtNamNganSach = QuyetToanModels.getDSNamNganSach();
         SelectOptionList slNamNganSach = new SelectOptionList(dtNamNganSach, "MaLoai", "sTen");
         dtNamNganSach.Dispose();
+        
+        //lấy danh sách phòng ban
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
         DataTable dtPhongBan = QuyetToanModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
@@ -38,17 +40,10 @@
         String iThang_Quy = Convert.ToString(ViewData["iThang_Quy"]);
         if (String.IsNullOrEmpty(iThang_Quy))
         {
-            String mon = DateTime.Now.Month.ToString();
-            if (mon == "1" || mon == "2" || mon == "3")
-                iThang_Quy = "1";
-            else if (mon == "4" || mon == "5" || mon == "6")
-                iThang_Quy = "2";
-            else if (mon == "7" || mon == "8" || mon == "9")
-                iThang_Quy = "3";
-            else
-                iThang_Quy = "4";
+            ReportModels.LayQuyHienTai();
         }
-        //dt Loại ngân sách
+        
+        //lấy danh sách loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaPhongBanND = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
         DataTable dtLNS = DanhMucModels.NS_LoaiNganSach_PhongBan(iID_MaPhongBanND);
@@ -64,11 +59,12 @@
                 sLNS = Guid.Empty.ToString();
             }
         }
+        
         dtLNS.Dispose();
+        
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
 
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        
         String[] arrLNS = sLNS.Split(',');
         String[] arrMaDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrMaDonVi.Length];
@@ -76,7 +72,20 @@
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
-        if (String.IsNullOrEmpty(iID_MaDonVi)) PageLoad = "0";
+
+        //Nếu không chọn loại ngân sách thì không cho xuất báo cáo
+        if (String.IsNullOrEmpty(sLNS))
+        {
+            PageLoad = "0";
+            sLNS = Guid.Empty.ToString();
+        }
+
+        //Nếu không chọn đơn vị không cho xuất báo cáo
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            PageLoad = "0";
+        } 
+        
         if (PageLoad == "1")
         {
             for (int i = 0; i < arrMaDonVi.Length; i++)
@@ -87,34 +96,8 @@
                     Chuoi += "+";
             }
         }
-        //String MaTo = Convert.ToString(ViewData["MaTo"]);
-        //String[] arrMaTo = MaTo.Split(',');
-        //String[] arrView = new String[arrMaTo.Length];
-        //String Chuoi = "";
-        //String PageLoad = Convert.ToString(ViewData["PageLoad"]);
-        //if (String.IsNullOrEmpty(PageLoad))
-        //    PageLoad = "0";
-        //if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
-        //if (PageLoad == "1")
-        //{
-
-        //    for (int i = 0; i < arrMaTo.Length; i++)
-        //        {
-        //            arrView[i] =
-        //                String.Format(
-        //                    @"/rptQuyetToan_TongHop_LNS/viewpdf?MaTo={0}&sLNS={1}&iThang_Quy={2}&iID_MaPhongBan={3}&MaND={4}",
-        //                    arrMaTo[i], sLNS, iThang_Quy, iID_MaPhongBan, MaND);
-        //            Chuoi += arrView[i];
-        //            if (i < arrMaTo.Length - 1)
-        //                Chuoi += "+";
-        //        }
-           
-        //}
-
 
         int SoCot = 1;
-        //String[] arrMaDonVi = sLNS.Split(',');
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_TongQuyetToan_LNS_DonVi", new { });
         using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongQuyetToan_LNS_DonVi", new { ParentID = ParentID }))
         {
     %>
@@ -166,12 +149,9 @@
                                     <%} %>
                                 </tr>
                                 <%
-                
-String strsTen = "", MaDonVi = "", strChecked = "";
-for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
-{
-                    
-                    
+                                String strsTen = "", MaDonVi = "", strChecked = "";
+                                for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
+                                {
                                 %>
                                 <tr>
                                     <%for (int c = 0; c < SoCot; c++)
@@ -456,7 +436,7 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                      this.checked = value;
                  });
              }                                            
- </script>
+         </script>
         <script type="text/javascript">
             $(document).ready(function () {
                    $('.title_tong a').click(function () {
@@ -480,7 +460,7 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
             });
             
             Chon();
-            //alert(Chon());
+
             function Chon() {
                   var sLNS = "";
              $("input:checkbox[check-group='LNS']").each(function (i) {
@@ -494,7 +474,7 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                  var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongQuyetToan_LNS_DonVi") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongQuyetToan_LNS_DonVi") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2","<%= iID_MaDonVi %>"));
@@ -512,9 +492,6 @@ for (int i = 0; i < dtLNS.Rows.Count; i = i + SoCot)
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel")%>
-        </div>
     </div>
     <%} %>
 </body>

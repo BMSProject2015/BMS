@@ -1,12 +1,9 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.QuyetToan" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -18,6 +15,8 @@
         String ParentID = "QuyetToanNganSach";
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
+        
+        //Danh sách quý
         DataTable dtQuy = DanhMucModels.DT_Quy_QuyetToan();
         DataRow R1 = dtQuy.NewRow();
         R1["MaQuy"] = "5";
@@ -30,22 +29,15 @@
         DataTable dtNamNganSach = QuyetToanModels.getDSNamNganSach();
         SelectOptionList slNamNganSach = new SelectOptionList(dtNamNganSach, "MaLoai", "sTen");
         dtNamNganSach.Dispose();
+        
         String iThang_Quy = Convert.ToString(ViewData["iThang_Quy"]);
         if (String.IsNullOrEmpty(iThang_Quy))
         {
-            String mon = DateTime.Now.Month.ToString();
-            if (mon == "1" || mon == "2" || mon == "3")
-                iThang_Quy = "1";
-            else if (mon == "4" || mon == "5" || mon == "6")
-                iThang_Quy = "2";
-            else if (mon == "7" || mon == "8" || mon == "9")
-                iThang_Quy = "3";
-            else
-                iThang_Quy = "4";
+            ReportModels.LayQuyHienTai();
         }
+        
         //dt Danh sách phòng ban
         String iID_MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
-
         DataTable dtPhongBan = QuyetToanModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         
@@ -54,11 +46,13 @@
         if (MaPhongBan == null)
             MaPhongBan = "-1";
         dtPhongBan.Dispose();
+        
         //dt Loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
         SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
+        
         if (String.IsNullOrEmpty(iID_MaDonVi))
         {
             if (dtDonVi.Rows.Count > 0)
@@ -70,17 +64,20 @@
                 iID_MaDonVi = Guid.Empty.ToString();
             }
         }
+        
         dtDonVi.Dispose();
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
-
 
         String[] arrDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrDonVi.Length];
         String Chuoi = "";
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
+        
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
+        
         if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
+        
         if (PageLoad == "1")
         {
             //for (int i = 0; i < arrDonVi.Length; i++)
@@ -100,8 +97,6 @@
             //Chuoi += arrView[0];
         }
 
-
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_DonVi_LNS", new { });
         using (Html.BeginForm("EditSubmit", "rptQuyetToan_DonVi_LNS", FormMethod.Post, new { target="_blank" }))
         {
     %>
@@ -379,6 +374,7 @@
                 </table>
             </div>
         </div>
+
         <script type="text/javascript">
             function CheckAll(value) {
                 $("input:checkbox[check-group='LNS']").each(function (i) {
@@ -411,16 +407,18 @@
             function Chon() {
                 Thang = document.getElementById("<%= ParentID %>_iThang_Quy").value;
                 var iID_MaDonVi = document.getElementById("<%=ParentID %>_iID_MaDonVi").value;
-                 var iID_MaNamNganSach = document.getElementById("<%=ParentID %>_iID_MaNamNganSach").value;
-                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+                var iID_MaNamNganSach = document.getElementById("<%=ParentID %>_iID_MaNamNganSach").value;
+                var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_DonVi_LNS") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_DonVi_LNS") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2",iID_MaDonVi));
                 url = unescape(url.replace("#3","<%= sLNS %>"));
                 url = unescape(url.replace("#4", iID_MaNamNganSach));
                 url = unescape(url.replace("#5", MaPhongBan));
+
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
                 });
@@ -432,9 +430,6 @@
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel") %>
-        </div>
     </div>
     <%} %>
 </body>

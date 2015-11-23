@@ -1,12 +1,8 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.QuyetToan" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -18,6 +14,8 @@
         String ParentID = "QuyetToanNganSach";
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
+        
+        //Danh sách quý
         DataTable dtQuy = DanhMucModels.DT_Quy_QuyetToan();
         DataRow R1 = dtQuy.NewRow();
         R1["MaQuy"] = "5";
@@ -26,12 +24,13 @@
         SelectOptionList slQuy = new SelectOptionList(dtQuy, "MaQuy", "TenQuy");
         dtQuy.Dispose();
 
+        //Danh sách năm ngân sách
         String iID_MaNamNganSach = Convert.ToString(ViewData["iID_MaNamNganSach"]);
         DataTable dtNamNganSach = QuyetToanModels.getDSNamNganSach();
         SelectOptionList slNamNganSach = new SelectOptionList(dtNamNganSach, "MaLoai", "sTen");
         dtNamNganSach.Dispose();
         
-        // dtPhongBan.
+        //Danh sách phòng ban.
         string iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
         DataTable dtPhongBan = QuyetToanModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
@@ -39,18 +38,10 @@
         
         String iThang_Quy = Convert.ToString(ViewData["iThang_Quy"]);
         
-        // dung quy hien tai
+        //Lấy quý hiện tại
         if (String.IsNullOrEmpty(iThang_Quy))
         {
-            String mon = DateTime.Now.Month.ToString();
-            if (mon == "1" || mon == "2" || mon == "3")
-                iThang_Quy = "1";
-            else if (mon == "4" || mon == "5" || mon == "6")
-                iThang_Quy = "2";
-            else if (mon == "7" || mon == "8" || mon == "9")
-                iThang_Quy = "3";
-            else
-                iThang_Quy = "4";
+            ReportModels.LayQuyHienTai();
         }
         
         //dt Loại ngân sách
@@ -69,6 +60,7 @@
                 sLNS = Guid.Empty.ToString();
             }
         }
+        
         dtLNS.Dispose();
         
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
@@ -101,7 +93,7 @@
         }
 
         int SoCot = 1;
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_TongHop_LNS", new { });
+        
         using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongHop_LNS",new {ParentID = ParentID}))
         {
     %>
@@ -498,9 +490,7 @@
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel") %>
-        </div>
+
     </div>
     <%} %>
 </body>

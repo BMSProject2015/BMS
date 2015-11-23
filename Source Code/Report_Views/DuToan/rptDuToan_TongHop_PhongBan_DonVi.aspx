@@ -1,9 +1,9 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToan" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToan" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,19 +29,19 @@
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
         
-        //dtDot
+        //HungPH: 2015/11/15 Lấy danh sanh đợt cấp phát
         String iID_MaDot = Convert.ToString(ViewData["iID_MaDot"]);
-        DataTable dtDot = DuToanBSModels.getDSDot(iNamLamViec, MaND);
+        DataTable dtDot = DuToan_ReportModels.LayDotDuToan(iNamLamViec, MaND);
         SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         dtDot.Dispose();
         
-        //dtPhongBan
+        //HungPH: 2015/11/15 Lấy danh sách phòng ban
         string iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
-        DataTable dtPhongBan = DuToan_ReportModels.getDSPhongBanAll(iNamLamViec, MaND);
+        DataTable dtPhongBan = DuToan_ReportModels.getDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();
-        
-        //dtLoaiNganSach
+
+        //HungPH: 2015/11/15 Lấy danh sách loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaPhongBanND = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
         DataTable dtLNS = DanhMucModels.NS_LoaiNganSach_PhongBan(iID_MaPhongBanND);
@@ -56,14 +56,15 @@
                 sLNS = Guid.Empty.ToString();
             }
         }
+        
         dtLNS.Dispose();
         String[] arrLNS = sLNS.Split(',');
-
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         String[] arrMaDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrMaDonVi.Length];
         String chuoi = "";
         String LoaiTongHop = Convert.ToString(ViewData["LoaiTongHop"]);
+        
         if (String.IsNullOrEmpty(LoaiTongHop))
         {
             LoaiTongHop = "ChiTiet";
@@ -98,8 +99,8 @@
                 chuoi += arrView[0];
             }
         }
+        
         int SoCot = 1;
-        String urlExport = Url.Action("ExportToExcel", "rptDuToan_TongHop_PhongBan_DonVi", new { });
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
         using (Html.BeginForm("EditSubmit", "rptDuToan_TongHop_PhongBan_DonVi", new { ParentID = ParentID }))
         {
@@ -434,7 +435,7 @@
          </div>
          <script type="text/javascript">
              function CheckAllDV(value) {
-                 $("input:checkbox[check-group='LNS']").each(function (i) {
+                 $("input:checkbox[check-group='LNS']").each(function () {
                      this.checked = value;
                  });
                  Chon();
@@ -442,7 +443,7 @@
          </script>
          <script type="text/javascript">
              function CheckAll(value) {
-                 $("input:checkbox[check-group='DonVi']").each(function (i) {
+                 $("input:checkbox[check-group='DonVi']").each(function () {
                      this.checked = value;
                  });
              }                                            
@@ -473,7 +474,7 @@
             function Chon(){
 
                 var sLNS = "";
-                 $("input:checkbox[check-group='LNS']").each(function (i) {
+                 $("input:checkbox[check-group='LNS']").each(function () {
                      if (this.checked) {
                          if (sLNS != "") sLNS += ",";
                          sLNS += this.value;
@@ -483,7 +484,7 @@
                 var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
 
                 jQuery.ajaxSetup({cache: false});
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDonVi=#1&iID_MaDot=#2&iID_MaPhongBan=#3&sLNS=#4", "rptDuToan_TongHop_PhongBan_DonVi") %>')
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDonVi=#1&iID_MaDot=#2&iID_MaPhongBan=#3&sLNS=#4", "rptDuToan_TongHop_PhongBan_DonVi") %>')
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1","<%= iID_MaDonVi %>"));
                 url = unescape(url.replace("#2", iID_MaDot));
@@ -500,9 +501,6 @@
                  window.location.href = '<%=BackURL%>';
              }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel")%>
-        </div>
         </div>
 
     <%} %>

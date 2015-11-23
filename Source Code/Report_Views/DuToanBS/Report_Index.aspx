@@ -43,7 +43,7 @@
                   <tr>
                     <td align="center" style="padding: 3px 2px;">3</td>
                     <td align="center" style="padding: 3px 2px;"></td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungDot"), "Dự toán - Báo cáo chỉ tiêu ngân sách bảo đảm phân cấp")%></td>                        
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_NganSachBaoDam_TungDot"), "Dự toán - Báo cáo chỉ tiêu ngân sách bảo đảm phân cấp")%></td>                        
                     <td align="center" style="padding: 3px 2px;">HungPX</td>
                 </tr>  
                  <tr>

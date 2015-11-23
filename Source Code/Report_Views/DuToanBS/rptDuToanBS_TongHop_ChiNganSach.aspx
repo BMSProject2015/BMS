@@ -4,9 +4,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.DuToanBS" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -33,20 +31,14 @@
         //lấy đợt từ ngày : ... đến ngày :...
         String iID_MaDotTu = Convert.ToString(ViewData["iID_MaDotTu"]);
         String iID_MaDotDen = Convert.ToString(ViewData["iID_MaDotDen"]);        
-        DataTable dtDot = DuToanBSModels.getDSDot(iNamLamViec, MaND);
+        DataTable dtDot = DuToanBS_ReportModels.LayDSDot(iNamLamViec, MaND);
         SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
-        //if (String.IsNullOrEmpty(iID_MaDot))
-        //{
-        //    if (dtDot.Rows.Count > 0)
-        //        iID_MaDot = Convert.ToString(dtDot.Rows[0]["MaDot"]);
-        //    else
-        //        iID_MaDot = Guid.Empty.ToString();
-        //}
+        
         dtDot.Dispose();
                 
         //dt Danh sách phòng ban
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
-        DataTable dtPhongBan = DuToanBSModels.getDSPhongBan(iNamLamViec, MaND);
+        DataTable dtPhongBan = DuToanBS_ReportModels.LayDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();
         
@@ -66,7 +58,9 @@
                 iID_MaDonVi = Guid.Empty.ToString();
             }
         }
+        
         dtDonVi.Dispose();
+        
         //loai bao cao
         String LoaiBaoCao = Convert.ToString(ViewData["LoaiTongHop"]);
         if (String.IsNullOrEmpty(LoaiBaoCao)) LoaiBaoCao = "ChiTiet";
@@ -77,9 +71,23 @@
         String[] arrView = new String[arrDonVi.Length];
         String Chuoi = "";
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
+        
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
-        if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
+
+        //Nếu không chọn loại ngân sách thì không cho xuất báo cáo
+        if (String.IsNullOrEmpty(sLNS))
+        {
+            PageLoad = "0";
+            sLNS = Guid.Empty.ToString();
+        }
+
+        //Nếu không chọn đơn vị không cho xuất báo cáo
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            PageLoad = "0";
+        } 
+        
         if (PageLoad == "1")
         {
             if (LoaiBaoCao == "ChiTiet")
@@ -109,7 +117,6 @@
 
         int SoCot = 1;
         
-        String urlExport = Url.Action("ExportToExcel", "rptDuToanBS_TongHop_ChiNganSach", new { });
         using (Html.BeginForm("EditSubmit", "rptDuToanBS_TongHop_ChiNganSach", new { ParentID = ParentID }))
         {
     %>
@@ -410,12 +417,12 @@
                 var count = <%=arrView.Length%>;
                 var Chuoi = '<%=Chuoi%>';
                 var Mang=Chuoi.split("+");
-                   var pageLoad = <%=PageLoad %>;
-                   if(pageLoad=="1") {
-                var siteArray = new Array(count);
-                for (var i = 0; i < count; i++) {
-                    siteArray[i] = Mang[i];
-                }
+                var pageLoad = <%=PageLoad %>;
+                if(pageLoad=="1") {
+                    var siteArray = new Array(count);
+                    for (var i = 0; i < count; i++) {
+                        siteArray[i] = Mang[i];
+                    }
                     for (var i = 0; i < count; i++) {
                         window.open(siteArray[i], '_blank');
                     }
@@ -453,7 +460,7 @@
                 });
                 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_LNS?ParentID=#0&iID_MaDotTu=#1&iID_MaDotDen=#2&iID_MaDonVi=#3&sLNS=#4&iID_MaPhongBan=#5", "rptDuToanBS_TongHop_ChiNganSach") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&iID_MaDotTu=#1&iID_MaDotDen=#2&iID_MaDonVi=#3&sLNS=#4&iID_MaPhongBan=#5", "rptDuToanBS_TongHop_ChiNganSach") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDotTu));
                 url = unescape(url.replace("#2", iID_MaDotDen));
@@ -465,9 +472,8 @@
                 });
             }
 
-            
-            //don vi
             Chon();
+
             function Chon() {
                 var iID_MaDonVi = "";
                 $("input:checkbox[check-group='DV']").each(function (i) {
@@ -482,7 +488,7 @@
 
                 jQuery.ajaxSetup({ cache: false });
 
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDotTu=#1&iID_MaDotDen=#2&iID_MaDonVi=#3&iID_MaPhongBan=#4", "rptDuToanBS_TongHop_ChiNganSach") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDotTu=#1&iID_MaDotDen=#2&iID_MaDonVi=#3&iID_MaPhongBan=#4", "rptDuToanBS_TongHop_ChiNganSach") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDotTu));
                 url = unescape(url.replace("#2", iID_MaDotDen));
@@ -490,19 +496,14 @@
                 url = unescape(url.replace("#4", MaPhongBan));
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
-                    //ChonDonVi();
                 });
-            }
-                                                   
+            }                           
         </script>
         <script type="text/javascript">
             function Huy() {
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel") %>
-        </div>
     </div>
     <%} %>
 </body>
