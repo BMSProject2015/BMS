@@ -13,6 +13,7 @@ using DomainModel;
 using VIETTEL.Models;
 using VIETTEL.Controllers;
 using System.IO;
+using VIETTEL.Models.DuToan;
 
 namespace VIETTEL.Report_Controllers.DuToan
 {

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-
 using System.Data;
 using System.Data.SqlClient;
 using FlexCel.Core;
@@ -15,6 +11,7 @@ using DomainModel.Controls;
 using VIETTEL.Models;
 using VIETTEL.Controllers;
 using System.IO;
+using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan
 {
@@ -207,7 +204,6 @@ namespace VIETTEL.Report_Controllers.QuyetToan
                 }
 
             }
-            return null;
         }
         /// <summary>
         /// onchange
@@ -225,6 +221,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan
             dtDonVi.Dispose();
             return DonVi;
         }
+
         [HttpGet]
         public JsonResult ds_DonVi(String ParentID, String MaND, String Thang_Quy, String iID_MaDonVi, String iID_MaTrangThaiDuyet)
         {

@@ -10,6 +10,7 @@ using VIETTEL.Models;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections;
+using VIETTEL.Models.CapPhat;
 
 namespace VIETTEL.Report_Controllers.CapPhat
 {
@@ -386,12 +387,12 @@ namespace VIETTEL.Report_Controllers.CapPhat
         /// <param name="sLNS">Loại ngân sách</param>
         /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
-        public JsonResult Ds_LNS(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaPhongBan)
+        public JsonResult LayDanhSachLNS(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaPhongBan)
         {
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/LNS_DanhSach_ThongTri.ascx";
 
-            DataTable dt = CapPhat_ChungTuModels.dtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
+            DataTable dt = CapPhat_ReportModels.LayDtLoaiThongTri_LNS(iNamCapPhat, MaND, LoaiThongTri, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(sLNS))
             {
@@ -414,12 +415,12 @@ namespace VIETTEL.Report_Controllers.CapPhat
         /// <param name="iID_MaDonVi">Mã đơn vị</param>
         /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
-        public JsonResult Ds_DonVi(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaDonVi, String iID_MaPhongBan)
+        public JsonResult LayDanhSachDonVi(String ParentID, String iNamCapPhat, String LoaiThongTri, String sLNS, String iID_MaDonVi, String iID_MaPhongBan)
         {
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/DonVi_DanhSach_ThongTri.ascx";
-            
-            DataTable dt = CapPhat_ChungTuModels.dtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
+
+            DataTable dt = CapPhat_ReportModels.LayDtLNS_DonVi(iNamCapPhat, LoaiThongTri, MaND, sLNS, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(iID_MaDonVi))
             {

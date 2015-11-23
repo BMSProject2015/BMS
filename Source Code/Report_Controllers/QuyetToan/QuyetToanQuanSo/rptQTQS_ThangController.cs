@@ -14,6 +14,7 @@ using DomainModel;
 using VIETTEL.Models;
 using VIETTEL.Controllers;
 using System.IO;
+using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuanSo
 {

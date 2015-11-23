@@ -10,6 +10,7 @@ using VIETTEL.Models;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections;
+using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 {
