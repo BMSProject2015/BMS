@@ -15,6 +15,7 @@ using VIETTEL.Models;
 using VIETTEL.Controllers;
 using System.IO;
 using System.Collections;
+using VIETTEL.Models.DuToan;
 
 namespace VIETTEL.Report_Controllers.DuToan
 {

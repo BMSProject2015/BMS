@@ -7,6 +7,7 @@ using FlexCel.XlsAdapter;
 using System.Data;
 using VIETTEL.Models;
 using System.IO;
+using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 {

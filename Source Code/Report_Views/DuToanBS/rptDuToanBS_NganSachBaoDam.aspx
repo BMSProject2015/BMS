@@ -1,11 +1,9 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.DuToan" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -32,42 +30,49 @@
         
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
         DataTable dtPhongBan = DuToanBS_ReportModels.getDSPhongBan(iNamLamViec, MaND, "1040100");
-        DataTable dtDotDuToan = new DataTable("DotDuToan");
-        DataColumn IdMucCol = dtDotDuToan.Columns.Add("IdMuc",typeof(String));
-        DataColumn TenMucCol = dtDotDuToan.Columns.Add("TenMuc",typeof(DateTime));
-        DataRow R1 = dtDotDuToan.NewRow();
-        R1["IdMuc"]= "1";
-        R1["TenMuc"] = "21-1-2015";
-        dtDotDuToan.Rows.Add(R1);
-        DataRow R2 = dtDotDuToan.NewRow();
-        R2["IdMuc"]= "2";
-        R2["TenMuc"] = "29-7-2015";
-        dtDotDuToan.Rows.Add(R2);
-        SelectOptionList slDotDuToan = new SelectOptionList(dtDotDuToan,"IdMuc","TenMuc");
-        dtDotDuToan.Dispose();
+        
+        //Lấy danh sách đợt
+        DataTable dtDot = DuToanBS_ReportModels.LayDSDot(iNamLamViec, MaND);
+        SelectOptionList slDotDuToan = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
+        String idDot = Convert.ToString(ViewData["iID_MaDot"]);
+        if (String.IsNullOrEmpty(idDot))
+        {
+            if (dtDot.Rows.Count > 0)
+                idDot = Convert.ToString(dtDot.Rows[0]["iDotCap"]);
+            else
+                idDot = Guid.Empty.ToString();
+        }
+
+        dtDot.Dispose();
+        
+        //lấy danh sách phòng ban
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();
+        
         String iID_Dot = Convert.ToString(ViewData["iID_Dot"]);
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         String[] arrMaDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrMaDonVi.Length];
         String chuoi = "";
         String LoaiTongHop = Convert.ToString(ViewData["LoaiTongHop"]);
+
         if (String.IsNullOrEmpty(LoaiTongHop)) {
             LoaiTongHop = "ChiTiet";
         }
+        
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
-        if (String.IsNullOrEmpty(PageLoad) || String.IsNullOrEmpty(iID_MaDonVi)) 
+        if (String.IsNullOrEmpty(PageLoad) || String.IsNullOrEmpty(iID_MaDonVi))
         {
             PageLoad = "0";
         }
+           
         if (PageLoad == "1") 
         {
             if (LoaiTongHop == "ChiTiet")
             {
                 for (int i = 0; i < arrMaDonVi.Length; i++)
                 {
-                    arrView[i] = String.Format(@"/rptDuToan_1040100_BoSung/viewpdf?iID_MaDonVi={0}&iID_Dot={1}&iID_MaPhongBan={2}&MaND={3}&LoaiTongHop={4}",
+                    arrView[i] = String.Format(@"/rptDuToanBS_NganSachBaoDam/viewpdf?iID_MaDonVi={0}&iID_Dot={1}&iID_MaPhongBan={2}&MaND={3}&LoaiTongHop={4}",
                         arrMaDonVi[i], iID_Dot, iID_MaPhongBan, MaND, LoaiTongHop);
                     chuoi += arrView[i];
                     if (i < arrMaDonVi.Length - 1)
@@ -79,14 +84,15 @@
             else 
             {
                 arrView = new string[1];
-                arrView[0] = String.Format(@"/rptDuToan_1040100_BoSung/viewpdf?iID_MaDonVi={0}&iID_Dot={1}&iID_MaPhongBan={2}&MaND={3}&LoaiTongHop={4}",
+                arrView[0] = String.Format(@"/rptDuToanBS_NganSachBaoDam/viewpdf?iID_MaDonVi={0}&iID_Dot={1}&iID_MaPhongBan={2}&MaND={3}&LoaiTongHop={4}",
                         iID_MaDonVi, iID_Dot, iID_MaPhongBan, MaND, LoaiTongHop);
                 chuoi += arrView[0];
             }
         }
-        String urlExport = Url.Action("ExportToExcel", "rptQuyetToan_TongQuyetToan_LNS_DonVi", new { });
+        
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
-        using (Html.BeginForm("EditSubmit", "rptDuToan_1040100_BoSung", new { ParentID = ParentID }))
+
+        using (Html.BeginForm("EditSubmit", "rptDuToanBS_NganSachBaoDam", new { ParentID = ParentID }))
         {
          %>
          <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
@@ -361,7 +367,7 @@
          </div>
          <script type="text/javascript">
              function CheckAll(value) {
-                 $("input:checkbox[check-group='DonVi']").each(function (i) {
+                 $("input:checkbox[check-group='DonVi']").each(function () {
                      this.checked = value;
                  });
              }                                            
@@ -376,12 +382,14 @@
                 var count = <%=arrView.Length%>;
                 var chuoi = '<%=chuoi%>';
                 var Mang=chuoi.split("+");
-                   var pageLoad = <%=PageLoad %>;
-                   if(pageLoad=="1") {
-                var siteArray = new Array(count);
-                for (var i = 0; i < count; i++) {
-                    siteArray[i] = Mang[i];
-                }
+                var pageLoad = <%=PageLoad %>;
+                if(pageLoad=="1") {
+                    var siteArray = new Array(count);
+
+                    for (var i = 0; i < count; i++) {
+                        siteArray[i] = Mang[i];
+                     }
+
                     for (var i = 0; i < count; i++) {
                         window.open(siteArray[i], '_blank');
                     }
@@ -389,12 +397,14 @@
             });
             
             Chon();
-            function Chon(){
+
+            function Chon()
+            {
                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
                 var iID_Dot = document.getElementById("<%=ParentID %>_iID_Dot").value;
 
                 jQuery.ajaxSetup({cache: false});
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDonVi=#1&iID_Dot=#2&iID_MaPhongBan=#3", "rptDuToan_1040100_BoSung") %>')
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDonVi=#1&iID_Dot=#2&iID_MaPhongBan=#3", "rptDuToanBS_NganSachBaoDam") %>')
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1","<%= iID_MaDonVi %>"));
                 url = unescape(url.replace("#2", iID_Dot));
@@ -409,9 +419,6 @@
                  window.location.href = '<%=BackURL%>';
              }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel")%>
-        </div>
         </div>
          <%} %>
 </body>

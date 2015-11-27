@@ -37,7 +37,7 @@
         
         //HungPH: 2015/11/15 Lấy danh sách phòng ban
         string iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
-        DataTable dtPhongBan = DuToan_ReportModels.getDSPhongBan(iNamLamViec, MaND);
+        DataTable dtPhongBan = DuToan_ReportModels.getDSPhongBanAll(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();
 

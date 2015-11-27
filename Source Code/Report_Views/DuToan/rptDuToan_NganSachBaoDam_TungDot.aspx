@@ -7,15 +7,12 @@
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Models.DuToan" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToan" %>
-<%@ Import Namespace="FlexCel.Core" %>
-<%@ Import Namespace="FlexCel.Render" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title></title>
 </head>
 <body>
     <%
-   
         String ParentID = "BaoCaoNganSachNam";
         int SoCot = 1;
         String MaND = User.Identity.Name;
@@ -30,14 +27,17 @@
         {
             MaDot = "-1";
         }
+        
         if (String.IsNullOrEmpty(Nganh))
         {
             Nganh = "0";
         }
+        
         if (String.IsNullOrEmpty(iID_MaPhongBan))
         {
             iID_MaPhongBan = "0";
         }
+        
         if (String.IsNullOrEmpty(ToSo))
         {
             ToSo = "1";
@@ -58,9 +58,10 @@
         R1["MaDot"] = "-1";
         R1["TenDot"] = "Null";
         dtDot.Rows.Add(R1);
-            SelectOptionList slDot = new SelectOptionList(dtDot, "MaDot", "TenDot");
+        SelectOptionList slDot = new SelectOptionList(dtDot, "MaDot", "TenDot");
         dtDot.Dispose();
-        DataTable dtTo = rptDuToan_1040100_TungDotController.DanhSachToIn(MaND, Nganh, ToSo, MaDot, iID_MaPhongBan);
+        
+        DataTable dtTo = rptDuToan_NganSachBaoDam_TungDotController.DanhSachToIn(MaND, Nganh, ToSo, MaDot, iID_MaPhongBan);
         String MaTo = Convert.ToString(ViewData["MaTo"]);
         String[] arrMaDonVi = MaTo.Split(',');
         String[] arrMaTo = MaTo.Split(',');
@@ -75,7 +76,7 @@
             {
                 arrView[i] =
                     String.Format(
-                        @"/rptDuToan_1040100_TungDot/viewpdf?ToSo={0}&MaND={1}&Nganh={2}&MaDot={3}&iID_MaPhongBan={4}",
+                        @"/rptDuToan_NganSachBaoDam_TungDot/viewpdf?ToSo={0}&MaND={1}&Nganh={2}&MaDot={3}&iID_MaPhongBan={4}",
                         arrMaTo[i], MaND, Nganh, MaDot, iID_MaPhongBan);
                 Chuoi += arrView[i];
                 if (i < arrMaTo.Length - 1)
@@ -85,7 +86,7 @@
         }
 
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = "1" });
-        using (Html.BeginForm("EditSubmit", "rptDuToan_1040100_TungDot", new { ParentID = ParentID }))
+        using (Html.BeginForm("EditSubmit", "rptDuToan_NganSachBaoDam_TungDot", new { ParentID = ParentID }))
         {
     %>
     <div class="box_tong">
@@ -194,10 +195,11 @@
                 Chon();
             function Chon() {
                  var Nganh = document.getElementById("<%=ParentID %>_Nganh").value;
-                    var MaDot = document.getElementById("<%=ParentID %>_MaDot").value;
-                       var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+                 var MaDot = document.getElementById("<%=ParentID %>_MaDot").value;
+                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
+
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&Nganh=#1&ToSo=#2&MaDot=#3&iID_MaPhongBan=#4", "rptDuToan_1040100_TungDot") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Nganh=#1&ToSo=#2&MaDot=#3&iID_MaPhongBan=#4", "rptDuToan_NganSachBaoDam_TungDot") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Nganh));
                 url = unescape(url.replace("#2","<%= MaTo %>"));
@@ -220,8 +222,6 @@
     <%}
         
     %>
-    <div>
-        <%=MyHtmlHelper.ActionLink(Url.Action("ExportToExcel", "rptDuToan_1040100_TungDot", new { MaND = MaND, Nganh = Nganh, ToSo = MaTo, iID_MaPhongBan = iID_MaPhongBan, MaDot = MaDot }), "Xuất ra Excels")%>
-    </div>
+
 </body>
 </html>
