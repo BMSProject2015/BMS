@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
