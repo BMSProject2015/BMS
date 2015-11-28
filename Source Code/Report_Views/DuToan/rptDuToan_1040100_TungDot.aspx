@@ -56,7 +56,7 @@
         dtDot.Columns.Add("TenDot", typeof(string));
         DataRow R1 = dtDot.NewRow();
         R1["MaDot"] = "-1";
-        R1["TenDot"] = "Null";
+        R1["TenDot"] = "--Chọn đợt--";
         dtDot.Rows.Add(R1);
             SelectOptionList slDot = new SelectOptionList(dtDot, "MaDot", "TenDot");
         dtDot.Dispose();
@@ -100,77 +100,136 @@
                 </tr>
             </table>
         </div>
-        <div id="Div1">
+        <div id="Div1" style="background-color: #F0F9FE;">
             <div id="Div2">
-                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td style="width: 10%" class="td_form2_td1">
-                            <b>Chọn ngành: </b>
+                        <td class="td_form2_td1" style="width: 5%">
                         </td>
-                        <td class="td_form2_td1" style="text-align: center; width: 30%">
+                        <td style="width: 10%" class="td_form2_td1">
+                            <div><b>Chọn ngành</b></div>
+                        </td>
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
-                                <%=MyHtmlHelper.DropDownList(ParentID, slNganh, Nganh, "Nganh", "", "class=\"input1_2\" style=\"width: 40%;height:24px;\" onchange=Chon()")%>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slNganh, Nganh, "Nganh", "", "class=\"input1_2\" style=\"width: 100%;height:24px;\" onchange=Chon()")%>
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%">
                             <div>
-                                Chọn tờ:</div>
+                                Chọn tờ</div>
                         </td>
-                        <td style="width: 30%" rowspan="3">
+                        <td class="td_form2_td5" style="width: 30%" rowspan="10">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 200px">
                             </div>
                         </td>
-                        <td class="td_form2_td1">
+                        <td class="td_form2_td1" style="width: 10%">
                         </td>
                     </tr>
                     <tr>
+                        <td class="td_form2_td1" style="width: 5%">
+                        </td>
                         <td style="width: 10%" class="td_form2_td1">
-                            <b>Chọn phòng ban: </b>
+                            <div><b>Chọn phòng ban</b></div>
                         </td>
-                        <td class="td_form2_td1" style="text-align: center; width: 30%">
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
-                                <%=MyHtmlHelper.DropDownList(ParentID, slBDich, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width: 40%;height:24px;\" onchange=Chon()")%>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slBDich, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width: 100%;height:24px;\" onchange=Chon()")%>
                             </div>
                         </td>
                         <td class="td_form2_td1">
                         </td>
                     </tr>
                     <tr>
+                        <td class="td_form2_td1" style="width: 5%">
+                        </td>
                         <td style="width: 10%" class="td_form2_td1">
-                            <b>Chọn đợt: </b>
+                            <div><b>Chọn đợt</b></div>
                         </td>
-                        <td class="td_form2_td1" style="text-align: center; width: 30%">
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
-                                <%=MyHtmlHelper.DropDownList(ParentID, slDot, MaDot, "MaDot", "", "class=\"input1_2\" style=\"width: 40%;height:24px;\" onchange=Chon()")%>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slDot, MaDot, "MaDot", "", "class=\"input1_2\" style=\"width: 100%;height:24px;\" onchange=Chon()")%>
                             </div>
                         </td>
                         <td class="td_form2_td1">
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="5">
-                            <div style="margin-top: 10px;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td style="width: 40%">
-                                        </td>
-                                        <td align="right">
-                                            <input type="submit" class="button" value="Tiếp tục" />
-                                        </td>
-                                        <td style="width: 1%">
-                                            &nbsp;
-                                        </td>
-                                        <td align="left">
-                                            <input type="button" class="button" value="Hủy" onclick="Huy()" />
-                                        </td>
-                                        <td style="width: 40%">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                    <tr >
+                        <td>
+                         &nbsp;
                         </td>
                     </tr>
-                    <script type="text/javascript">
+                    <tr>
+                        <td >
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                         &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td style="width: 40%">
+                                    </td>
+                                    <td align="right">
+                                        <input type="submit" class="button" value="Tiếp tục" />
+                                    </td>
+                                    <td style="width: 1%">
+                                        &nbsp;
+                                    </td>
+                                    <td align="left">
+                                        <input type="button" class="button" value="Hủy" onclick="Huy()" />
+                                    </td>
+                                    <td style="width: 40%">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function Huy() {
+                window.location.href = '<%=BackURL%>';
+            }
+        </script>
+        <script type="text/javascript">
                
                 var count = <%=arrView.Length%>;
                 var Chuoi = '<%=Chuoi%>';
@@ -208,20 +267,12 @@
                 });
             }
                     </script>
-                </table>
-            </div>
-        </div>
-        <script type="text/javascript">
-            function Huy() {
-                window.location.href = '<%=BackURL%>';
-            }
-        </script>
     </div>
     <%}
         
     %>
-    <div>
+   <%-- <div>
         <%=MyHtmlHelper.ActionLink(Url.Action("ExportToExcel", "rptDuToan_1040100_TungDot", new { MaND = MaND, Nganh = Nganh, ToSo = MaTo, iID_MaPhongBan = iID_MaPhongBan, MaDot = MaDot }), "Xuất ra Excels")%>
-    </div>
+    </div>--%>
 </body>
 </html>
