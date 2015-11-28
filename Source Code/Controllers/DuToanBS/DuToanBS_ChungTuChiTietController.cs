@@ -323,7 +323,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 return RedirectToAction("Index", "PermitionMessage");
             }
             int iXoa = 0;
-            iXoa = DuToanBS_ChungTuChiTietModels.Delete_ChungTuChiTiet(iID_MaChungTuChiTiet, Request.UserHostAddress, User.Identity.Name);
+            iXoa = DuToanBS_ChungTuChiTietModels.XoaChungTuChiTiet(iID_MaChungTuChiTiet, Request.UserHostAddress, User.Identity.Name);
             return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
         }
 

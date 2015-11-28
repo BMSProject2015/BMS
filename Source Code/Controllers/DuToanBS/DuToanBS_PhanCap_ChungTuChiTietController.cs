@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using DomainModel.Abstract;
 using DomainModel;
-using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models;
@@ -51,7 +47,7 @@ namespace VIETTEL.Controllers.DuToanBS
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DetailSubmit(String ChiNganSach, String iID_MaChungTu, String sLNS)
         {
-            DataTable dtCT = DuToanBS_ChungTuChiTietModels.Get_RowChungTuChiTiet(iID_MaChungTu);
+            DataTable dtCT = DuToanBS_ChungTuChiTietModels.LayDongChungTuChiTiet(iID_MaChungTu);
             DataRow data = dtCT.Rows[0];
             String MaND = User.Identity.Name;
             String TenBangChiTiet = "DTBS_ChungTuChiTiet_PhanCap";

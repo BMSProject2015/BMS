@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using DomainModel;
 using DomainModel.Abstract;
 using VIETTEL.Models;
+using VIETTEL.Models.DungChung;
 using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models.DuToanBS;
@@ -200,7 +201,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ThemSuaChungTu(string ParentID, string MaChungTu, string sLNS1)
+        public ActionResult ThemSuaChungTu(string ParentID, string MaChungTu, string sLNS1, string iKyThuat)
         {
             string maND = User.Identity.Name;
             string sChucNang = EDIT;
@@ -232,7 +233,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    string maChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTu(bang, maND, sLNS);
+                    string maChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTu(bang, maND, sLNS, iKyThuat);
                     return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = maChungTuAddNew});
                 }
                 catch (Exception ex)
