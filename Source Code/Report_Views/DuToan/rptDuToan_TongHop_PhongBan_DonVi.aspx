@@ -31,7 +31,7 @@
         
         //HungPH: 2015/11/15 Lấy danh sanh đợt cấp phát
         String iID_MaDot = Convert.ToString(ViewData["iID_MaDot"]);
-        DataTable dtDot = DuToan_ReportModels.LayDotDuToan(iNamLamViec, MaND);
+        DataTable dtDot = DuToan_ReportModels.getDSDot(iNamLamViec, MaND);
         SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         dtDot.Dispose();
         
@@ -56,15 +56,14 @@
                 sLNS = Guid.Empty.ToString();
             }
         }
-        
         dtLNS.Dispose();
         String[] arrLNS = sLNS.Split(',');
+
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         String[] arrMaDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrMaDonVi.Length];
         String chuoi = "";
         String LoaiTongHop = Convert.ToString(ViewData["LoaiTongHop"]);
-        
         if (String.IsNullOrEmpty(LoaiTongHop))
         {
             LoaiTongHop = "ChiTiet";
@@ -99,8 +98,8 @@
                 chuoi += arrView[0];
             }
         }
-        
         int SoCot = 1;
+        String urlExport = Url.Action("ExportToExcel", "rptDuToan_TongHop_PhongBan_DonVi", new { });
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
         using (Html.BeginForm("EditSubmit", "rptDuToan_TongHop_PhongBan_DonVi", new { ParentID = ParentID }))
         {
@@ -128,15 +127,15 @@
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div><b>Chọn Đợt</b></div>
                         </td>
-                        <td style="width: 10%">
+                        <td class="td_form2_td5" style="width: 14%; height: 10px">
                             <div>
                             <%=MyHtmlHelper.DropDownList(ParentID, slDot, iID_MaDot, "iID_MaDot", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 15%">
-                            <b>Loại ngân sách: &nbsp;&nbsp; </b>
+                            <b>Loại ngân sách &nbsp;&nbsp; </b>
                         </td>
-                        <td style="width: 25%" rowspan="25">
+                        <td class="td_form2_td5" style="width: 25%" rowspan="25">
                             <div  style="overflow: scroll; height: 400px">
                             
                             <table class="mGrid" style="width: 100%">
@@ -191,20 +190,22 @@
                         </td>
                         <td>
                         </td>
-                        <td class="style1"> 
+                        <td class="td_form2_td1" style="width: 8%; height: 10px"> 
                             <div style="width: 130px"><b>Chọn Đơn Vị</b></div>
                         </td>
-                        <td rowspan="25" style="width: 30%;">
+                        <td class="td_form2_td5" rowspan="25" style="width: 25%;">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
+                        </td>
+                        <td class="td_form2_td1" style="width: 2%; height: 10px">
                         </td>
                        
                     </tr>
                     <tr>
-                        <td class="td_form2_td1" style="width: 15%">
+                        <td class="td_form2_td1" style="width: 8%; height: 10px">
                             <div><b>Chọn Phòng Ban</b></div>
                         </td>
-                        <td style="width: 10%">
+                        <td class="td_form2_td5" style="width: 14%; height: 10px">
                             <div>
                             <%=MyHtmlHelper.DropDownList(ParentID, slPhongBan, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
