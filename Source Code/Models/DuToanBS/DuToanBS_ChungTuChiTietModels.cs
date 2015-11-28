@@ -14,7 +14,7 @@ namespace VIETTEL.Models.DuToanBS
     public class DuToanBS_ChungTuChiTietModels
     {
         public const String sLNSBaoDam = "1040100";
-        public const int iID_MaTrangThaiDuyetKT = 106;
+        public const int iMaTrangThaiDuyetKT = 106;
         public static DataTable Getdata(String MaChungTu, String sOrder = "", String sLNS = "", int Trang = 1, int SoBanGhi = 0)
         {
             DataTable dt;
@@ -1277,16 +1277,16 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
             return vR;
         }
 
-        public static int Delete_ChungTuChiTiet(String MaChungTuChiTiet, String IPSua, String MaNguoiDungSua)
+        public static int XoaChungTuChiTiet(String maChungTuChiTiet, String IPSua, String maND)
         {
             int vR = 0;
             try
             {
                 //Xóa dữ liệu trong bảng DT_DotNganSach
                 Bang bang = new Bang("DTBS_ChungTuChiTiet");
-                bang.MaNguoiDungSua = MaNguoiDungSua;
+                bang.MaNguoiDungSua = maND;
                 bang.IPSua = IPSua;
-                bang.GiaTriKhoa = MaChungTuChiTiet;
+                bang.GiaTriKhoa = maChungTuChiTiet;
                 bang.Delete();
                 vR = 1;
             }
@@ -1698,7 +1698,7 @@ ORDER BY sM,sTM,sTTM,sNG, iID_MaDonVi", DK);
             return vR;
         }
 
-        public static DataTable Get_RowChungTuChiTiet(String iID_MaChungTu)
+        public static DataTable LayDongChungTuChiTiet(String iID_MaChungTu)
         {
             DataTable vR = null;
             String SQL;

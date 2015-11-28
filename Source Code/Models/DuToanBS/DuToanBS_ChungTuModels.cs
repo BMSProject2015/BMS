@@ -1014,7 +1014,7 @@ ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
             SqlCommand cmd = new SqlCommand();
             string dk = "";
             //Trang thai tro ly tong hop duyet lan 1
-            int iID_MaTrangThaiDuyet = DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT;
+            int iID_MaTrangThaiDuyet = DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT;
             string iNamLamViec = ReportModels.LayNamLamViec(maND);
             string iID_MaNguonNganSach = "";
             string iID_MaNamNganSach = "";
@@ -1718,9 +1718,9 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <summary>
         /// Xóa chứng dự toán bổ sung
         /// </summary>
-        /// <param name="iID_MaChungTu">Mã chứng từ</param>
+        /// <param name="maChungTu">Mã chứng từ</param>
         /// <returns></returns>
-        public static int XoaChungTu(string iID_MaChungTu)
+        public static int XoaChungTu(string maChungTu)
         {
             SqlCommand cmd;
             //Xoa dữ liệu bang DTBS_ChungTuChiTiet_PhanCap
@@ -1736,13 +1736,13 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
                                             )
                                         ) ");
             cmd = new SqlCommand(sql);
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTu);
             Connection.UpdateDatabase(cmd);
             cmd.Dispose();
 
             //Xóa dữ liệu bảng DTBS_ChungTuChiTiet
             cmd = new SqlCommand("UPDATE DTBS_ChungTuChiTiet SET iTrangThai = 0 WHERE iID_MaChungTu=@iID_MaChungTu");
-            cmd.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
+            cmd.Parameters.AddWithValue("@iID_MaChungTu", maChungTu);
             Connection.UpdateDatabase(cmd);
             cmd.Dispose();
 
@@ -1750,7 +1750,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
             Bang bang = new Bang("DTBS_ChungTu");
             //bang.MaNguoiDungSua = MaNguoiDungSua;
             //bang.IPSua = IPSua;
-            bang.GiaTriKhoa = iID_MaChungTu;
+            bang.GiaTriKhoa = maChungTu;
             bang.Delete();
             return 1;
         }

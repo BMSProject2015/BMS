@@ -66,14 +66,14 @@ namespace VIETTEL.Models.DuToanBS
         /// <summary>
         /// Hàm khởi tạo
         /// </summary>
-        /// <param name="iID_MaChungTu"></param>
-        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="maChungTu"></param>
+        /// <param name="maND">Mã người dùng</param>
         /// <param name="IPSua">IP của máy yêu cầu</param>
         ///sLNS,sL,sK,sM,sTM,sTTM
-        public DuToanBS_BangDuLieu(String iID_MaChungTu, Dictionary<String, String> arrGiaTriTimKiem, String MaND, String IPSua, String sLNS, String MaLoai, String iLoai, String iChiTapTrung)
+        public DuToanBS_BangDuLieu(String maChungTu, Dictionary<String, String> dicGiaTriTimKiem, String maND, String IPSua, String sLNS, String MaLoai, String iLoai, String iChiTapTrung)
         {
-            this._iID_Ma = iID_MaChungTu;
-            this._MaND = MaND;
+            this._iID_Ma = maChungTu;
+            this._MaND = maND;
             this._IPSua = IPSua;
             _dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(_MaND);
             string SQL;
@@ -108,11 +108,11 @@ namespace VIETTEL.Models.DuToanBS
             // String sLNS = Convert.ToString(_dtBang.Rows[0]["sDSLNS"]);
             if (sLNS != "1040100")
             {
-                bool ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, MaND,
+                bool ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND,
                                                                                         iID_MaTrangThaiDuyet);
-                _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, MaND);
+                _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, maND);
                 //Trolytonghop duoc sua chung tu do minh tạo
-                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
+                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
                 bool CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanBSModels.iID_MaPhanHe, iID_MaTrangThaiDuyet);
                 if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
                 {
@@ -130,7 +130,7 @@ namespace VIETTEL.Models.DuToanBS
                     _ChiDoc = true;
                 }
                 //Trang thai tu choi
-                if (MaND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
+                if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
                 {
                     _DuocSuaChiTiet = true;
                     _ChiDoc = false;
@@ -144,19 +144,19 @@ namespace VIETTEL.Models.DuToanBS
                 bool CheckTrangThaiDuyetMoiTao = false;
                 if (iKyThuat == "1")
                 {
-                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, MaND,iID_MaTrangThaiDuyet);
-                    _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeChiTieu, MaND);
+                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, maND,iID_MaTrangThaiDuyet);
+                    _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeChiTieu, maND);
                     CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet);
                 }
                 else
                 {
-                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, MaND,iID_MaTrangThaiDuyet);
-                    _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, MaND);
+                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND,iID_MaTrangThaiDuyet);
+                    _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, maND);
                     CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet);
                 }
 
                 //Trolytonghop duoc sua chung tu do minh tạo
-                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
+                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
 
                 if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
                 {
@@ -173,13 +173,13 @@ namespace VIETTEL.Models.DuToanBS
                 if (iKyThuat == "1")
                 {
                     //Trang thai tu choi
-                    if (MaND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet))
+                    if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet))
                     {
                         _DuocSuaChiTiet = true;
                         _ChiDoc = false;
                     }
                     //Tro ly tong hop dc sua chung tu
-                    if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT)
+                    if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT)
                     {
                         ND_DuocSuaChungTu = true;
                         _DuocSuaChiTiet = true;
@@ -189,7 +189,7 @@ namespace VIETTEL.Models.DuToanBS
                 else
                 {
                     //Trang thai tu choi
-                    if (MaND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
+                    if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
                     {
                         _DuocSuaChiTiet = true;
                         _ChiDoc = false;
@@ -199,7 +199,7 @@ namespace VIETTEL.Models.DuToanBS
             //phần nhaapk chi tâp chng
             if (iChiTapTrung == "1")
             {
-                _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTiet_ChiTapTrung(_iID_Ma, arrGiaTriTimKiem, MaND, sLNS);
+                _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTiet_ChiTapTrung(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                 _DuocSuaChiTiet = true;
             }
             else
@@ -207,12 +207,12 @@ namespace VIETTEL.Models.DuToanBS
                 //phan nhap ky thuat lan 2
                 if (iLoai == "4")
                 {
-                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTietLan2(_iID_Ma, arrGiaTriTimKiem, MaND, sLNS);
+                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTietLan2(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                     _DuocSuaChiTiet = true;
                 }
                 else
                 {
-                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.LayChungTuChiTiet(_iID_Ma, arrGiaTriTimKiem, MaND, sLNS);
+                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.LayChungTuChiTiet(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                 }
             }
 

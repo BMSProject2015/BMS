@@ -135,7 +135,7 @@ namespace VIETTEL.Models.DuToanBS
                     _ChiDoc = false;
                 }
                 //Tro ly tong hop dc sua chung tu
-                if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT)
+                if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT)
                 {
                     ND_DuocSuaChungTu = true;
                     _DuocSuaChiTiet = true;
@@ -150,7 +150,7 @@ namespace VIETTEL.Models.DuToanBS
                     _DuocSuaChiTiet = true;
                     _ChiDoc = false;
                 }
-                if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iID_MaTrangThaiDuyetKT)
+                if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT)
                 {
                     ND_DuocSuaChungTu = true;
                     _DuocSuaChiTiet = true;

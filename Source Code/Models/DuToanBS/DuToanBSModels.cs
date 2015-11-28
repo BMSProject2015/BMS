@@ -8,7 +8,7 @@ using DomainModel.Controls;
 using System.Data.Sql;
 using System.Data.SqlClient;
 
-namespace VIETTEL.Models
+namespace VIETTEL.Models.DuToanBS
 {
     public class DuToanBSListModels
     {
