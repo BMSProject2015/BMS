@@ -336,7 +336,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                             </div>
                                         </td>
                                         <td class="td_form2_td5">
-                                            <div>
+                                            <div style="width: 550px; float: left;">
                                                 <%= MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"") %>
                                             </div>
                                         </td>

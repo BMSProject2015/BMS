@@ -63,7 +63,7 @@
             string BackURL ="";
             if(sLNS1 =="104" || sLNS1 == "109")
             {
-                BackURL = Url.Action("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = iLoai });
+                BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1,iKyThuat=iKyThuat });
             }
             else
             {
