@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -57,18 +58,16 @@
     <div class="box_tong">
         <div id="Div1">
             <div id="Div2">
-                
-                <table cellpadding="0" cellspacing="0" width="100%" class="table_form2">
+                <table cellpadding="0" cellspacing="0" width="50%" class="table_form2">
                     <tr>
-                        <td style="width: 80%">
+                        <td style="width: 50%">
                             <table cellpadding="0" cellspacing="0" border="0" width="50%" class="table_form2">
                                 <tr>
                                     <td class="td_form2_td1">
-                                        <div>
-                                            <b>Chọn đợt</b></div>
+                                        <div><b>Chọn đợt</b></div>
                                     </td>
                                     <td class="td_form2_td5">
-                                    <div style="overflow: scroll; width: 50%; height: 300px">
+                                    <div style="overflow: scroll; width: 50%; height: 200px">
                                         <table class="mGrid" style="width: 100%">
                                             <tr>
                                                 <th align="center" style="width: 40px;">
@@ -146,24 +145,20 @@
                                             <b>Nội dung đợt</b></div>
                                     </td>
                                     <td class="td_form2_td5">
-                                        <div>
-                                            <%= MyHtmlHelper.TextArea(ParentID, data["sNoiDung"], "sNoiDung", "","class=\"input1_2\" style=\"height: 100px;\"") %></div>
+                                        <div style ="width:550px; float:left">
+                                            <%= MyHtmlHelper.TextArea(ParentID, data["sNoiDung"], "sNoiDung", "","class=\"input1_2\" style=\"height: 100px; resize: none;\"") %>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="td_form2_td1" style="width: 15%;">
-                                        <div>
-                                        </div>
-                                    </td>
+                                    <td class="td_form2_td1" style="width:5%;"></td>
                                     <td class="td_form2_td5">
                                         <div>
                                             <table cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
-                                                    <td width="65%" class="td_form2_td5">&nbsp;</td>   
-                                                    <td width="30%" align="right" class="td_form2_td5">
+                                                    <td width="30%" align="left" class="td_form2_td5">
                                                         <input type="submit" class="button" id="Submit1" value="Lưu" />
                                                     </td>          
-                                                    <td width="5px">&nbsp;</td>          
                                                     <td class="td_form2_td5">
                                                         <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                                     </td>

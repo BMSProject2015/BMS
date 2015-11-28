@@ -137,10 +137,10 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                     <tr>
                         <td class="td_form2_td1" style="width: 10%">
                             <div>
-                                <b>Chọn LNS</b>
+                                <b>Loại ngân sách</b>
                             </div>
                         </td>
-                        <td class="td_form2_td5" style="width: 10%">
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
                                 <%= MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, sLNS_TK, "sLNS_TK", "", "class=\"input1_2\"") %>
                             </div>
@@ -170,7 +170,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                 <b>Trạng thái</b>
                             </div>
                         </td>
-                        <td class="td_form2_td5" style="width: 10%">
+                        <td class="td_form2_td5" style="width: 15%">
                             <div>
                                 <%= MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "iID_MaTrangThaiDuyet", "", "class=\"input1_2\"") %>
                             </div>
@@ -196,7 +196,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                     <td>
-                        <span>Thêm một đợt cấp mới </span>
+                        <span>Thêm Một Đợt Cấp Mới </span>
                     </td>
                 </tr>
             </table>
@@ -292,7 +292,9 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                             &nbsp;
                                         </td>
                                         <td class="td_form2_td5">
-                                            <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS") %>
+                                            <div>
+                                                <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS") %>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -317,7 +319,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                         </td>
                                         <td class="td_form2_td5">
                                             <div style="width: 200px; float: left;">
-                                                <%= MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"") %>
+                                                <%= MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px; resize: none;\" ")%>
                                             </div>
                                         </td>
                                     </tr>
@@ -326,7 +328,9 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                             &nbsp;
                                         </td>
                                         <td class="td_form2_td5">
-                                            <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %>
+                                            <div>
+                                                <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -337,7 +341,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                                         </td>
                                         <td class="td_form2_td5">
                                             <div style="width: 550px; float: left;">
-                                                <%= MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"") %>
+                                                <%= MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px; resize: none\"")%>
                                             </div>
                                         </td>
                                     </tr>
@@ -469,7 +473,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                     <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), R["iID_MaNguon"], "Detail", "") %></b>
                 </td>
                 <td align="center">
-                    <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "") %></b>
+                    <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), NgayChungTu, "Detail", "") %></b>
                 </td>
                 <td align="left">
                     <%= HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"]) %>

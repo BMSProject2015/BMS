@@ -2,6 +2,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	<%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -51,8 +52,18 @@
                             <td class="td_form2_td1">
                                 <div>Ngày chứng từ</div>
                             </td>
-                            <td class="td_form2_td5">
-                                <div><%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"")%><br />
+                            <td class="td_form2_td5" >
+                                <div style="width: 200px; float: left;">
+                                    <%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"")%>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td_form2_td1">
+                                &nbsp;
+                            </td>
+                            <td>
+                                <div>
                                     <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                 </div>
                             </td>
@@ -62,7 +73,9 @@
                                 <div>Nội dung</div>
                             </td>
                             <td class="td_form2_td5">
-                                <div><%=MyHtmlHelper.TextArea(ParentID, sNoiDung, "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"")%></div>
+                                <div style="width: 550px; float: left;">
+                                    <%=MyHtmlHelper.TextArea(ParentID, sNoiDung, "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px; resize: none\"")%>
+                                </div>
                             </td>
                         </tr>
                         <tr>

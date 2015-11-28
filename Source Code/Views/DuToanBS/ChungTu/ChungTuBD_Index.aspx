@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -148,9 +149,9 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%">
                             <div>
-                                <b>Chọn LNS</b></div>
+                                <b>Loại ngân sách</b></div>
                         </td>
-                        <td class="td_form2_td5" style="width: 10%">
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach,sLNS_TK,"sLNS_TK", "", "class=\"input1_2\"")%></div>
                         </td>
@@ -176,7 +177,7 @@
                             <div>
                                 <b>Trạng thái</b></div>
                         </td>
-                        <td class="td_form2_td5" style="width: 10%">
+                        <td class="td_form2_td5" style="width: 14%">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "iID_MaTrangThaiDuyet", "", "class=\"input1_2\"")%>
                             </div>
@@ -221,8 +222,8 @@
                                 <tr>
                                     <td class="td_form2_td1" style="width: 15%;">
                                         <div>
-                                            <b>
-                                                <%=NgonNgu.LayXau("Bổ sung đợt mới")%></b></div>
+                                            <b><%=NgonNgu.LayXau("Bổ sung đợt mới")%></b>
+                                        </div>
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
@@ -238,12 +239,23 @@
                                 <tr>
                                     <td class="td_form2_td1">
                                         <div>
-                                            <b>Loại ngân sách</b></div>
+                                            <b>Loại ngân sách</b>
+                                        </div>
+                                    </td>
+                                    <td class="td_form2_td5"  >
+                                        <div style="width: 200px; float:left;">
+                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, "", "sLNS", "", "class=\"input1_2\"")%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                            &nbsp;
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, "", "sLNS", "", "class=\"input1_2\"")%></div>
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                            <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                        </div>
                                     </td>
                                 </tr>
                                 <%--<tr>
@@ -260,24 +272,34 @@
                                 </tr>--%>
                                 <tr>
                                     <td class="td_form2_td1">
-                                        <div>
-                                            <b>Ngày tháng</b></div>
+                                        <div><b>Ngày tháng</b></div>
                                     </td>
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"")%>
-                                            <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                         &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5"  >
+                                        <div>
+                                                <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="td_form2_td1">
                                         <div>
-                                            <b>Nội dung đợt</b></div>
+                                            <b>Nội dung đợt</b>
+                                        </div>
                                     </td>
                                     <td class="td_form2_td5">
-                                        <div>
-                                            <%=MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"")%></div>
+                                        <div style="width: 550px; float: left;">
+                                            <%=MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"")%>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>

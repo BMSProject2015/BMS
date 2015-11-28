@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -268,7 +269,9 @@
                                             <b>Nội dung đợt</b></div>
                                     </td>
                                     <td class="td_form2_td5">
-                                        <div><%= MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"") %></div>
+                                        <div style="width: 550px; float: left">
+                                            <%= MyHtmlHelper.TextArea(ParentID, "", "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px; resize: none;\"") %>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
