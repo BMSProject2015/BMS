@@ -32,7 +32,7 @@
                             <div><b> Lý do: </b></div> 
                         </td>
             <td class="td_form2_td1" style="width: 40%">
-             <%=MyHtmlHelper.TextArea(ParentID, slyDo, "sLyDo", "", "class=\"input1_2\" style=\"width: 100%\"")%>
+             <%=MyHtmlHelper.TextArea(ParentID, slyDo, "sLyDo", "", "class=\"input1_2\" style=\"width: 100% resize: none\"")%>
             </td>
                   </tr>
                            

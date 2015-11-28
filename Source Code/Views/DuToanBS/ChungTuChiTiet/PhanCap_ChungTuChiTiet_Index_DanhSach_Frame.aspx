@@ -5,6 +5,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="System.ComponentModel" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <%  
