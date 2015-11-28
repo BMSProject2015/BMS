@@ -34,29 +34,35 @@
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToanBS_ChiTieuNganSach"), "Dự toán bổ sung - Báo cáo chỉ tiêu ngân sách 1")%></td>                        
                     <td align="center" style="padding: 3px 2px;">HungPX</td>
                 </tr>
-              <tr>
+                <tr>
                     <td align="center" style="padding: 3px 2px;">2</td>
                     <td align="center" style="padding: 3px 2px;"></td>
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToanBS_ChiTieuNganSach2"), "Dự toán bổ sung - Báo cáo chỉ tiêu ngân sách 2")%></td>                        
                     <td align="center" style="padding: 3px 2px;">HungPX</td>
                 </tr>
-                  <tr>
+                <tr>
+                    <td align="center" style="padding: 3px 2px;">2</td>
+                    <td align="center" style="padding: 3px 2px;"></td>
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToanBS_PhanCap"), "Dự toán bổ sung - Báo cáo bảng kiểm số liệu phân cấp")%></td>                        
+                    <td align="center" style="padding: 3px 2px;">HungPX</td>
+                </tr>
+                <tr>
                     <td align="center" style="padding: 3px 2px;">3</td>
                     <td align="center" style="padding: 3px 2px;"></td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_NganSachBaoDam_TungDot"), "Dự toán - Báo cáo chỉ tiêu ngân sách bảo đảm phân cấp")%></td>                        
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungDot"), "Dự toán - Báo cáo chỉ tiêu ngân sách bảo đảm phân cấp")%></td>                        
                     <td align="center" style="padding: 3px 2px;">HungPX</td>
                 </tr>  
-                 <tr>
+                <tr>
                     <td align="center" style="padding: 3px 2px;">4</td>
                     <td align="center" style="padding: 3px 2px;"></td>
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToanBS_TongHop_ChiNganSach"), "Dự toán bổ sung - Báo cáo tổng hợp dự toán chi ngân sách")%></td>                        
                     <td align="center" style="padding: 3px 2px;">QuyDQ</td>
                 </tr>   
-                  <tr>
+                <tr>
                     <td align="center" style="padding: 3px 2px;">5</td>
                     <td align="center" style="padding: 3px 2px;"></td>
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_TongHop_PhongBan_DonVi"), "Dự toán - Báo cáo tổn hợp dự toán chi ngân sách")%></td>                        
-                     <td align="center" style="padding: 3px 2px;">HungPH</td>
+                    <td align="center" style="padding: 3px 2px;">HungPH</td>
                 </tr>  
                 
             </table>

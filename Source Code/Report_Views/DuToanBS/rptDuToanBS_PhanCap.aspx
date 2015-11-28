@@ -4,6 +4,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToanBS" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Data.SqlClient" %>
@@ -115,30 +116,30 @@
             <div id="Div2" style="margin-left: 10px;" class="table_form2">
                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td class="td_form2_td1" style="width: 10%; height: 20px">
+                        <td class="td_form2_td1" style="width: 8%; height: 20px">
                             <div>
-                                <b>Chọn Đợt  :</b></div>
+                                <b>Chọn Đợt</b></div>
                         </td>
-                        <td class="style1">
+                        <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slDot, iID_MaDot, "iID_MaDot", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
                         </td>
-                        <td class="td_form2_td1" style="width :10% ; height : 20px">
-                            <b>Chọn Đơn vị : </b>
+                        <td class="td_form2_td1" style="width :8% ; height : 20px">
+                            <div><b>Chọn Đơn vị</b></div>
                         </td>
-                         <td rowspan="25" style="width: 25%;">
+                         <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                              <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
-                        <td class="td_form2_td1" style="width : 10%; height:20px">
-                            <b>Loại Ngân Sách:</b>
+                        <td class="td_form2_td1" style="width : 8%; height:20px">
+                            <div><b>Loại Ngân Sách</b></div>
                         </td>
-                       <td rowspan="25" style="width: 25%;">
+                       <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                             <div id="<%= ParentID %>_tdLNS" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
-                        <td class="td_form2_td1" style="width: 5%; height: 20px">
+                        <td class="td_form2_td1" style="width: 2%; height: 20px">
                             <div>
                                 <b></b>
                             </div>
@@ -147,10 +148,10 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                          <div>
-                                <b>Chọn phòng ban :</b>
+                                <b>Chọn phòng ban</b>
                          </div>
                         </td>
-                        <td>
+                        <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slPhongBan, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon() ")%>
                             </div>
@@ -370,12 +371,13 @@
                     }
                 } 
             });
+
             function CheckAllDonVi(value) {
                 $("input:checkbox[check-group='DV']").each(function (i) {
                     this.checked = value;
                 });
                 ChonDonVi();
-            }                                            
+            }
         </script>
         
         <script type="text/javascript">
@@ -383,7 +385,7 @@
                 $("input:checkbox[check-group='LNS']").each(function (i) {
                     this.checked = value;
                 });
-                Chon();
+                //Chon();
             }                                            
         </script>
 
@@ -434,7 +436,7 @@
 
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
-                    //ChonDonVi();
+                    ChonDonVi();
                 });
             }
                                                    
@@ -444,9 +446,6 @@
                 window.location.href = '<%=BackURL%>';
             }
         </script>
-        <div>
-            <%=MyHtmlHelper.ActionLink(urlExport, "Export To Excel") %>
-        </div>
     </div>
     <%} %>
 </body>
