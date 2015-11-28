@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using DomainModel;
 using DomainModel.Abstract;
 using VIETTEL.Models;
-using VIETTEL.Models.DungChung;
 using System.Data.SqlClient;
 using System.Data;
 using VIETTEL.Models.DuToanBS;

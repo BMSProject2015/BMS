@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using DomainModel.Abstract;
-using DomainModel.Controls;
 using DomainModel;
 using System.Collections.Specialized;
 using VIETTEL.Models;
