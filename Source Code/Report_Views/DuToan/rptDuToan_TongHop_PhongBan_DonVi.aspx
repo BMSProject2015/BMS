@@ -125,7 +125,7 @@
                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <div><b>Chọn Đợt</b></div>
+                            <div><b>Chọn đợt</b></div>
                         </td>
                         <td class="td_form2_td5" style="width: 14%; height: 10px">
                             <div>
