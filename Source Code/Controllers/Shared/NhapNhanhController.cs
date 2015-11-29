@@ -240,6 +240,14 @@ namespace VIETTEL.Controllers.Shared
                 case "DUTOAN_NHAPEXCEL":
                     ViewData["Partial_View"] = "~/Views/DuToan/ChungTuChiTiet/DuToan_Nhapexcel.aspx";
                     break;
+                //Cấp Phát
+                case "CAPPHAT_TRINHDUYETCHITIET":
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
+                    break;
+                case "CAPPHAT_TUCHOICHITIET":
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
+                    break;
+
                 // Dự toán bổ sung
                 case "DUTOANBS_TRINHDUYETCHUNGTU":
                     ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_TrinhDuyetChungTu.aspx";
