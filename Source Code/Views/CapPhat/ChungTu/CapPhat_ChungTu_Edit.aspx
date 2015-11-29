@@ -35,6 +35,7 @@
     DataTable dtCapPhat = CapPhat_ChungTuModels.LayChungTuCapPhat(iID_MaCapPhat);
     DataRow R;
     String sLoai = "", iSoCapPhat = "", sTienToChungTu = "", dNgayCapPhat = "", sNoiDung = "", sLyDo = "", iID_MaTrangThaiDuyet = "", iDM_MaLoaiCapPhat = "", iID_MaTinhChatCapThu = ""; ;
+    // HungPX: Cài đặt TT readonly cho control. "ChiTietDen" dropdown list để disable vì chức năng chưa phát triển xong
     String ReadOnly = "";
      if (dtCapPhat!=null && dtCapPhat.Rows.Count > 0)
     {
@@ -57,18 +58,18 @@
     }
     if(String.IsNullOrEmpty(sLoai))
     {
-        sLoai = "sM";
+        sLoai = "sNG";
     }
     if (ViewData["DuLieuMoi"] == "1")
     {
         sTienToChungTu = PhanHeModels.LayTienToChungTu(CapPhatModels.iID_MaPhanHe);
-        //iSoCapPhat = Convert.ToString(CapPhat_ChungTuModels.GetMaxChungTu() + 1);
+        iSoCapPhat = Convert.ToString(CapPhat_ChungTuModels.GetMaxSoCapPhat() + 1);
     }
     DataTable dtTinhChatCapThu = TinhChatCapThuModels.Get_dtTinhChatCapThu();
     SelectOptionList slTinhChatCapThu = new SelectOptionList(dtTinhChatCapThu, "iID_MaTinhChatCapThu", "sTen");
     DataRow R2 = dtTinhChatCapThu.NewRow();
     R2["iID_MaTinhChatCapThu"] = "-1";
-    R2["sTen"] = "--- Danh sách tính chất cấp thu ---";
+    R2["sTen"] = "--Chọn tính chất cấp thu--";
     dtTinhChatCapThu.Rows.InsertAt(R2, 0);
     dtTinhChatCapThu.Dispose();
      
@@ -108,30 +109,32 @@
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                         <td class="td_form2_td1" style="width: 15%;">
-                            <div>Số chứng từ</div>
+                            <div><b>Số cấp phát</b></div>
                         </td>
                         <td class="td_form2_td5">
                             <div>
-                                <%=sTienToChungTu %><%=iSoCapPhat%>
+                                <b><%=sTienToChungTu %><%=iSoCapPhat%></b>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td class="td_form2_td1">
-                            <div>Loại cấp phát</div>
+                            <div><b>Loại cấp phát<b></div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DropDownList(ParentID, slLoaiCapPhat, iDM_MaLoaiCapPhat, "iDM_MaLoaiCapPhat", "")%><br />
+                            <div>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slLoaiCapPhat, iDM_MaLoaiCapPhat, "iDM_MaLoaiCapPhat", "", "style=\"width:50%\"")%><br />
                                 <%= Html.ValidationMessage(ParentID + "_" + "err_iDM_MaLoaiCapPhat")%>
                             </div>
                         </td>
                     </tr>
                      <tr>
                         <td class="td_form2_td1">
-                            <div>Tính chất cấp thu</div>
+                            <div><b>Tính chất cấp thu</b></div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DropDownList(ParentID, slTinhChatCapThu, iID_MaTinhChatCapThu, "iID_MaTinhChatCapThu", "")%><br />
+                            <div>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slTinhChatCapThu, iID_MaTinhChatCapThu, "iID_MaTinhChatCapThu", "", "style=\"width:50%\"")%><br />
                                 <%= Html.ValidationMessage(ParentID + "_" + "err_iID_MaTinhChatCapThu")%>
                             </div>
                         </td>
@@ -140,19 +143,19 @@
                        { %>
                      <tr>
                         <td class="td_form2_td1">
-                            <div>Chọn LNS:</div>
+                            <div><b>Chọn LNS</b></div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DropDownList(ParentID, slLNS, sLNS, "sLNS", "class=\"input1_2\" style=\"height: 100px;\"", String.Format(ReadOnly))%></div>
+                            <div style="width:100%"><%=MyHtmlHelper.DropDownList(ParentID, slLNS, sLNS, "sLNS", "class=\"input1_2\" style=\"height: 100px;width:50%\"", String.Format(ReadOnly))%></div>
                         </td>
                     </tr>
                     <%} %>
                        <tr>
                         <td class="td_form2_td1">
-                            <div>Chi tiết đến:</div>
+                            <div><b>Chi tiết đến</b></div>
                         </td>
-                        <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DropDownList(ParentID, slLoai, sLoai, "iID_Loai", "class=\"input1_2\" style=\"height: 100px;\"", String.Format(ReadOnly))%></div>
+                        <td class="td_form2_td5" >
+                            <div><%=MyHtmlHelper.DropDownList(ParentID, slLoai, sLoai, "iID_Loai", "class=\"input1_2\" style=\"height: 100px;width:100%\"", String.Format("disabled=\"disabled\""))%></div>
                         </td>
                     </tr>
 
@@ -177,20 +180,20 @@
                     <%} %>
                     <tr>
                         <td class="td_form2_td1">
-                            <div>Ngày chứng từ</div>
+                            <div><b>Ngày chứng từ</b></div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DatePicker(ParentID, dNgayCapPhat, "dNgayCapPhat", "", "class=\"input1_2\" onblur=isDate(this);")%><br />
+                            <div style="width: 35%"><%=MyHtmlHelper.DatePicker(ParentID, dNgayCapPhat, "dNgayCapPhat", "", "style=\"width:95%\" class=\"input1_2\" onblur=isDate(this);")%><br />
                                 <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayCapPhat")%>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td class="td_form2_td1">
-                            <div>Nội dung</div>
+                            <div><b>Nội dung</b></div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.TextArea(ParentID, sNoiDung, "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;\"")%></div>
+                            <div><%=MyHtmlHelper.TextArea(ParentID, sNoiDung, "sNoiDung", "", "class=\"input1_2\" style=\"height: 100px;resize: none;\"")%></div>
                         </td>
                     </tr>
                     
