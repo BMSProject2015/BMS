@@ -79,7 +79,10 @@ namespace VIETTEL.Models
         /// <param name="iTrang"></param>
         /// <param name="iSoBanGhi"></param>
         /// <returns></returns>
-        public static DataTable LayDanhSachChungTuCuc(String sMaPhongBan, String sMaND, String sSoChungTu, String sTuNgay, String sDenNgay, String iID_MaTrangThaiDuyet, String iDM_MaLoaiCapPhat, Boolean bLayTheoMaNDTao = false, int iTrang = 1, int iSoBanGhi = 0)
+        public static DataTable LayDanhSachChungTuCuc( String sMaPhongBan, String sMaND, String sSoChungTu, String sTuNgay, String sDenNgay, 
+                                                       String iID_MaTrangThaiDuyet, String iDM_MaLoaiCapPhat, 
+                                                       String iID_MaTinhChatCapThu, String sLNSQuocPhong,
+                                                       Boolean bLayTheoMaNDTao = false, int iTrang = 1, int iSoBanGhi = 0)
         {
             DataTable vR;
             SqlCommand cmd = new SqlCommand();
@@ -128,6 +131,16 @@ namespace VIETTEL.Models
                 DK += " AND dNgayCapPhat <= @dDenNgayCapPhat";
                 cmd.Parameters.AddWithValue("@dDenNgayCapPhat", CommonFunction.LayNgayTuXau(sDenNgay));
             }
+            if (String.IsNullOrEmpty(iID_MaTinhChatCapThu) == false && iID_MaTinhChatCapThu!="-1")
+            {
+                DK += " AND iID_MaTinhChatCapThu = @iID_MaTinhChatCapThu";
+                cmd.Parameters.AddWithValue("@iID_MaTinhChatCapThu", iID_MaTinhChatCapThu);
+            }
+            //if (String.IsNullOrEmpty(sLNSQuocPhong) == false)
+            //{
+            //    DK += " AND sDSLNS = @sLNSQuocPhong";
+            //    cmd.Parameters.AddWithValue("@sLNSQuocPhong", sLNSQuocPhong);
+            //}
 
             String SQL = String.Format("SELECT * FROM CP_CapPhat WHERE iTrangThai=1 AND {0}", DK);
             cmd.CommandText = SQL;
@@ -231,7 +244,10 @@ namespace VIETTEL.Models
         /// <param name="iDM_MaLoaiCapPhat"></param>
         /// <param name="bLayTheoMaNDTao"></param>
         /// <returns></returns>
-        public static int LayDanhSachChungTuCapPhatCucCount(String sMaPhongBan = "", String sMaND = "", String sSoChungTu = "", String TuNgay = "", String sDenNgay = "", String iID_MaTrangThaiDuyet = "", String iDM_MaLoaiCapPhat = "", Boolean bLayTheoMaNDTao = false)
+        public static int LayDanhSachChungTuCapPhatCucCount(String sMaPhongBan = "", String sMaND = "", String sSoChungTu = "", 
+                                                            String TuNgay = "", String sDenNgay = "", String iID_MaTrangThaiDuyet = "",
+                                                            String iDM_MaLoaiCapPhat = "",String iID_MaTinhChatCapThu = "" , String sLNSQuocPhong = "" ,
+                                                            Boolean bLayTheoMaNDTao = false)
         {
             int vR;
             SqlCommand cmd = new SqlCommand();
@@ -280,7 +296,16 @@ namespace VIETTEL.Models
                 DK += " AND dNgayCapPhat <= @dDenNgayCapPhat";
                 cmd.Parameters.AddWithValue("@dDenNgayCapPhat", CommonFunction.LayNgayTuXau(sDenNgay));
             }
-
+            if (String.IsNullOrEmpty(iID_MaTinhChatCapThu) == false && iID_MaTinhChatCapThu != "-1")
+            {
+                DK += " AND iID_MaTinhChatCapThu = @iID_MaTinhChatCapThu";
+                cmd.Parameters.AddWithValue("@iID_MaTinhChatCapThu", iID_MaTinhChatCapThu);
+            }
+            //if (String.IsNullOrEmpty(sLNSQuocPhong) == false)
+            //{
+            //    DK += " AND sDSLNS = @sLNSQuocPhong";
+            //    cmd.Parameters.AddWithValue("@sLNSQuocPhong", sLNSQuocPhong);
+            //}
             String SQL = String.Format("SELECT COUNT(*) FROM CP_CapPhat WHERE iTrangThai=1 AND {0}", DK);
             cmd.CommandText = SQL;
             vR = Convert.ToInt32(Connection.GetValue(cmd, 0));
