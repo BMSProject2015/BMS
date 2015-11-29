@@ -103,14 +103,15 @@ if (bang.ChiDoc == false)
                 <%
                 if (iID_MaTrangThaiDuyet_TuChoi > 0)
                 {
-                    %><td align="right"  style="float: left;width:6%">
+                    %>
                     <%--<div style="float: left; padding-right: 10px;">
                         <button class='button' style="float:left;"  onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">Từ chối</button>
                     </div>--%>
+                 <td align="right"  style="float: left;width:6%">
                     <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
                      <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "CapPhat_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
-                </div>
-                </td>
+                    </div>
+                 </td>
                     <%        
                 }
                 %>
