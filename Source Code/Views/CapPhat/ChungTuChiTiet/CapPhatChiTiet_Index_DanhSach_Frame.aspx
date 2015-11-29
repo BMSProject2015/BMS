@@ -129,9 +129,9 @@ if (bang.ChiDoc == false)
                         <%=TrinhDuyet %></button>
                 </div>--%>
                 <td align="right"  style="float: left;width:6%">
-                <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
-                    <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "CapPhat_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
-                </div>
+                    <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
+                        <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "CapPhat_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                    </div>
                 </td>
                 <%
                     }
