@@ -37,8 +37,8 @@
 
     int iID_MaTrangThaiDuyet_TuChoi = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTuChoi(MaND, iID_MaCapPhat);
     int iID_MaTrangThaiDuyet_TrinhDuyet = CapPhat_ChungTuChiTietModels.LayMaTrangThaiDuyetTrinhDuyet(MaND, iID_MaCapPhat);
-    
-    
+
+    String BackURL = Url.Action("Index", "CapPhat_ChungTu");
 
    %>
             
@@ -92,7 +92,7 @@ if (bang.ChiDoc == false)
         <tr><td>&nbsp;</td></tr>
         <tr>
             <td align="right">
-                <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Thực hiện")%>"/>
+                <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Lưu")%>"/>
             </td>
             <td>&nbsp;</td>
             <td align="left" width="100px">
@@ -103,11 +103,15 @@ if (bang.ChiDoc == false)
                 <%
                 if (iID_MaTrangThaiDuyet_TuChoi > 0)
                 {
-                    %>
-                    <div style="float: left; padding-right: 10px;">
+                    %><td align="right"  style="float: left;width:6%">
+                    <%--<div style="float: left; padding-right: 10px;">
                         <button class='button' style="float:left;"  onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">Từ chối</button>
-                    </div>
-                    <%
+                    </div>--%>
+                    <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
+                     <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "CapPhat_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                </div>
+                </td>
+                    <%        
                 }
                 %>
                 <%
@@ -119,10 +123,15 @@ if (bang.ChiDoc == false)
                             TrinhDuyet = "Phê duyệt";
                         }
                 %>
-                <div style="float: left;">
+                <%--<div style="float: left;">
                     <button class='button' style="float: left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);">
                         <%=TrinhDuyet %></button>
+                </div>--%>
+                <td align="right"  style="float: left;width:6%">
+                <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
+                    <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "CapPhat_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
+                </td>
                 <%
                     }
                 %>
@@ -149,4 +158,30 @@ if (bang.ChiDoc == false)
         <%=bang.DuocSuaChiTiet?"":"Bang_keys.fnSetFocus(null, null);"%>
     });
 </script>
+<script type="text/javascript">
+         function Huy() {
+        window.parent.location.href = '<%=BackURL %>';
+    }
+        
+        function OnInit_CT_NEW(value, title) {
+            $("#idDialog").dialog("destroy");
+            document.getElementById("idDialog").title = title;
+            document.getElementById("idDialog").innerHTML = "";
+            $("#idDialog").dialog({
+                resizeable: false,
+                draggable: true,
+                width: value,
+                modal: true,
+                open: function (event, ui) {
+                    $(event.target).parent().css('position', 'fixed');
+                    $(event.target).parent().css('top', '10px');
+                    
+                }
+            });
+        }
+        function OnLoad_CT(v) {
+            document.getElementById("idDialog").innerHTML = v;
+        }
+    </script>
+    <div id="idDialog" style="display: none;"></div>
 </asp:Content>
