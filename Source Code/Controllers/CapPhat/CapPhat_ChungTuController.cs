@@ -80,8 +80,10 @@ namespace VIETTEL.Controllers.CapPhat
             String SoCapPhat = Request.Form[ParentID + "_iSoCapPhat"];
             String iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
             String iDM_MaLoaiCapPhat = Request.Form[ParentID + "_iDM_MaLoaiCapPhat"];
+            String iID_MaTinhChatCapThu = Request.Form[ParentID + "_iID_MaTinhChatCapThu"];
+            String sLNSQuocPhong = Request.Form[ParentID + "_sLNSQuocPhong"];
             String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(User.Identity.Name);
-            return RedirectToAction("Index", "CapPhat_ChungTu", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi, Loai = Loai });
+            return RedirectToAction("Index", "CapPhat_ChungTu", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi, Loai = Loai, iID_MaTinhChatCapThu = iID_MaTinhChatCapThu, sLNSQuocPhong = sLNSQuocPhong });
         }
         /// <summary>
         /// Hàm sửa chứng từ cấp phát khi người dùng click sửa chứng từ
@@ -147,6 +149,10 @@ namespace VIETTEL.Controllers.CapPhat
             String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayCapPhat"]);
             String sLNS = Convert.ToString(Request.Form[ParentID + "_sLNS"]);
             String sLoai = Convert.ToString(Request.Form[ParentID + "_iID_Loai"]);
+            if (String.IsNullOrEmpty(sLoai))
+            {
+                sLoai = "sNG";
+            }
             String iID_MaTinhChatCapThu = Convert.ToString(Request.Form[ParentID + "_iID_MaTinhChatCapThu"]);
             if (iDM_MaLoaiCapPhat == Convert.ToString(Guid.Empty) || iDM_MaLoaiCapPhat == "" || iDM_MaLoaiCapPhat == null)
             {
@@ -212,7 +218,7 @@ namespace VIETTEL.Controllers.CapPhat
         /// <param name="DonVi"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult XoaChungTu(String iID_MaCapPhat, String DonVi)
+        public ActionResult XoaChungTu(String iID_MaCapPhat, String Loai)
         {
             if (BaoMat.ChoPhepLamViec(User.Identity.Name, "CP_CapPhat", DELETE) == false)
             {
@@ -220,7 +226,8 @@ namespace VIETTEL.Controllers.CapPhat
             }
             //Xóa bảng cấp phát và chi tiết
             CapPhat_ChungTuModels.XoaChungTu(iID_MaCapPhat, Request.UserHostAddress, User.Identity.Name);
-            return RedirectToAction("Index", "CapPhat_ChungTu", new { MaDotNganSach = iID_MaCapPhat, DonVi = DonVi });
+            ViewData["Loai"] = Loai;
+            return RedirectToAction("Index", "CapPhat_ChungTu", new { MaDotNganSach = iID_MaCapPhat, Loai = Loai });
         }
 
         /// <summary>
@@ -239,6 +246,8 @@ namespace VIETTEL.Controllers.CapPhat
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
+
+            String sLyDo = Convert.ToString(Request.Form["CapPhat_sLyDo"]);
             DataTable dtTrangThaiDuyet = LuongCongViecModel.Get_dtTrangThaiDuyet(iID_MaTrangThaiDuyet_TrinhDuyet);
             String NoiDung = Convert.ToString(dtTrangThaiDuyet.Rows[0]["sTen"]);
             dtTrangThaiDuyet.Dispose();
