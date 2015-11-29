@@ -21,6 +21,9 @@
     String iDM_MaLoaiCapPhat = Request.QueryString["iDM_MaLoaiCapPhat"];
     String page = Request.QueryString["page"];
     String Loai = Request.QueryString["Loai"];
+    String iID_MaTinhChatCapThu = Request.QueryString["iID_MaTinhChatCapThu"];
+    String sLNSQuocPhong = Request.QueryString["sLNSQuocPhong"];
+    //String 
     if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
     if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
     int CurrentPage = 1;
@@ -33,21 +36,37 @@
     DataTable dtTrangThai = LuongCongViecModel.Get_dtDSTrangThaiDuyet_DuocXem(PhanHeModels.iID_MaPhanHeCapPhat, MaND);
     dtTrangThai.Rows.InsertAt(dtTrangThai.NewRow(), 0);
     dtTrangThai.Rows[0]["iID_MaTrangThaiDuyet"] = -1;
-    dtTrangThai.Rows[0]["sTen"] = "-- Chọn trạng thái --";
+    dtTrangThai.Rows[0]["sTen"] = "--Chọn trạng thái--";
     SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
     
     if(String.IsNullOrEmpty(page) == false){
         CurrentPage = Convert.ToInt32(page);
     }
 
-    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuCuc("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, true, CurrentPage, Globals.PageSize);
+    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuCuc("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat,iID_MaTinhChatCapThu,sLNSQuocPhong, true, CurrentPage, Globals.PageSize);
 
-    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatCucCount("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, true);
+    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatCucCount("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu, sLNSQuocPhong, true);
     int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
     String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new {MaND = MaND, SoCapPhat = iSoCapPhat, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
     String strThemMoi = Url.Action("SuaChungTu", "CapPhat_ChungTu", new { sLNS = sLNS, DonVi = DonVi, Loai = Loai });
-    DataTable dtLoaiCapPhat = DanhMucModels.DT_DanhMuc("LoaiCapPhat",true,"---Chọn loại cấp phát---");
+    DataTable dtLoaiCapPhat = DanhMucModels.DT_DanhMuc("LoaiCapPhat",true,"--Chọn loại cấp phát--");
     SelectOptionList slLoaiCapPhat = new SelectOptionList(dtLoaiCapPhat, "iID_MaDanhMuc", "sTen");
+
+    //START Lấy danh sách loại ngân sách quốc phòng
+    String iID_MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
+    DataTable dtLNSQuocPhong = DanhMucModels.NS_LoaiNganSachQuocPhong(iID_MaPhongBan);
+    SelectOptionList slLNSQuocPhong = new SelectOptionList(dtLNSQuocPhong, "sLNS", "TenHT");
+    //END
+    
+    //START Lấy danh sách tính chất cấp thu
+    DataTable dtTinhChatCapThu = TinhChatCapThuModels.Get_dtTinhChatCapThu();
+    SelectOptionList slTinhChatCapThu = new SelectOptionList(dtTinhChatCapThu, "iID_MaTinhChatCapThu", "sTen");
+    DataRow R2 = dtTinhChatCapThu.NewRow();
+    R2["iID_MaTinhChatCapThu"] = "-1";
+    R2["sTen"] = "--Chọn tính chất cấp thu--";
+    dtTinhChatCapThu.Rows.InsertAt(R2, 0);
+    //END
+    
     using (Html.BeginForm("TimKiemChungTu", "CapPhat_ChungTu", new { ParentID = ParentID, DonVi = DonVi, Loai = Loai }))
     {
 %>
@@ -79,15 +98,31 @@
                                 <td class="td_form2_td1"><div><b>Loại cấp phát</b></div></td>
                                 <td class="td_form2_td5">
                                     <div>
-                                        <%=MyHtmlHelper.DropDownList(ParentID, slLoaiCapPhat, iDM_MaLoaiCapPhat, "iDM_MaLoaiCapPhat", "", "class=\"input1_2\" onblur=isDate(this);")%>
+                                        <%=MyHtmlHelper.DropDownList(ParentID, slLoaiCapPhat, iDM_MaLoaiCapPhat, "iDM_MaLoaiCapPhat", "", "class=\"input1_2\"")%>
                                     </div>
                                 </td>
                             </tr>
                               <tr>
+                                <td class="td_form2_td1"><div><b>Tính chất cấp thu</b></div></td>
+                                <td class="td_form2_td5">
+                                    <div>
+                                        <%=MyHtmlHelper.DropDownList(ParentID, slTinhChatCapThu, iID_MaTinhChatCapThu, "iID_MaTinhChatCapThu", "", "class=\"input1_2\"")%>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td_form2_td1"><div><b>Loại ngân sách</b></div></td>
+                                <td class="td_form2_td5">
+                                    <div>
+                                        <%=MyHtmlHelper.DropDownList(ParentID, slLNSQuocPhong, sLNSQuocPhong, "sLNSQuocPhong", "", "class=\"input1_2\"")%>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="td_form2_td1"><div><b>Trạng thái</b></div></td>
                                 <td class="td_form2_td5">
                                     <div>
-                                        <%=MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "iID_MaTrangThaiDuyet", "", "class=\"input1_2\" onblur=isDate(this);")%>
+                                        <%=MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "iID_MaTrangThaiDuyet", "", "class=\"input1_2\"")%>
                                     </div>
                                 </td>
                             </tr>
@@ -95,11 +130,10 @@
                     </td>
                     <td valign="top" align="left" style="width: 45%;">
                         <table cellpadding="5" cellspacing="5" width="100%">
-                        
                             <tr>
-                                <td class="td_form2_td1"><div><b>Từ ngày</b></div></td>
-                                <td class="td_form2_td5">
-                                    <div>
+                                <td class="td_form2_td1" ; width="10%" ><div><b>Từ ngày</b></div></td>
+                                <td class="td_form2_td5" ; width="35%" >
+                                    <div style="width: 35%">
                                         <%=MyHtmlHelper.DatePicker(ParentID, sTuNgay, "dTuNgay", "", "class=\"input1_2\" onblur=isDate(this);")%>        
                                     </div>
                                 </td>
@@ -107,11 +141,19 @@
                             <tr>
                                 <td class="td_form2_td1"><div><b>Đến ngày</b></div></td>
                                 <td class="td_form2_td5">
-                                    <div>
+                                    <div style="width: 35%">
                                         <%=MyHtmlHelper.DatePicker(ParentID, sDenNgay, "dDenNgay", "", "class=\"input1_2\" onblur=isDate(this);")%>
                                     </div>
                                 </td>
                             </tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
+                            <tr><td class="td_form2_td1" colspan="2">&nbsp;</td></tr>
                         </table>
                     </td>
                 </tr>
@@ -155,18 +197,23 @@
     <table class="mGrid" id="<%= ParentID %>_thList">
         <tr>
             <th style="width: 5%;" align="center">STT</th>
-            <th style="width: 5%;" align="center">Ngày cấp phát</th>
-            <th style="width: 5%;" align="center">Số cấp phát</th>
-            <th style="width: 15%;" align="center">Loại cấp phát</th>
+            <th style="width: 7.5%;" align="center">Ngày cấp phát</th>
+            <th style="width: 7.5%;" align="center">Số cấp phát</th>
+            <th style="width: 7.5%;" align="center">Loại cấp phát</th>
+            <th style="width: 7.5%;" align="center">Tính chất cấp thu</th>
+            <th style="width: 7.5%;" align="center">Loại Ngân sách</th>
             <% if (Loai == "1")
-            { %>
-                <th style="width: 5%;" align="center">
-                    Loại Ngân sách
-                </th>
-             <%} %>
-            <th style="width: 40%;" align="center">Nội dung</th>
+               {%>
+                <th style="width: 10%;" align="center">Chi tiết Đến</th>
+                <th style="width: 27.5%;" align="center">Nội dung</th>
+             <%}
+               else
+               {%> 
+                <th style="width: 37.5%;" align="center">Nội dung</th>
+               <%}
+             %>
+            
             <th style="width: 10%;" align="center">Trạng thái</th>
-            <th style="width: 10%;" align="center">Thông tri</th>
             <th style="width: 5%;" align="center">Sửa</th>
             <th style="width: 5%;" align="center">Xóa</th>
         </tr>
@@ -200,6 +247,30 @@
                     break;
                 }
             }
+            String tinhChatCapThu = "";
+            for (int j = 0; j < dtTinhChatCapThu.Rows.Count; j++)
+            {
+                if (Convert.ToString(R["iID_MaTinhChatCapThu"]) == "-1")
+                    break;
+                if (Convert.ToString(R["iID_MaTinhChatCapThu"]) == Convert.ToString(dtTinhChatCapThu.Rows[j]["iID_MaTinhChatCapThu"]))
+                {
+                    tinhChatCapThu = Convert.ToString(dtTinhChatCapThu.Rows[j]["sTen"]);
+                    break;
+                }
+            }
+
+            DataTable dtLoaiChiTietDen = CapPhat_ChungTuModels.LayLoaiNganSachCon();
+            String chiTietDen = "";
+            for (int j = 0; j < dtLoaiChiTietDen.Rows.Count; j++)
+            {
+                if (Convert.ToString(R["sLoai"]) == Convert.ToString(dtLoaiChiTietDen.Rows[j]["iID_Loai"]))
+                {
+                    chiTietDen = Convert.ToString(dtLoaiChiTietDen.Rows[j]["TenHT"]);
+                    break;
+                }
+            }
+            dtLoaiChiTietDen.Dispose();
+            
             String LoaiNganSach = (Convert.ToString(R["sDSLNS"]).Length < 7)? "": Convert.ToString(R["sDSLNS"]);
             
             String strEdit = "";
@@ -216,20 +287,13 @@
             <tr <%=strColor %>>
                 <td align="center"><%=R["rownum"]%></td>            
                 <td align="center"><%=NgayChungTu %></td>
-                <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"] }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b>
-                </td>
+                <td align="center"><b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"] }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b></td>
                 <td><%=LoaiCapPhat %></td>
-                <td><%=LoaiNganSach %></td>
+                <td><%=tinhChatCapThu %></td>
+                <td><%=LoaiNganSach%></td>
+                <td><%=chiTietDen%></td>
                 <td align="left"><%=dt.Rows[i]["sNoiDung"]%></td>
                 <td align="center"><%=sTrangThai %></td>
-                <td>
-                <%if(TrangThaiDuyet==DaDuyet){ %>
-                      <div style="float: right; margin-right: 5px;" onclick="OnInit_CT();">      
-                        <%= Ajax.ActionLink("Thông tri", "Index", "NhapNhanh", new { id = "CapPhat_ThongTri", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaCapPhat = iID_MaCapPhat}, new AjaxOptions { }, new { @class = "button_title" })%>                                
-                      </div>
-                      <%}%>
-                </td>
                 <td align="center">
                     <%=strEdit%>                   
                 </td>
@@ -239,7 +303,7 @@
             </tr>
         <%} %>
         <tr class="pgr">
-            <td colspan="9" align="right">
+            <td colspan="11" align="right">
                 <%=strPhanTrang%>
             </td>
         </tr>
@@ -250,6 +314,8 @@ dt.Dispose();
 dtTrangThai.Dispose();
 dtLoaiCapPhat.Dispose();
 dtTrangThai_All.Dispose();
+dtTinhChatCapThu.Dispose();
+dtLNSQuocPhong.Dispose();
 %>
 <script type="text/javascript">
     function CallSuccess_CT() {     
