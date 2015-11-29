@@ -30,6 +30,7 @@
 
     CapPhat_DonVi_BangDuLieu bang = new CapPhat_DonVi_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem, MaND, IPSua);
 
+    String BackURL = Url.Action("Index", "CapPhat_ChungTu");
     String BangID = "BangDuLieu";
     int Bang_Height = 470;
     int Bang_FixedRow_Height = 50;
@@ -98,9 +99,14 @@ if (bang.ChiDoc == false)
                 if (iID_MaTrangThaiDuyet_TuChoi > 0)
                 {
                     %>
-                    <div style="float: left; padding-right: 10px;">
+                    <%--<div style="float: left; padding-right: 10px;">
                         <button class='button' style="float:left;"  onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">Từ chối</button>
+                    </div>--%>
+                 <td align="right"  style="float: left;width:6%">
+                    <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
+                        <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "CapPhatDonVi_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                     </div>
+                </td>
                     <%
                 }
                 %>
@@ -113,9 +119,14 @@ if (bang.ChiDoc == false)
                         TrinhDuyet = "Phê duyệt";
                     }
                     %>
-                    <div style="float: left;">
+                    <%--<div style="float: left;">
                         <button class='button' style="float:left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);"><%=TrinhDuyet %></button>
-                    </div>
+                    </div>--%>
+                    <td align="right"  style="float: left;width:6%">
+                        <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
+                            <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "CapPhatDonVi_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                        </div>
+                    </td>
                     <%
                 }
                 %>  
@@ -139,4 +150,31 @@ if (bang.ChiDoc == false)
     });
 }
 </script>
+</script>
+<script type="text/javascript">
+    function Huy() {
+        window.parent.location.href = '<%=BackURL %>';
+    }
+
+    function OnInit_CT_NEW(value, title) {
+        $("#idDialog").dialog("destroy");
+        document.getElementById("idDialog").title = title;
+        document.getElementById("idDialog").innerHTML = "";
+        $("#idDialog").dialog({
+            resizeable: false,
+            draggable: true,
+            width: value,
+            modal: true,
+            open: function (event, ui) {
+                $(event.target).parent().css('position', 'fixed');
+                $(event.target).parent().css('top', '10px');
+
+            }
+        });
+    }
+    function OnLoad_CT(v) {
+        document.getElementById("idDialog").innerHTML = v;
+    }
+    </script>
+    <div id="idDialog" style="display: none;"></div>
 </asp:Content>
