@@ -112,7 +112,7 @@ namespace VIETTEL.Models.CapPhat
             DataTable dt = Connection.GetDataTable(cmd);
             cmd.Dispose();
             DataRow dr = dt.NewRow();
-            dr["iID_MaPhongBan"] = "-1";
+            dr["iID_MaPhongBan"] = Guid.Empty;
             dr["sTenPhongBan"] = "--Chọn tất cả các B--";
             dt.Rows.InsertAt(dr, 0);
 

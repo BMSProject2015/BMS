@@ -966,7 +966,7 @@ WHERE iTrangThai=1 AND iID_MaLoaiDanhMuc=(SELECT iID_MaLoaiDanhMuc FROM DC_LoaiD
             {
                 vR.Rows.InsertAt(vR.NewRow(), 0);
                 vR.Rows[0]["MaQuy"] = "-1";
-                vR.Rows[0]["TenQuy"] = "-- Quý --";
+                vR.Rows[0]["TenQuy"] = "--Quý--";
             }
             return vR;
         }
@@ -1004,7 +1004,7 @@ WHERE iTrangThai=1 AND iID_MaLoaiDanhMuc=(SELECT iID_MaLoaiDanhMuc FROM DC_LoaiD
             {
                 vR.Rows.InsertAt(vR.NewRow(), 0);
                 vR.Rows[0]["MaQuy"] = "-1";
-                vR.Rows[0]["TenQuy"] = "-- Quý --";
+                vR.Rows[0]["TenQuy"] = "--Quý--";
             }
             return vR;
         }
