@@ -1,13 +1,11 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToanBS" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -31,58 +29,71 @@
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
         
-        //hungpx dt dot hardcode
-        DataTable dtDot = new DataTable();
-        dtDot.Columns.Add("MaDot", typeof(string));
-        dtDot.Columns.Add("TenDot", typeof(string));
-        DataRow R1 = dtDot.NewRow();
-        R1["MaDot"] = "-1";
-        R1["TenDot"] = "--Chọn đợt--";
-        dtDot.Rows.Add(R1);
-        SelectOptionList slDot = new SelectOptionList(dtDot, "MaDot", "TenDot");
+        //Lấy danh sách đợt
+        DataTable dtDot = DuToanBS_ReportModels.LayDSDot(iNamLamViec, MaND);
+        SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         String idDot = Convert.ToString(ViewData["iID_MaDot"]);
         if (String.IsNullOrEmpty(idDot))
         {
             if(dtDot.Rows.Count >0 )
-                idDot = Convert.ToString(dtDot.Rows[0]["MaDot"]);
+                idDot = Convert.ToString(dtDot.Rows[0]["iDotCap"]);
             else
                 idDot = Guid.Empty.ToString();
         }
+        
         dtDot.Dispose();
                 
         //dt Danh sách phòng ban
-        //String iID_MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
-        
-        DataTable dtPhongBan = DuToanBSModels.getDSPhongBan(iNamLamViec, MaND);
+        DataTable dtPhongBan = DuToanBS_ReportModels.LayDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
-
         String MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
+        
         if (MaPhongBan == null)
             MaPhongBan = "-1";
+            
         dtPhongBan.Dispose();
         
         //hungpx: dt Loại ngân sách truyen di sau khi bam submit
         String sLNS = Convert.ToString(ViewData["sLNS"]);
+        
         //DataTable dtLNS = DanhMucModels.NS_LoaiNganSach_PhongBan(iID_MaPhongBan);
         DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
         SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
+        
         dtDonVi.Dispose();
         
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
         
         // hungpx: tach xau ma don vi 
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        if (String.IsNullOrEmpty(iID_MaDonVi)) iID_MaDonVi = "-100";
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            iID_MaDonVi = "-100";
+        }
+        
         String[] arrDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrDonVi.Length];
         String Chuoi = "";
+
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
-        //if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
+
+        //Nếu không chọn loại ngân sách thì không cho xuất báo cáo
+        if (String.IsNullOrEmpty(sLNS))
+        {
+            PageLoad = "0";
+            sLNS = Guid.Empty.ToString();
+        }
+
+        //Nếu không chọn đơn vị không cho xuất báo cáo
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            PageLoad = "0";
+        } 
+        
         if (PageLoad == "1")
         {
-
             for (int i = 0; i < arrDonVi.Length; i++)
             {
                 arrView[i] =
@@ -93,10 +104,10 @@
                 if (i < arrDonVi.Length - 1)
                     Chuoi += "+";
             }
-           
         }
+        
         String[] arrMaNS = sLNS.Split(',');
-        String urlExport = Url.Action("ExportToExcel", "rptDuToanBS_ChiTieuNganSach2", new { });
+
         using (Html.BeginForm("EditSubmit", "rptDuToanBS_ChiTieuNganSach2", new { ParentID = ParentID, }))
         {
     %>
@@ -159,6 +170,11 @@
                         <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slPhongBan, MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon() ")%>
+                            </div>
+                        </td>
+                        <td class="td_form2_td1" style="width: 10%; height: 20px">
+                            <div>
+                                <b></b>
                             </div>
                         </td>
                     </tr>
@@ -344,7 +360,7 @@
         </div>
         <script type="text/javascript">
                      function CheckAll(value) {
-                         $("input:checkbox[check-group='DonVi']").each(function (i) {
+                         $("input:checkbox[check-group='DonVi']").each(function () {
                              this.checked = value;
                          });
                          ChonDonVi();
@@ -352,7 +368,7 @@
          </script>
           <script type="text/javascript">
               function CheckAllLNS(value) {
-                  $("input:checkbox[check-group='LNS']").each(function (i) {
+                  $("input:checkbox[check-group='LNS']").each(function () {
                       this.checked = value;
                   });
               }                                            
@@ -387,7 +403,7 @@
             // hungpx update view don vi
             function Chon() {
                  var iID_MaDonVi = "";
-                     $("input:checkbox[check-group='DonVi']").each(function (i) {
+                     $("input:checkbox[check-group='DonVi']").each(function () {
                          if (this.checked) {
                              if (iID_MaDonVi != "") iID_MaDonVi += ",";
                              iID_MaDonVi += this.value;
@@ -399,7 +415,7 @@
                  
                 jQuery.ajaxSetup({ cache: false });
 
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_ChiTieuNganSach2") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_ChiTieuNganSach2") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", MaPhongBan));
@@ -416,14 +432,14 @@
             }
             function ChonDonVi() {
                 var sLNS = "";
-                $("input:checkbox[check-group='LNS']").each(function (i) {
+                $("input:checkbox[check-group='LNS']").each(function () {
                     if (this.checked) {
                         if (sLNS != "") sLNS += ",";
                         sLNS += this.value;
                     }
                 });
                 var iID_MaDonVi = "";
-                $("input:checkbox[check-group='DonVi']").each(function (i) {
+                $("input:checkbox[check-group='DonVi']").each(function () {
                     if (this.checked) {
                         if (iID_MaDonVi != "") iID_MaDonVi += ",";
                         iID_MaDonVi += this.value;
@@ -433,7 +449,8 @@
 
                 var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
-                var url = unescape('<%= Url.Action("Ds_LNS?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3&sLNS=#4", "rptDuToanBS_ChiTieuNganSach2") %>');
+
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3&sLNS=#4", "rptDuToanBS_ChiTieuNganSach2") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", MaPhongBan));   
@@ -446,6 +463,7 @@
                     url = unescape(url.replace("#4", sLNS));
                     url = unescape(url.replace("#3", iID_MaDonVi));
                 }
+
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdLNS").innerHTML = data;
                 });

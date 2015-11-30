@@ -117,25 +117,27 @@
             </table>
         </div>
         <div id="rptMain" style="background-color: #F0F9FE;">
-            <div id="Div2" style="margin-left: 120px;" class="table_form2">
-                <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                              
-                        <td class="style1">
+            <div id="Div2" style="margin-left: 10px" class="table_form2">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
+                <tr>      
+                        <td style="width:10%">
+                        </td>               
+                        <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn Quý :</b></div>
+                                <b>Chọn quý </b></div>
                         </td>
                         <td style="width:10%">
-                            <div style="margin-right: 10px;">
+                            <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slQuy, iThang_Quy, "iThang_Quy", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
-                        </td>                     
+                        </td>                   
                         <td class="td_form2_td1" style="width: 8%">
-                            <b>Loại ngân sách: &nbsp;&nbsp; </b>
+                            <b>Loại ngân sách &nbsp;&nbsp; </b>
                         </td>
-                        <td style="width: 40%" rowspan="25">
-                             <div  style="overflow: scroll; height: 400px; margin-right: 300px;">
+                        <td class="td_form2_td1" style="width: 40%" rowspan="25">
+                             <div  style="overflow: scroll; height: 400px; margin-right: 300px; width: 80%">
                             
-                            <table class="mGrid" style="width: 100%">
+                            <table class="mGrid" width="100%">
                                 <tr>
                                     <th align="center" style="width: 40px;">
                                         <input type="checkbox" id="abc" onclick="CheckAllDV(this.checked)" />
@@ -182,12 +184,13 @@
                             </table>
                             </div>
                         </td>
-
                     </tr>
                     <tr>
-                        <td class="style2">
+                        <td style="width:10%">
+                        </td>
+                        <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn phòng ban:</b></div>
+                                <b>Chọn phòng ban</b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -207,9 +210,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="style2">
+                        <td style="width:10%">
+                        </td>
+                        <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn đơn vị:</b></div>
+                                <b>Chọn đơn vị</b></div>
                         </td>
                         <td style="width: 10%">
                             <div id="<%= ParentID %>_tdDonVi">

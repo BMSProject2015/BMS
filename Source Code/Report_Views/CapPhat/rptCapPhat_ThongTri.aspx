@@ -3,7 +3,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-
+<%@ Import Namespace="VIETTEL.Models.CapPhat" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -143,7 +143,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn Đợt :</b></div>
+                                <b>Chọn đợt cấp phát</b></div>
                         </td>
                         <td style="width: 25%">
                             <div>
@@ -151,17 +151,17 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Chọn đơn vị :</b>
+                            <b>Chọn đơn vị</b>
                         </td>
-                        <td style="width: 20%;" rowspan="5">
-                            <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 260px">
+                        <td  style="width: 20%;" rowspan="5">
+                            <div class="td_form2_td5" id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 260px; width: 100%">
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 7%; height: 10px">
-                            <b>Ghi chú :</b>
+                            <b>Ghi chú  </b>
                         </td>
                         <td style="height: 40px; width: 20%" rowspan="5">
-                            <div style="height: 250px;" id="<%= ParentID %>_tdGhiChu">
+                            <div style="height: 250px; " id="<%= ParentID %>_tdGhiChu">
                             </div>
                             <div style="color: red; font-size: medium; padding-left: 5px; padding-bottom: 10px">
                                 <%=MyHtmlHelper.Option(ParentID, "ChiTiet", LoaiTongHop, "LoaiTongHop", "", "")%>
@@ -174,7 +174,7 @@
                                 <%=MyHtmlHelper.Option(ParentID, "Nganh", DenMuc, "DenMuc", "", "")%>
                                Đến Ngành
                                  <%=MyHtmlHelper.Option(ParentID, "Muc", DenMuc, "DenMuc", "", "")%>
-                                Đến Mục
+                              Đến Mục
                             </div>
                         </td>
                         <td>
@@ -184,7 +184,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 12%; height: 10px">
                             <div>
-                                <b>Loại NS Cấp phát :</b></div>
+                                <b>Loại cấp phát</b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -197,7 +197,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 12%; height: 10px">
                             <div>
-                                <b>Chọn phòng ban :</b></div>
+                                <b>Chọn phòng ban</b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -207,9 +207,9 @@
                     </tr>
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Chọn LNS :</b>
+                            <b>Chọn loại ngân sách</b>
                         </td>
-                        <td style="width: 15%;">
+                        <td class="td_form2_td5" style="width: 15%;">
                             <div id="<%= ParentID %>_tdLNS" style="overflow: scroll; height: 200px">
                             </div>
                         </td>
@@ -222,11 +222,11 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 12%; height: 10px">
                             <div>
-                                <b>Loại cấp phát :</b></div>
+                                <b>Ghi chú cấp phát</b></div>
                         </td>
                         <td style="width: 12%; height: 10px">
                             <div >
-                             <%=MyHtmlHelper.TextBox(ParentID, LoaiCapPhat, "LoaiCapPhat","","style=\"width:100%;\"onchange=update_LoaiCapPhat()")%>
+                             <%=MyHtmlHelper.TextBox(ParentID, LoaiCapPhat, "LoaiCapPhat","","style=\"width:100%; resize: none\" onchange=update_LoaiCapPhat()")%>
                             </div>
                         </td>
                     </tr>

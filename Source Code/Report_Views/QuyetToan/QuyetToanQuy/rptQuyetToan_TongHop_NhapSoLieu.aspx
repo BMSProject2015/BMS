@@ -81,7 +81,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                         <td>
-                            <span>Báo cáo tổng hợp tình hình quyết toán ngân sách năm
+                            <span>Báo cáo tổng hợp nhập số liệu
                                 <%=iNamLamViec%></span>
                         </td>
                         <td width="52%" style="text-align: left;">
@@ -98,7 +98,7 @@
                         <tr>
                             <td class="td_form2_td1" style="width: 10%; height: 10px">
                                 <div>
-                                    <b>Chọn Quý :</b></div>
+                                    <b>Chọn quý </b></div>
                             </td>
                             <td style="width: 10%">
                                 <div>
@@ -107,7 +107,7 @@
                             </td>
                             <td class="td_form2_td1" style="width: 10%; height: 20px">
                                 <div>
-                                    <b>Chọn Năm  :</b></div>
+                                    <b>Chọn năm  </b></div>
                             </td>
                             <td style="width: 10%">
                                 <div>
@@ -116,12 +116,15 @@
                             </td>
                             <td class="td_form2_td1" style="width: 10%; height: 20px">
                                 <div>
-                                    <b>Chọn Phòng Ban  :</b></div>
+                                    <b>Chọn phòng ban  </b></div>
                             </td>
                             <td style="width: 10%">
                                 <div>
                                     <%=MyHtmlHelper.DropDownList(ParentID, slPhongBan, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width:100%;\"")%>
                                 </div>
+                            </td>
+                            <td style="width: 10%">
+                                &nbsp;
                             </td>
                         </tr>
                         <tr>
@@ -139,8 +142,8 @@
                         
                         </tr>
                        
-                        <tr>
-                            <td style="text-align: center;" colspan="6">
+                        <tr style="text-align: center;">
+                            <td colspan="6" align="center">
                                 <table cellpadding="0" cellspacing="0" border="0" align="center">
                                     <tr>
                                         <td>

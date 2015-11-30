@@ -14,8 +14,8 @@
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
         	<tr>
             	<td>
-                	<span>Danh sách báo cáo cấp phát</span>
-                    </td>
+                	<span>Danh sách báo cáo</span>
+                </td>
             </tr>
         </table>
     </div>

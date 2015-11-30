@@ -124,7 +124,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn Quý :</b></div>
+                                <b>Chọn quý </b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -132,9 +132,9 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%">
-                            <b>Loại ngân sách: &nbsp;&nbsp; </b>
+                            <b>Loại ngân sách &nbsp;&nbsp; </b>
                         </td>
-                        <td style="width: 25%" rowspan="25">
+                        <td class="td_form2_td5" style="width: 25%" rowspan="25">
                              <div  style="overflow: scroll; height: 400px">
                             
                             <table class="mGrid" style="width: 100%">
@@ -185,17 +185,19 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Chọn Đơn Vị :</b>
+                            <b>Chọn đơn vị &nbsp;&nbsp;</b>
                         </td>
-                        <td rowspan="25" style="width: 30%;">
+                        <td class="td_form2_td5" rowspan="25" style="width: 30%;">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
+                        </td>
+                        <td>
                         </td>
                     </tr>
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                             <div>
-                                <b>Chọn Năm  :</b></div>
+                                <b>Chọn năm  </b></div>
                         </td>
                         <td>
                             <div>
@@ -216,7 +218,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                             <div>
-                                <b>Chọn Phòng Ban  :</b></div>
+                                <b>Chọn phòng ban  </b></div>
                         </td>
                         <td>
                             <div>

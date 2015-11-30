@@ -118,7 +118,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 8%; height: 20px">
                             <div>
-                                <b>Chọn Đợt</b></div>
+                                <b>Chọn đợt</b></div>
                         </td>
                         <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
@@ -126,14 +126,14 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width :8% ; height : 20px">
-                            <div><b>Chọn Đơn vị</b></div>
+                            <div><b>Chọn đơn vị</b></div>
                         </td>
                          <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                              <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width : 8%; height:20px">
-                            <div><b>Loại Ngân Sách</b></div>
+                            <div><b>Loại ngân sách</b></div>
                         </td>
                        <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                             <div id="<%= ParentID %>_tdLNS" style="overflow: scroll; height: 400px">
@@ -371,13 +371,12 @@
                     }
                 } 
             });
-
             function CheckAllDonVi(value) {
                 $("input:checkbox[check-group='DV']").each(function (i) {
                     this.checked = value;
                 });
                 ChonDonVi();
-            }
+            }                                            
         </script>
         
         <script type="text/javascript">
@@ -385,7 +384,7 @@
                 $("input:checkbox[check-group='LNS']").each(function (i) {
                     this.checked = value;
                 });
-                //Chon();
+                Chon();
             }                                            
         </script>
 
@@ -436,7 +435,7 @@
 
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
-                    ChonDonVi();
+                    //ChonDonVi();
                 });
             }
                                                    

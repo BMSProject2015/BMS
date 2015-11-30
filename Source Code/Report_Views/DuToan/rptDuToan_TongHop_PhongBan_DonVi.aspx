@@ -31,7 +31,7 @@
         
         //HungPH: 2015/11/15 Lấy danh sanh đợt cấp phát
         String iID_MaDot = Convert.ToString(ViewData["iID_MaDot"]);
-        DataTable dtDot = DuToan_ReportModels.getDSDot(iNamLamViec, MaND);
+        DataTable dtDot = DuToan_ReportModels.LayDotDuToan(iNamLamViec, MaND);
         SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         dtDot.Dispose();
         
@@ -56,14 +56,15 @@
                 sLNS = Guid.Empty.ToString();
             }
         }
+        
         dtLNS.Dispose();
         String[] arrLNS = sLNS.Split(',');
-
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
         String[] arrMaDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrMaDonVi.Length];
         String chuoi = "";
         String LoaiTongHop = Convert.ToString(ViewData["LoaiTongHop"]);
+        
         if (String.IsNullOrEmpty(LoaiTongHop))
         {
             LoaiTongHop = "ChiTiet";
@@ -98,8 +99,8 @@
                 chuoi += arrView[0];
             }
         }
+        
         int SoCot = 1;
-        String urlExport = Url.Action("ExportToExcel", "rptDuToan_TongHop_PhongBan_DonVi", new { });
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
         using (Html.BeginForm("EditSubmit", "rptDuToan_TongHop_PhongBan_DonVi", new { ParentID = ParentID }))
         {
@@ -191,7 +192,7 @@
                         <td>
                         </td>
                         <td class="td_form2_td1" style="width: 8%; height: 10px"> 
-                            <div style="width: 130px"><b>Chọn Đơn Vị</b></div>
+                            <div style="width: 130px"><b>Chọn đơn vị</b></div>
                         </td>
                         <td class="td_form2_td5" rowspan="25" style="width: 25%;">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
@@ -203,7 +204,7 @@
                     </tr>
                     <tr>
                         <td class="td_form2_td1" style="width: 8%; height: 10px">
-                            <div><b>Chọn Phòng Ban</b></div>
+                            <div><b>Chọn phòng ban</b></div>
                         </td>
                         <td class="td_form2_td5" style="width: 14%; height: 10px">
                             <div>

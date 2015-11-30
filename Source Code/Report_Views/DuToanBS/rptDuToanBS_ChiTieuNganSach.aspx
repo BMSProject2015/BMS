@@ -1,13 +1,9 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
-<%@ Import Namespace="VIETTEL.Report_Controllers.DuToanBS" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -31,7 +27,8 @@
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
         
-        //hungpx dt dot hardcode
+        //cần thống nhất để lấy ra đợt dự toán từ 1 bảng trong DB
+        //Hungpx : hard code
         DataTable dtDot = new DataTable();
         dtDot.Columns.Add("MaDot", typeof(string));
         dtDot.Columns.Add("TenDot", typeof(string));
@@ -50,39 +47,58 @@
         }
         dtDot.Dispose();
                 
-        //dt Danh sách phòng ban
-        //String iID_MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
-        
-        DataTable dtPhongBan = DuToanBSModels.getDSPhongBan(iNamLamViec, MaND);
+        //Danh sách phòng ban
+        DataTable dtPhongBan = DuToanBS_ReportModels.LayDSPhongBan(iNamLamViec, MaND);
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
 
         String MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
         if (MaPhongBan == null)
             MaPhongBan = "-1";
+            
         dtPhongBan.Dispose();
         
         //hungpx: dt Loại ngân sách truyen di sau khi bam submit
         String sLNS = Convert.ToString(ViewData["sLNS"]);
+        
         //DataTable dtLNS = DanhMucModels.NS_LoaiNganSach_PhongBan(iID_MaPhongBan);
         DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
         SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
+        
         dtDonVi.Dispose();
         
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
         
         // hungpx: tach xau ma don vi 
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        if (String.IsNullOrEmpty(iID_MaDonVi)) iID_MaDonVi = "-100";
+
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            iID_MaDonVi = "-100";
+        }
+        
         String[] arrDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrDonVi.Length];
         String Chuoi = "";
+
         String PageLoad = Convert.ToString(ViewData["PageLoad"]);
         if (String.IsNullOrEmpty(PageLoad))
             PageLoad = "0";
-        //if (String.IsNullOrEmpty(sLNS)) PageLoad = "0";
+
+        //Nếu không chọn loại ngân sách thì không cho xuất báo cáo
+        if (String.IsNullOrEmpty(sLNS))
+        {
+            PageLoad = "0";
+            sLNS = Guid.Empty.ToString();
+        }
+
+        //Nếu không chọn đơn vị không cho xuất báo cáo
+        if (String.IsNullOrEmpty(iID_MaDonVi))
+        {
+            PageLoad = "0";
+        } 
+        
         if (PageLoad == "1")
         {
-
             for (int i = 0; i < arrDonVi.Length; i++)
             {
                 arrView[i] =
@@ -96,9 +112,9 @@
            
         }
 
-        int SoCot = 1;
+        //int SoCot = 1;
         String[] arrMaNS = sLNS.Split(',');
-        String urlExport = Url.Action("ExportToExcel", "rptDuToanBS_ChiTieuNganSach", new { });
+        
         using (Html.BeginForm("EditSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
         {
     %>
@@ -346,7 +362,7 @@
         </div>
         <script type="text/javascript">
                      function CheckAll(value) {
-                         $("input:checkbox[check-group='DonVi']").each(function (i) {
+                         $("input:checkbox[check-group='DonVi']").each(function () {
                              this.checked = value;
                          });
                          ChonDonVi();
@@ -354,7 +370,7 @@
          </script>
           <script type="text/javascript">
               function CheckAllLNS(value) {
-                  $("input:checkbox[check-group='LNS']").each(function (i) {
+                  $("input:checkbox[check-group='LNS']").each(function () {
                       this.checked = value;
                   });
               }                                            
@@ -389,19 +405,19 @@
             // hungpx update view don vi
             function Chon() {
                  var iID_MaDonVi = "";
-                     $("input:checkbox[check-group='DonVi']").each(function (i) {
+                     $("input:checkbox[check-group='DonVi']").each(function () {
                          if (this.checked) {
                              if (iID_MaDonVi != "") iID_MaDonVi += ",";
                              iID_MaDonVi += this.value;
                          }
                      });
-                 //var iID_MaDonVi = document.getElementById("<%=ParentID %>_iID_MaDonVi").value;
+
                  var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
                  var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
                  
                 jQuery.ajaxSetup({ cache: false });
 
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_ChiTieuNganSach") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_ChiTieuNganSach") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", MaPhongBan));
@@ -416,26 +432,29 @@
                     ChonDonVi();
                 });
             }
+
             function ChonDonVi() {
                 var sLNS = "";
-                $("input:checkbox[check-group='LNS']").each(function (i) {
+                $("input:checkbox[check-group='LNS']").each(function () {
                     if (this.checked) {
                         if (sLNS != "") sLNS += ",";
                         sLNS += this.value;
                     }
                 });
                 var iID_MaDonVi = "";
-                $("input:checkbox[check-group='DonVi']").each(function (i) {
+
+                $("input:checkbox[check-group='DonVi']").each(function () {
                     if (this.checked) {
                         if (iID_MaDonVi != "") iID_MaDonVi += ",";
                         iID_MaDonVi += this.value;
                     }
                 });
+
                 jQuery.ajaxSetup({ cache: false });
 
                 var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
-                var url = unescape('<%= Url.Action("Ds_LNS?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3&sLNS=#4", "rptDuToanBS_ChiTieuNganSach") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3&sLNS=#4", "rptDuToanBS_ChiTieuNganSach") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", MaPhongBan));   

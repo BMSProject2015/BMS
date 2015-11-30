@@ -150,7 +150,7 @@
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                     <td>
-                        <span>Báo cáo tổng hợp tình hình quyết toán ngân sách năm
+                        <span>Báo cáo quyết toán thông tri
                             <%=iNamLamViec%></span>
                     </td>
                     <td width="52%" style="text-align: left;">
@@ -167,22 +167,22 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn Quý :</b></div>
+                                <b>Chọn quý </b></div>
                         </td>
                         <td style="width: 25%">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slQuy, iThang_Quy, "iThang_Quy", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
                         </td>
-                        <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Chọn đơn vị :</b>
+                        <td class="td_form2_td1" style="width: 7%; height: 10px">
+                            <b>Chọn đơn vị &nbsp;&nbsp;</b>                         
                         </td>
                         <td style="width: 20%;" rowspan="5">
-                            <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 260px">
+                            <div class="td_form2_td5" id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 260px; width:100%">
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 7%; height: 10px">
-                            <b>Ghi chú :</b>
+                            <div><b>Ghi chú </b></div>
                         </td>
                         <td style="height: 40px; width: 20%" rowspan="5">
                             <div style="height: 250px;" id="<%= ParentID %>_tdGhiChu">
@@ -207,7 +207,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                             <div>
-                                <b>Chọn năm :</b></div>
+                                <b>Chọn năm </b></div>
                         </td>
                         <td style="width: 15%">
                             <div>
@@ -232,9 +232,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="td_form2_td1" style="width: 12%; height: 10px">
+                        <td class="td_form2_td1" style="width: 15%; height: 10px">
                             <div>
-                                <b>Loại NS Quyết toán :</b></div>
+                                <b>Loại ngân sách </b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -248,7 +248,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 12%; height: 10px">
                             <div>
-                                <b>Chọn phòng ban :</b></div>
+                                <b>Chọn phòng ban </b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -259,9 +259,11 @@
                     <!-- End: VungNV: 2015/09/21: thêm mới dropdownlist chọn phòng ban -->
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Chọn LNS :</b>
+                            <div>
+                            <b>Chọn LNS </b>
+                            </div>
                         </td>
-                        <td style="width: 15%;">
+                        <td class="td_form2_td5" style="width: 15%;">
                             <div id="<%= ParentID %>_tdLNS" style="overflow: scroll; height: 200px">
                             </div>
                         </td>
@@ -275,7 +277,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 12%; height: 10px">
                             <div>
-                                <b>Loại cấp phát :</b></div>
+                                <b>Ghi chú quyết toán </b></div>
                         </td>
                         <td style="width: 20%; height: 10px">
                             <div >

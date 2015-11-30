@@ -152,7 +152,7 @@
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                     <td>
-                        <span>Báo cáo tổng hợp tình hình quyết toán ngân sách năm
+                        <span>Báo cáo quyết toán tổng hợp năm quý 
                             <%=iNamLamViec%></span>
                     </td>
                     <td width="52%" style="text-align: left;">
@@ -169,7 +169,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
                             <div>
-                                <b>Chọn Quý :</b></div>
+                                <b>Chọn quý </b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -177,9 +177,9 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%">
-                            <b>Đơn vị: &nbsp;&nbsp; </b>
+                            <b>Đơn vị &nbsp;&nbsp; </b>
                         </td>
-                        <td style="width: 25%" rowspan="25">
+                        <td class="td_form2_td5" style="width: 25%" rowspan="25">
                               <div  style="overflow: scroll; height: 400px">
                             <table class="mGrid" style="width: 100%">
                                 <tr>
@@ -229,9 +229,11 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <b>Loại ngân sách :</b>
+                            <div>
+                            <b>Loại ngân sách </b>
+                            </div>
                         </td>
-                        <td rowspan="25" style="width: 30%;">
+                        <td class="td_form2_td5" rowspan="25" style="width: 30%;">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
@@ -239,7 +241,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                             <div>
-                                <b>Chọn năm :</b></div>
+                                <b>Chọn năm </b></div>
                         </td>
                         <td>
                             <div>
@@ -260,7 +262,7 @@
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 20px">
                             <div>
-                                <b>Chọn phòng ban :</b></div>
+                                <b>Chọn phòng ban </b></div>
                         </td>
                         <td>
                             <div>
@@ -279,7 +281,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="td_form2_td1" style="width: 10%; height: 20px">
+                        <td class="td_form2_td1" style="width: 10%; height: 20px; ">
                             <div style="color: red; font-size: medium">
                                 <%=MyHtmlHelper.Option(ParentID, "ChiTiet", LoaiBaoCao, "LoaiTongHop", "", "onchange=\" Chon()\"")%>
                                 Chi tiết đơn vị
@@ -288,7 +290,7 @@
                         <td class="td_form2_td1" style="width: 15%; height: 20px">
                             <div style="color: red; font-size: medium">
                                 <%=MyHtmlHelper.Option(ParentID, "TongHop", LoaiBaoCao, "LoaiTongHop", "", "")%>
-                                Báo cáo tổng hợp
+                                Tổng hợp đơn vị
                             </div>
                         </td>;
                         <td>
