@@ -472,7 +472,7 @@
                 var iID_MaNamNganSach = document.getElementById("<%=ParentID %>_iID_MaNamNganSach").value;
                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&Thang_Quy=#1&MaTo=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongHop_LNS") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&MaTo=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongHop_LNS") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2","<%= MaTo%>"));

@@ -1,13 +1,11 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
-
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToanBS" %>
-<%@ Import Namespace="System.Data" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
@@ -31,10 +29,8 @@
         String MaND = User.Identity.Name;
         String iNamLamViec = ReportModels.LayNamLamViec(MaND);
 
-
-
         String iID_MaDot = Convert.ToString(ViewData["iID_MaDot"]);
-        DataTable dtDot = DuToanBSModels.getDSDot(iNamLamViec, MaND);
+        DataTable dtDot = DuToanBS_ReportModels.LayDSDot(iNamLamViec, MaND);
         SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         //if (String.IsNullOrEmpty(iID_MaDot))
         //{
@@ -67,6 +63,7 @@
                 iID_MaDonVi = Guid.Empty.ToString();
             }
         }
+        
         dtDonVi.Dispose();
 
         String BackURL = Url.Action("Index", "DuToan_Report", new { Loai = 0 });
@@ -90,9 +87,6 @@
         }
 
 
-        int SoCot = 1;
-        
-        String urlExport = Url.Action("ExportToExcel", "rptDuToanBS_PhanCap", new { });
         using (Html.BeginForm("EditSubmit", "rptDuToanBS_PhanCap", new { ParentID = ParentID }))
         {
     %>
@@ -400,7 +394,7 @@
                     }
                 });
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("Ds_LNS?ParentID=#0&iID_MaDot=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaPhongBan=#4", "rptDuToanBS_PhanCap") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&iID_MaDot=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaPhongBan=#4", "rptDuToanBS_PhanCap") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", iID_MaDonVi));
@@ -427,7 +421,7 @@
 
                 jQuery.ajaxSetup({ cache: false });
 
-                var url = unescape('<%= Url.Action("Ds_DonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_PhanCap") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDot=#1&iID_MaPhongBan=#2&iID_MaDonVi=#3", "rptDuToanBS_PhanCap") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", iID_MaPhongBan));

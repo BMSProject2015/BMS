@@ -72,31 +72,6 @@ WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} AND iID_MaPhongBan NOT IN (0
             return dt;
         }
 
-        //lấy danh sách đợt
-        public static DataTable getDSDot(String iNamLamViec, String MaND)
-        {
-            String DK = "";
-            SqlCommand cmd = new SqlCommand();
-            DataTable dt = new DataTable();
-            dt.Columns.Add("MaDot", typeof(String));
-            dt.Columns.Add("iDotCap", typeof(String));
-            DataRow dr = dt.NewRow();
-            String SQL = String.Format(@"Select DISTINCT CONVERT(VARCHAR(24),dNgayChungTu,105) as iDotCap,dNgayChungTu
-FROM DT_ChungTu
-WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec
-    AND iID_MaChungTu IN (
-                        SELECT iID_MaChungTu FROM DT_ChungTuChiTiet WHERE iTrangThai=1 AND rTuChi<>0 AND iID_MaDonVi<>''
-) 
-ORDER BY dNgayChungTu
-");
-            
-            cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
-            //cmd.Parameters.AddWithValue("");
-            cmd.CommandText = SQL;
-            dt = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return dt;
-        }
     }
 
 }

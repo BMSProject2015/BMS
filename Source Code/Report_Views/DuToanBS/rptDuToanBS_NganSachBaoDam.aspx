@@ -116,7 +116,7 @@
                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="td_form2_td1" style="width: 10%; height: 10px">
-                            <div><b>Chọn Đợt</b></div>
+                            <div><b>Chọn đợt</b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -124,7 +124,7 @@
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width: 15%">
-                            <div><b>Chọn Phòng Ban</b></div>
+                            <div><b>Chọn phòng ban</b></div>
                         </td>
                         <td style="width: 10%">
                             <div>
@@ -134,7 +134,7 @@
                         <td>
                         </td>
                         <td class="style1"> 
-                            <div style="width: 130px"><b>Chọn Đơn Vị</b></div>
+                            <div style="width: 130px"><b>Chọn đơn vị</b></div>
                         </td>
                         <td rowspan="25" style="width: 30%;">
                             <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">

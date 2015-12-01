@@ -285,7 +285,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
        /// <param name="iID_MaNamNganSach">Năm ngân sách</param>
        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
        /// <returns></returns>
-        public JsonResult Ds_DonVi(String ParentID, String Thang_Quy, String MaTo, String sLNS, String iID_MaNamNganSach, String iID_MaPhongBan)
+        public JsonResult LayDanhSachDonVi(String ParentID, String Thang_Quy, String MaTo, String sLNS, String iID_MaNamNganSach, String iID_MaPhongBan)
         {
             String MaND = User.Identity.Name;
             String sViewPath = "~/Views/DungChung/DonVi/To_DanhSach.ascx";

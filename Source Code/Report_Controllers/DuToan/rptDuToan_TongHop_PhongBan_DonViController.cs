@@ -111,7 +111,7 @@ namespace VIETTEL.Report_Controllers.DuToan
             XlsFile Result = new XlsFile(true);
             Result.Open(path);
             FlexCelReport fr = new FlexCelReport();
-            fr = ReportModels.LayThongTinChuKy(fr, " rptDuToan_1040100_BoSung");
+            fr = ReportModels.LayThongTinChuKy(fr, "rptDuToan_TongHop_PhongBan_DonVi");
 
             //Lấy dữ liệu
             LoadData(fr, MaND, sLNS, iID_MaDonVi, iID_MaDot, iID_MaPhongBan, LoaiTongHop);

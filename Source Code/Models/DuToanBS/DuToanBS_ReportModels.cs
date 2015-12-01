@@ -1368,7 +1368,6 @@ ORDER BY sLNS
         /// <returns></returns>
         public static DataTable LayDSDot(String iNamLamViec, String MaND)
         {
-            String DK = "";
             SqlCommand cmd = new SqlCommand();
             DataTable dt = new DataTable();
             DataRow dr = dt.NewRow();
@@ -1567,7 +1566,7 @@ ORDER BY sLNS
 
         #region QuyDQ: rptDuToanBS_NganSachBaoDam ngày 19/11/2015
         /// <summary>
-        /// Lấy dữ liệu danh sách dự toán 1040100
+        /// Lấy dữ liệu danh sách dự toán bổ sung 1040100
         /// </summary>
         /// <param name="MaND">Mã Người Dùng</param>
         /// <param name="iID_MaDonVi">Mã Đơn Vị</param>
@@ -1650,6 +1649,77 @@ ORDER BY sLNS
         }
         #endregion
 
+        #region VungNV: rptDuToanBS_PhanCap ngay 30/11/2015
+        /// <summary>
+        /// Lấy dữ liệu danh sách dự toán bổ sng phân cấp
+        /// </summary>
+        /// <param name="iID_MaDonVi">Mã Đơn Vị</param>
+        /// <param name="sLNS">Mã loại ngân sách</param>
+        /// <param name="iID_MaDot">Mã Đợt</param>
+        /// <param name="iID_MaPhongBan">Mã Phòng Ban</param>
+        /// <param name="MaND">Mã Người Dùng</param>
+        /// <returns></returns>
+        public static DataTable rptDuToanBS_PhanCap(String iID_MaDonVi, String sLNS, String iID_MaDot, String iID_MaPhongBan, String MaND)
+        {
+            String DKDonVi = ""; String DKPhongBan = ""; String DK = "";
+            SqlCommand cmd = new SqlCommand();
+
+            //Điều kiện đơn vị
+            if (String.IsNullOrEmpty(iID_MaDonVi))
+            {
+                iID_MaDonVi = Guid.Empty.ToString();
+            }
+            String[] arrDonVi = iID_MaDonVi.Split(',');
+            for (int i = 0; i < arrDonVi.Length; i++)
+            {
+                DK += "iID_MaDonVi=@MaDonVi" + i;
+                cmd.Parameters.AddWithValue("@MaDonVi" + i, arrDonVi[i]);
+                if (i < arrDonVi.Length - 1)
+                {
+                    DK += " OR ";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(DK))
+            {
+                DK = " AND ( " + DK + ") ";
+            }
+
+            //điều kiện LNS
+            if (!String.IsNullOrEmpty(sLNS))
+            {
+                DK += " AND sLNS IN ( " + sLNS + ") ";
+            }
+
+            //điều kiện phòng ban
+            if (!String.IsNullOrEmpty(iID_MaPhongBan) && iID_MaPhongBan != "-1")
+            {
+                DK += " AND iID_MaPhongBan=@MaPhongBan ";
+                cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
+            }
+
+            DKDonVi = ThuNopModels.DKDonVi(MaND, cmd);
+            DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
+
+            String Sql = String.Format(
+                        @"SELECT SUBSTRING(sLNS,1,1) as sLNS1,
+                                SUBSTRING(sLNS,1,3) as sLNS3,
+                                SUBSTRING(sLNS,1,5) as sLNS5,
+                                sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
+                                ,SUM(rTuChi/@donvitinh) as rTuChi,SUM(rHienVat/@donvitinh) as rHienVat
+                        FROM DT_ChungTuChiTiet
+                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
+                        GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
+                        HAVING SUM(rTuChi)<>0 OR SUM(rHienVat) <>0
+                        ", DK, DKDonVi, DKPhongBan);
+
+            cmd.CommandText = Sql;
+            cmd.Parameters.AddWithValue("@donvitinh", "1000");
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
+            DataTable dtAll = Connection.GetDataTable(cmd);
+            return dtAll;
+        }
+        #endregion
         #endregion
     }
 }
