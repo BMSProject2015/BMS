@@ -91,9 +91,9 @@ function BangDuLieu_DienPhanBo_DaCapPhat(h)
             for (i = 0; i < arrTruong.length; i++) {
                 for (j = Bang_nC_Fixed; j < Bang_arrMaCot.length; j++) {
                     if (arrTruong[i] == Bang_arrMaCot[j]) {
-                        Bang_GanGiaTriThatChoO(h, j - 1, parseFloat(arrPhanBo[i]));
-                        Bang_GanGiaTriThatChoO(h, j + 1, parseFloat(arrDaCap[i]));
-                        BangDuLieu_TinhOConLai(h, j);
+                        Bang_GanGiaTriThatChoO(h, j - 2, parseFloat(arrPhanBo[i]));
+                        Bang_GanGiaTriThatChoO(h, j - 1, parseFloat(arrDaCap[i]));
+                        BangDuLieu_TinhOConLai(h, j + 1);
                         BangDuLieu_CapNhapLaiHangCha(h, j);
                         break;
                     }
@@ -146,44 +146,61 @@ function BangDuLieu_onCellAfterEdit(h, c) {
         BangDuLieu_DienPhanBo_DaCapPhat(h);
     }
     else {
-        if (Bang_arrMaCot[c] == "sTenDonVi") 
+        //if (Bang_arrMaCot[c] == "sTenDonVi") 
             BangDuLieu_CapNhapLaiHangCha(h, c);
     }
     return true;
 }
 
+//function BangDuLieu_CapNhapLaiHangCha(h, c) {
+//    if (BangDuLieu_CoCotDuyet && c >= Bang_arrMaCot.length - 2) {
+//        return;
+//    }
+//    
+//    var j, cTongSo = Bang_arrCSMaCot["rTongSo"];
+//    var cMax = cTongSo - 3;
+//    if (c > 0) {
+//        BangDuLieu_TinhOConLai(h, c);
+//    }
+//    BangDuLieu_TinhOTongSo(h);
+//    var csCha = h, GiaTri;
+//    while (Bang_arrCSCha[csCha] >= 0) {
+//        csCha = Bang_arrCSCha[csCha];
+//        
+//        for (j = Bang_nC_Fixed + 3; j < cMax; j = j + 4) {
+//            //Tính tổng các ô con của cột phân bổ
+//            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j - 2);
+//            Bang_GanGiaTriThatChoO(csCha, j - 2, GiaTri);
+
+//            //Tính tổng các ô con của cột cấp phát
+//            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j);
+//            Bang_GanGiaTriThatChoO(csCha, j, GiaTri);
+
+//            //Tính tổng các ô con của cột đã cấp phát
+//            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j - 1);
+//            Bang_GanGiaTriThatChoO(csCha, j - 1, GiaTri);
+
+//            //Tính tổng các ô con của cột còn lại
+//            BangDuLieu_TinhOConLai(csCha, j + 1);    
+//        } 
+//        BangDuLieu_TinhOTongSo(csCha);
+//    }
+//}
 function BangDuLieu_CapNhapLaiHangCha(h, c) {
-    if (BangDuLieu_CoCotDuyet && c >= Bang_arrMaCot.length - 2) {
-        return;
-    }
-    
-    var j, cTongSo = Bang_arrCSMaCot["rTongSo"];
-    var cMax = cTongSo - 3;
-    if (c > 0) {
+    if (Bang_arrType[c] == 1) {
+        if (BangDuLieu_CoCotDuyet && c >= Bang_arrMaCot.length - 2) {
+            return;
+        }
         BangDuLieu_TinhOConLai(h, c);
-    }
-    BangDuLieu_TinhOTongSo(h);
-    var csCha = h, GiaTri;
-    while (Bang_arrCSCha[csCha] >= 0) {
-        csCha = Bang_arrCSCha[csCha];
-        
-        for (j = Bang_nC_Fixed + 3; j < cMax; j = j + 4) {
-            //Tính tổng các ô con của cột phân bổ
-            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j - 1);
-            Bang_GanGiaTriThatChoO(csCha, j - 1, GiaTri);
-
-            //Tính tổng các ô con của cột cấp phát
-            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j);
-            Bang_GanGiaTriThatChoO(csCha, j, GiaTri);
-
-            //Tính tổng các ô con của cột đã cấp phát
-            GiaTri = BangDuLieu_TinhTongHangCon(csCha, j + 1);
-            Bang_GanGiaTriThatChoO(csCha, j + 1, GiaTri);
-
-            //Tính tổng các ô con của cột còn lại
-            BangDuLieu_TinhOConLai(csCha, j);    
-        } 
-        BangDuLieu_TinhOTongSo(csCha);
+        BangDuLieu_TinhOTongSo(h);
+        var csCha = h, GiaTri;
+        while (Bang_arrCSCha[csCha] >= 0) {
+            csCha = Bang_arrCSCha[csCha];
+            GiaTri = BangDuLieu_TinhTongHangCon(csCha, c);
+            Bang_GanGiaTriThatChoO(csCha, c, GiaTri);
+            BangDuLieu_TinhOConLai(csCha, c);
+            BangDuLieu_TinhOTongSo(csCha);
+        }
     }
 }
 
