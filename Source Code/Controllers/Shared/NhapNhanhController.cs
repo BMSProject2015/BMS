@@ -245,10 +245,10 @@ namespace VIETTEL.Controllers.Shared
                     ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
                     break;
                 case "CAPPHAT_TUCHOICHITIET":
-                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TuChoiChungTu.aspx";
                     break;
                 case "CAPPHATDONVI_TUCHOICHITIET":
-                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TrinhDuyetChungTu.aspx";
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TuChoiChungTu.aspx";
                     break;
                 case "CAPPHATDONVI_TRINHDUYETCHITIET":
                     ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TrinhDuyetChungTu.aspx";
