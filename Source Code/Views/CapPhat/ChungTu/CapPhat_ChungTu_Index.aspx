@@ -43,11 +43,11 @@
         CurrentPage = Convert.ToInt32(page);
     }
 
-    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuCuc("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat,iID_MaTinhChatCapThu,sLNSQuocPhong, true, CurrentPage, Globals.PageSize);
+    DataTable dt = CapPhat_ChungTuModels.LayDanhSachChungTuCuc("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat,iID_MaTinhChatCapThu,sLNSQuocPhong, false, CurrentPage, Globals.PageSize);
 
-    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatCucCount("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu, sLNSQuocPhong, true);
+    double nums = CapPhat_ChungTuModels.LayDanhSachChungTuCapPhatCucCount("", MaND, iSoCapPhat, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu, sLNSQuocPhong, false);
     int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
-    String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new {MaND = MaND, SoCapPhat = iSoCapPhat, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
+    String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new {MaND = MaND,Loai = Loai, SoCapPhat = iSoCapPhat, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
     String strThemMoi = Url.Action("SuaChungTu", "CapPhat_ChungTu", new { sLNS = sLNS, DonVi = DonVi, Loai = Loai });
     DataTable dtLoaiCapPhat = DanhMucModels.DT_DanhMuc("LoaiCapPhat",true,"--Chọn loại cấp phát--");
     SelectOptionList slLoaiCapPhat = new SelectOptionList(dtLoaiCapPhat, "iID_MaDanhMuc", "sTen");
@@ -196,7 +196,7 @@
     </div>
     <table class="mGrid" id="<%= ParentID %>_thList">
         <tr>
-            <th style="width: 5%;" align="center">STT</th>
+            <th style="width: 2.5%;" align="center">STT</th>
             <th style="width: 7.5%;" align="center">Ngày cấp phát</th>
             <th style="width: 7.5%;" align="center">Số cấp phát</th>
             <th style="width: 7.5%;" align="center">Loại cấp phát</th>
@@ -204,18 +204,21 @@
             <th style="width: 7.5%;" align="center">Loại Ngân sách</th>
             <% if (Loai == "1")
                {%>
-                <th style="width: 10%;" align="center">Chi tiết Đến</th>
-                <th style="width: 27.5%;" align="center">Nội dung</th>
+                <th style="width: 7.5%;" align="center">Chi tiết Đến</th>
+                <th style="width: 20%;" align="center">Nội dung</th>
+                <th style="width: 10%;" align="center">Trạng thái</th>
+                <th style="width: 16.5%;" align="center">Lý do</th>
              <%}
                else
                {%> 
-                <th style="width: 37.5%;" align="center">Nội dung</th>
+                <th style="width: 25%;" align="center">Nội dung</th>
+                <th style="width: 10%;" align="center">Trạng thái</th>
+                <th style="width: 19%;" align="center">Lý do</th>
                <%}
              %>
             
-            <th style="width: 10%;" align="center">Trạng thái</th>
-            <th style="width: 5%;" align="center">Sửa</th>
-            <th style="width: 5%;" align="center">Xóa</th>
+            <th style="width: 3%;" align="center">Sửa</th>
+            <th style="width: 3%;" align="center">Xóa</th>
         </tr>
         <%
         for (i = 0; i < dt.Rows.Count; i++)
@@ -287,13 +290,20 @@
             <tr <%=strColor %>>
                 <td align="center"><%=R["rownum"]%></td>            
                 <td align="center"><%=NgayChungTu %></td>
-                <td align="center"><b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"] }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b></td>
+                <td align="center"><b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b></td>
                 <td><%=LoaiCapPhat %></td>
                 <td><%=tinhChatCapThu %></td>
                 <td><%=LoaiNganSach%></td>
+                <% if (Loai == "1")
+                   {
+                %>
                 <td><%=chiTietDen%></td>
+                <%
+                   }
+                %>
                 <td align="left"><%=dt.Rows[i]["sNoiDung"]%></td>
                 <td align="center"><%=sTrangThai %></td>
+                <td align="left"><%=dt.Rows[i]["sLyDo"]%></td>
                 <td align="center">
                     <%=strEdit%>                   
                 </td>
@@ -303,20 +313,20 @@
             </tr>
         <%} %>
         <tr class="pgr">
-            <td colspan="11" align="right">
+            <td colspan="12" align="right">
                 <%=strPhanTrang%>
             </td>
         </tr>
     </table>
 </div>
-<%
-dt.Dispose();
-dtTrangThai.Dispose();
-dtLoaiCapPhat.Dispose();
-dtTrangThai_All.Dispose();
-dtTinhChatCapThu.Dispose();
-dtLNSQuocPhong.Dispose();
-%>
+    <%
+    dt.Dispose();
+    dtTrangThai.Dispose();
+    dtLoaiCapPhat.Dispose();
+    dtTrangThai_All.Dispose();
+    dtTinhChatCapThu.Dispose();
+    dtLNSQuocPhong.Dispose();
+    %>
 <script type="text/javascript">
     function CallSuccess_CT() {     
         location.reload();
