@@ -265,7 +265,7 @@ namespace VIETTEL.Models
                 DK += " AND iID_MaDonVi=@iID_MaDonVi";
                 cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
             }
-            DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat <= @dNgayCapPhat)";
+            DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat < @dNgayCapPhat)";
             cmd.Parameters.AddWithValue("@dNgayCapPhat", dNgayCapPhat);
 
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
@@ -364,7 +364,7 @@ namespace VIETTEL.Models
             //DK += " AND sChiTietDen=@sChiTietDen";
             //cmd.Parameters.AddWithValue("@sChiTietDen", sChiTietDen);
             //DK += " AND dNgayCapPhat<=@dNgayCapPhat";
-            DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat <= @dNgayCapPhat)";
+            DK += " AND iID_MaCapPhat IN (SELECT iID_MaCapPhat FROM CP_CapPhat WHERE dNgayCapPhat < @dNgayCapPhat)";
             cmd.Parameters.AddWithValue("@dNgayCapPhat", dNgayCapPhat);
 
             String[] arrDSTruongTien_So = MucLucNganSachModels.strDSTruongTien_So.Split(',');
