@@ -131,6 +131,7 @@ namespace VIETTEL.Controllers.DuToan
                 ViewData["MaChungTu"] = MaChungTu;
                 if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
                 {
+                    ViewData["bThemMoi"] = "true";
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
                     return View(sViewPath + "ChungTu_index.aspx");
