@@ -591,7 +591,7 @@ ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
             //Điều kiện loại ngân sách tìm kiế
             if (!String.IsNullOrEmpty(sLNS_TK))
             {
-                dk += String.Format(" AND sDSLNS LIKE '{0}%'", sLNS_TK);
+                dk += String.Format(" AND sDSLNS LIKE '%{0}%'", sLNS_TK);
             }
 
             // Điều kiện ngày đợt ngân sách
