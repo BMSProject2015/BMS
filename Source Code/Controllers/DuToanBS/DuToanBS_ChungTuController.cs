@@ -610,8 +610,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="maChungTuTLTH"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult TrinhDuyetChungTu(string maChungTu, string sLNS, string iKyThuat, string sLyDo,
-            string maChungTuTLTH)
+        public ActionResult TrinhDuyetChungTu(string maChungTu, string sLNS, string iKyThuat, string sLyDo, string maChungTuTLTH, string chiTiet)
         {
             string MaND = User.Identity.Name;
 
@@ -639,11 +638,9 @@ namespace VIETTEL.Controllers.DuToanBS
             //Update trạng thái chứng từ TLTH
             DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, MaND);
             ViewData["LoadLai"] = "1";
-
-            if (sLNS.Contains("1040100"))
+            if (!String.IsNullOrEmpty(chiTiet) && chiTiet == "1")
             {
-                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam",
-                    new {sLNS = sLNS, iKyThuat = iKyThuat, iID_MaChungTu = maChungTuTLTH});
+                return RedirectToAction("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = maChungTu });
             }
             return RedirectToAction("Index", "DuToanBS_ChungTu",
                 new {sLNS1 = sLNS, iKyThuat = iKyThuat, iID_MaChungTu = maChungTuTLTH});
@@ -679,11 +676,7 @@ namespace VIETTEL.Controllers.DuToanBS
             DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, iID_MaTrangThaiDuyet_TrinhDuyet, MaND,
                 Request.UserHostAddress);
             DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, MaND);
-            if (sLNS == "1040100")
-            {
-                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam",
-                    new {sLNS = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
-            }
+            
             return RedirectToAction("Index", "DuToanBS_ChungTu",
                 new {sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
         }
@@ -725,7 +718,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="maChungTuTLTH"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult TuChoiChungTu(string maChungTu, string iLoai, string sLNS, string sLyDo, string maChungTuTLTH)
+        public ActionResult TuChoiChungTu(string maChungTu, string iLoai, string sLNS, string sLyDo, string maChungTuTLTH, string chiTiet)
         {
             string maND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
@@ -749,10 +742,9 @@ namespace VIETTEL.Controllers.DuToanBS
 
             //Update chứng từ TLTH
             DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, maND);
-            if (sLNS.Contains("1040100"))
+            if (!String.IsNullOrEmpty(chiTiet) && chiTiet == "1")
             {
-                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam",
-                    new {sLNS = sLNS, iID_MaChungTu = maChungTuTLTH});
+                return RedirectToAction("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = maChungTu });
             }
             return RedirectToAction("Index", "DuToanBS_ChungTu", new {sLNS1 = sLNS, iID_MaChungTu = maChungTuTLTH});
         }
@@ -786,11 +778,6 @@ namespace VIETTEL.Controllers.DuToanBS
                 Request.UserHostAddress);
 
             DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, maND);
-            if (sLNS == "1040100")
-            {
-                return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam",
-                    new {sLNS = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
-            }
             return RedirectToAction("Index", "DuToanBS_ChungTu",
                 new {sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
         }
