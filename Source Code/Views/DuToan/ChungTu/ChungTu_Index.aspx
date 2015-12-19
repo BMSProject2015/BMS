@@ -204,7 +204,7 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%=MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi(this.checked)\"")%>
+                                            <%=MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi()\"")%>
                                             <span style="color: brown;">(Trường hợp bổ sung đợt mới, đánh dấu chọn "Bổ sung đợt
                                                 mới". Nếu không chọn đợt bổ sung dưới lưới) </span>
                                         </div>
@@ -462,9 +462,10 @@
         function OnLoad_CT(v) {
             document.getElementById("idDialog").innerHTML = v;
         }
-        CheckThemMoi(false);
-        function CheckThemMoi(value) {
-            if (value == true) {
+        CheckThemMoi();
+        function CheckThemMoi() {
+            var isChecked = document.getElementById("<%= ParentID %>_iThemMoi").checked;
+            if (isChecked == true) {
                 document.getElementById('tb_DotNganSach').style.display = '';
             } else {
                 document.getElementById('tb_DotNganSach').style.display = 'none';

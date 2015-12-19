@@ -467,13 +467,16 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
                     <b><%= R["rownum"] %></b>
                 </td>
                 <td align="center">
-                    <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), LNS, "Detail", "") %></b>
+                    <%--<b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), LNS, "Detail", "") %></b>--%>
+                    <b><%=LNS %></b>
                 </td>
                 <td align="center">
-                    <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), R["iID_MaNguon"], "Detail", "") %></b>
+                    <%--<b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), R["iID_MaNguon"], "Detail", "") %></b>--%>
+                    <b><%=R["iID_MaNguon"]%></b>
                 </td>
                 <td align="center">
-                    <b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), NgayChungTu, "Detail", "") %></b>
+                    <%--<b><%= MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1}).ToString(), NgayChungTu, "Detail", "") %></b>--%>
+                    <b><%=NgayChungTu%></b>
                 </td>
                 <td align="left">
                     <%= HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"]) %>

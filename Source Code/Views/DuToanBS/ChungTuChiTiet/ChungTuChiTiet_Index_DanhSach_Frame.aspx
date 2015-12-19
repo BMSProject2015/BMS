@@ -59,16 +59,19 @@
             string BangID = "BangDuLieu";
             int Bang_Height = 470;
             int Bang_FixedRow_Height = 50;
-            string sLNS1 = sLNS.Substring(0,3);
-            string BackURL ="";
-            if(sLNS1 =="104" || sLNS1 == "109")
+            string BackURL = "";
+            if (!String.IsNullOrEmpty(sLNS))
             {
-                BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1,iKyThuat=iKyThuat });
-            }
-            else
-            {
-                sLNS1 = sLNS.Substring(0,1);
-                BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1});
+                string sLNS1 = sLNS.Substring(0, 3);
+                if (sLNS1 == "104" || sLNS1 == "109")
+                {
+                    BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1, iKyThuat = iKyThuat });
+                }
+                else
+                {
+                    sLNS1 = sLNS.Substring(0, 1);
+                    BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1 });
+                }
             }
             int iID_MaTrangThaiDuyet_TuChoi = 0;
             int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
@@ -88,8 +91,15 @@
             }
             else
             {
-                iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
-                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
+                if (iLoai == "4")
+                {
+
+                }
+                else
+                {
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
+                }
             }
     %>
     <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>
@@ -263,7 +273,7 @@
             Bang_arrDSTruongTien = '<%=MucLucNganSachModels.strDSTruongTien%>'.split(',');
             Bang_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "Public")%>';
             Bang_Url_getDanhSach = '<%=Url.Action("get_DanhSach_LNS", "Public", new {sLNS=sLNS})%>';
-            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToan_ChungTuChiTiet")%>';
+            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToanBS_ChungTuChiTiet")%>';
             BangDuLieu_Url_PhanCap = '<%=Url.Action("Index", "DuToanBS_phanCapChungTuChiTiet")%>';
             BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "DuToan_ChungTuChiTiet")%>';
             BangDuLieu_iID_MaChungTu = '<%=iID_MaChungTu%>';

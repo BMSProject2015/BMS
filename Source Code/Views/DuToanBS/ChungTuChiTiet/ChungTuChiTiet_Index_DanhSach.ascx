@@ -2,6 +2,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="System.ComponentModel" %>
 
