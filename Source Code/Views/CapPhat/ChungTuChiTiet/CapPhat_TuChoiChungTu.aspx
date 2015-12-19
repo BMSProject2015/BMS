@@ -17,8 +17,8 @@
         String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
         String slyDo = "";
         
-        String idAction = "2";
-        using (Html.BeginForm("LuuChungTuChiTiet", "CapPhat_ChungTuChiTiet", new { ParentID = ParentID, iID_MaCapPhat = iID_MaChungTu }))
+        String idAction = "1";
+        using (Html.BeginForm("TuChoi", "CapPhat_ChungTu", new { ParentID = ParentID, iID_MaCapPhat = iID_MaChungTu }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>
@@ -41,7 +41,7 @@
                             <td style="width: 40%">
                             </td>
                             <td align="right">
-                                <input type="button" class="button"  value="Tiếp tục" id="btnDuyet" />
+                                <input type="button" class="button"  value="Tiếp tục" id="btnTuChoi" />
                             </td>
                             <td style="width: 1%">
                                 &nbsp;

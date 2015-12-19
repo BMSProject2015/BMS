@@ -288,7 +288,7 @@ namespace VIETTEL.Models
         {
             String[] arrDSTruongTien = "rNgay,rSoNguoi,rChiTaiKhoBac,rTonKho,rTuChi,rChiTapTrung,rHangNhap,rHangMua,rHienVat,rDuPhong,rPhanCap,rTongSo".Split(',');
             String[] arrDSTruongTienTieuDe = "Ngày,Người,Chi tại kho bạc,Tồn kho,Tự chi,Chi tập trung,Hàng nhập,Hàng mua,Hiện vật,Dự phòng,Phân cấp,Tổng số".Split(',');
-            String[] arrDSTruongTienDoRong = "100,100,100,100,100,100,100,100,100,100,100,100,100".Split(',');
+            String[] arrDSTruongTienDoRong = "100,100,100,100,200,100,100,100,100,100,100,100,100".Split(',');
 
             //HungPX: Add cột mã đơn vị
             _arrDSMaCot.Add("iID_MaDonVi");
@@ -301,7 +301,7 @@ namespace VIETTEL.Models
             //HungPX: Add cột Tên đơn vị
             _arrDSMaCot.Add("sTenDonVi");
             _arrTieuDe.Add("Tên Đơn vị");
-            _arrWidth.Add(100);
+            _arrWidth.Add(150);
             _arrHienThiCot.Add(true);
             _arrSoCotCungNhom.Add(1);
             _arrTieuDeNhomCot.Add("");
@@ -368,16 +368,15 @@ namespace VIETTEL.Models
                     _arrSoCotCungNhom.Add(4);
                     _arrTieuDeNhomCot.Add(arrDSTruongTienTieuDe[j]);
 
-
-                    _arrDSMaCot.Add(arrDSTruongTien[j]);
-                    _arrTieuDe.Add("Cấp phát");
+                    _arrDSMaCot.Add(arrDSTruongTien[j] + "_DaCap");
+                    _arrTieuDe.Add("Đã cấp");
                     _arrWidth.Add(Convert.ToInt32(arrDSTruongTienDoRong[j]));
                     _arrHienThiCot.Add(bHienThiCot);
                     _arrSoCotCungNhom.Add(4);
                     _arrTieuDeNhomCot.Add(arrDSTruongTienTieuDe[j]);
 
-                    _arrDSMaCot.Add(arrDSTruongTien[j] + "_DaCap");
-                    _arrTieuDe.Add("Đã cấp");
+                    _arrDSMaCot.Add(arrDSTruongTien[j]);
+                    _arrTieuDe.Add("Cấp phát");
                     _arrWidth.Add(Convert.ToInt32(arrDSTruongTienDoRong[j]));
                     _arrHienThiCot.Add(bHienThiCot);
                     _arrSoCotCungNhom.Add(4);

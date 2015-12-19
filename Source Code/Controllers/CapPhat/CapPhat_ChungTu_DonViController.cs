@@ -95,6 +95,27 @@ namespace VIETTEL.Controllers.CapPhat
 
             return View(VIEW_ROOTPATH + VIEW_CHUNGTU_DONVI_EDIT);
         }
+
+        /// <summary>
+        /// xóa chứng từ
+        /// </summary>
+        /// <param name="iID_MaCapPhat"></param>
+        /// <param name="DonVi"></param>
+        /// <returns></returns>
+        [Authorize]
+        public ActionResult XoaChungTu(String iID_MaCapPhat, String Loai)
+        {
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "CP_CapPhat", "Delete") == false)
+            {
+                return RedirectToAction("Index", "PermitionMessage");
+            }
+            //Xóa bảng cấp phát và chi tiết
+            CapPhat_ChungTuModels.XoaChungTu(iID_MaCapPhat, Request.UserHostAddress, User.Identity.Name);
+            ViewData["Loai"] = Loai;
+            return RedirectToAction("Index", "CapPhat_ChungTu_DonVi", new { MaDotNganSach = iID_MaCapPhat, Loai = Loai });
+        }
+
+
         /// <summary>
         /// Hàm xử lý hoạt động lưu chứng từ
         /// </summary>
@@ -226,7 +247,7 @@ namespace VIETTEL.Controllers.CapPhat
         /// <param name="iID_MaCapPhat"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult TrinhDuyet(String iID_MaCapPhat)
+        public ActionResult TrinhDuyet(String iID_MaCapPhat, String sLyDo)
         {
             String MaND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
@@ -249,6 +270,7 @@ namespace VIETTEL.Controllers.CapPhat
             SqlCommand cmd;
             cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@iID_MaDuyetCapPhatCuoiCung", MaDuyetChungTu);
+            cmd.Parameters.AddWithValue("@sLyDo", sLyDo);
             CapPhat_ChungTuModels.CapNhatBanGhi(iID_MaCapPhat, cmd.Parameters, User.Identity.Name, Request.UserHostAddress);
             cmd.Dispose();
 
@@ -261,7 +283,7 @@ namespace VIETTEL.Controllers.CapPhat
         /// <param name="iID_MaCapPhat"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult TuChoi(String iID_MaCapPhat)
+        public ActionResult TuChoi(String iID_MaCapPhat, String sLyDo)
         {
             String MaND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
@@ -287,6 +309,7 @@ namespace VIETTEL.Controllers.CapPhat
             SqlCommand cmd;
             cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@iID_MaDuyetCapPhatCuoiCung", MaDuyetChungTu);
+            cmd.Parameters.AddWithValue("@sLyDo", sLyDo);
             CapPhat_ChungTuModels.CapNhatBanGhi(iID_MaCapPhat, cmd.Parameters, MaND, Request.UserHostAddress);
             cmd.Dispose();
 
@@ -431,13 +454,14 @@ namespace VIETTEL.Controllers.CapPhat
 
             dtChungTu.Dispose();
             string idAction = Request.Form["idAction"];
+            string sLyDo = Request.Form["sLyDo"];
             if (idAction == "1")
             {
-                return RedirectToAction("TuChoi", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = iID_MaCapPhat });
+                return RedirectToAction("TuChoi", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = iID_MaCapPhat, sLyDo = sLyDo });
             }
             else if (idAction == "2")
             {
-                return RedirectToAction("TrinhDuyet", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = iID_MaCapPhat });
+                return RedirectToAction("TrinhDuyet", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = iID_MaCapPhat, sLyDo = sLyDo });
             }
             return RedirectToAction("CapPhatChiTiet_Frame", new { iID_MaCapPhat = iID_MaCapPhat });
         }

@@ -17,7 +17,7 @@
         String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
         String slyDo = "";
         
-        String idAction = "1";
+        String idAction = "2";
         using (Html.BeginForm("TrinhDuyet", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID, iID_MaCapPhat = iID_MaChungTu }))
         {
     %>
@@ -41,7 +41,7 @@
                             <td style="width: 40%">
                             </td>
                             <td align="right">
-                                <input type="submit" class="button"  value="Tiếp tục" id="btnDuyet" />
+                                <input type="button" class="button"  value="Tiếp tục" id="btnDuyet" />
                             </td>
                             <td style="width: 1%">
                                 &nbsp;

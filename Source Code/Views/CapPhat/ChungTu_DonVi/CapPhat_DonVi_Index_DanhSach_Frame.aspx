@@ -30,8 +30,11 @@
 
     CapPhat_DonVi_BangDuLieu bang = new CapPhat_DonVi_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem, MaND, IPSua);
 
-    String BackURL = Url.Action("Index", "CapPhat_ChungTu");
+    DataTable dtCapPhat = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
+    String Loai = Convert.ToString(dtCapPhat.Rows[0]["iLoai"]);
+    String BackURL = Url.Action("Index", "CapPhat_ChungTu_DonVi", new { Loai = Loai });
     String BangID = "BangDuLieu";
+    
     int Bang_Height = 470;
     int Bang_FixedRow_Height = 50;
     //String strDSDonVi = bang.strDSDonVi;
@@ -56,10 +59,11 @@
     {
     %>
     
-    <form action="<%=Url.Action("LuuChungTuChiTiet", "CapPhat_ChungTu_DonVi", new{iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
+    <form id="formDuyet" action="<%=Url.Action("LuuChungTuChiTiet", "CapPhat_ChungTu_DonVi", new{iID_MaCapPhat=iID_MaCapPhat})%>" method="post">
     <%
     } %>
         <input type="hidden" id="idAction" name="idAction" value="0" />
+        <input type="hidden" id="sLyDo" name="sLyDo" />
         <input type="hidden" id="idXauDuLieuThayDoi" name="idXauDuLieuThayDoi" value="<%=HttpUtility.HtmlEncode(bang.strThayDoi)%>" />
         <input type="hidden" id="idXauLaHangCha" name="idXauLaHangCha" value="<%=HttpUtility.HtmlEncode(bang.strLaHangCha)%>" />
         <input type="hidden" id="idXauMaCacHang" name="idXauMaCacHang" value="<%=HttpUtility.HtmlEncode(bang.strDSMaHang)%>" />
@@ -86,15 +90,12 @@ if (bang.ChiDoc == false)
     <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td align="right">
+            <td align="right" style="padding-right:10px;width:30%">
                 <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Thực hiện")%>"/>
             </td>
-            <td>&nbsp;</td>
-            <td align="center" width="100px">
-                <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="history.go(-1)" />
+            <td align="center" style="width:1%">
+                <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
             </td>
-            <td>&nbsp;</td>
-            <td align="left">
                 <%
                 if (iID_MaTrangThaiDuyet_TuChoi > 0)
                 {
@@ -102,7 +103,7 @@ if (bang.ChiDoc == false)
                     <%--<div style="float: left; padding-right: 10px;">
                         <button class='button' style="float:left;"  onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">Từ chối</button>
                     </div>--%>
-                 <td align="right"  style="float: left;width:6%">
+                 <td align="center" style="padding-left:10px; width:1%">
                     <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
                         <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "CapPhatDonVi_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                     </div>
@@ -122,14 +123,28 @@ if (bang.ChiDoc == false)
                     <%--<div style="float: left;">
                         <button class='button' style="float:left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);"><%=TrinhDuyet %></button>
                     </div>--%>
-                    <td align="right"  style="float: left;width:6%">
+                    <td align="left" style="padding-left:10px;width:30%">
                         <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
-                            <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "CapPhatDonVi_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                            <%= Ajax.ActionLink(TrinhDuyet, "Index", "NhapNhanh", new { id = "CapPhatDonVi_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                         </div>
                     </td>
                     <%
                 }
                 %>  
+        </tr>
+    </table>                    
+<%
+}
+%>
+<%
+if (bang.ChiDoc == true)
+{
+%>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+            <td align="center">
+                <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
             </td>
         </tr>
         <tr><td>&nbsp;</td></tr>
@@ -137,9 +152,27 @@ if (bang.ChiDoc == false)
 <%
 }
 %>
-<%
-    //dtChungTuChiTiet_TongCong.Dispose();
- %>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnDuyet').live("click", function () {
+            Bang_GanMangGiaTri_Bang_arrGiaTri();
+            if (document.getElementById("idAction")) document.getElementById("idAction").value = 2;
+            if (document.getElementById("sLyDo")) {
+                document.getElementById("sLyDo").value = document.getElementById("CapPhat_sLyDo").value;
+            }
+            document.getElementById("formDuyet").submit();
+        });
+
+        $('#btnTuChoi').live("click", function () {
+            Bang_GanMangGiaTri_Bang_arrGiaTri();
+            if (document.getElementById("idAction")) document.getElementById("idAction").value = 1;
+            if (document.getElementById("sLyDo")) {
+                document.getElementById("sLyDo").value = document.getElementById("CapPhat_sLyDo").value;
+            }
+            document.getElementById("formDuyet").submit();
+        });
+    });
+    </script>
 <script type="text/javascript">
     $(document).ready(function () {
         Bang_arrDSTruongTien = '<%=MucLucNganSachModels.strDSTruongTien%>'.split(',');

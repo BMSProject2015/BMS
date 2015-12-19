@@ -210,13 +210,14 @@ namespace VIETTEL.Controllers.CapPhat
                 }
             }
             string idAction = Request.Form["idAction"];
+            string sLyDo = Request.Form["sLyDo"];
             if (idAction == "1")
             {
-                return RedirectToAction("TuChoi", "CapPhat_ChungTu", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi });
+                return RedirectToAction("TuChoi", "CapPhat_ChungTu", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi, sLyDo = sLyDo });
             }
             else if (idAction == "2")
             {
-                return RedirectToAction("TrinhDuyet", "CapPhat_ChungTu", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi });
+                return RedirectToAction("TrinhDuyet", "CapPhat_ChungTu", new { ChiNganSach = ChiNganSach, iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi, sLyDo = sLyDo });
             }
             return RedirectToAction("CapPhatChiTiet_Frame", new { iID_MaCapPhat = iID_MaCapPhat, DonVi = DonVi });
         }

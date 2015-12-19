@@ -242,11 +242,12 @@
             <th style="width: 5%;" align="center">Số cấp phát</th>
             <th style="width: 7.5%;" align="center">Loại cấp phát</th>
             <th style="width: 7.5%;" align="center">Tính chất cấp thu</th>
-            <th style="width: 10%;" align="center">Đơn vị</th>
-            <th style="width: 7%;" align="center">Loại ngân sách</th>
+            <th style="width: 7%;" align="center">Đơn vị</th>
+            <th style="width: 4%;" align="center">LNS</th>
             <th style="width: 7%;" align="center">Chi tiết đến</th>
-            <th style="width: 25%;" align="center">Nội dung</th>
-            <th style="width: 12%;" align="center">Trạng thái</th>
+            <th style="width: 17%;" align="center">Nội dung</th>
+            <th style="width: 10%;" align="center">Trạng thái</th>
+            <th style="width: 16%;" align="center">Lý do</th>
             <th style="width: 3%;" align="center">Sửa</th>
             <th style="width: 3%;" align="center">Xóa</th>
         </tr>
@@ -318,7 +319,7 @@
                                 LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeCapPhat, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])))
             {
                 strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "");
-                strDelete = MyHtmlHelper.ActionLink(Url.Action("Delete", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "");
+                strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "CapPhat_ChungTu_DonVi", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "");
             }
             
             %>
@@ -335,6 +336,7 @@
                 <td><%=ChiTietDen%></td>
                 <td align="left"><%=dt.Rows[i]["sNoiDung"]%></td>
                 <td align="center"><%=sTrangThai %></td>
+                <td align="left"><%=dt.Rows[i]["sLyDo"]%></td>
 
                 <%-- VungNV: 2015/11/28: không làm thông tri              
                 <td align="center">
@@ -354,7 +356,7 @@
             </tr>
         <%} %>
         <tr class="pgr">
-            <td colspan="12" align="right">
+            <td colspan="13" align="right">
                 <%=strPhanTrang%>
             </td>
         </tr>
