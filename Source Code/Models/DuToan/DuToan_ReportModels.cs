@@ -1110,13 +1110,14 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
         /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         /// <param name="LoaiTongHop">Xuất chi tiết hoặc tổng hợp</param>
         /// HungPH
-        public static DataTable rptDuToan_TongHop_PhongBan_DonVi(String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot, String iID_MaPhongBan, String LoaiTongHop)
+        public static DataTable rptDuToanTongHopPhongBanDonVi(String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot, String iID_MaPhongBan, String LoaiTongHop)
         {
             SqlCommand cmd = new SqlCommand();
             String DKPhongBan = "";
             String DKDonVi = "";
             String DK = "";
             String DKDot = "";
+            String DKLoaiBaoCao = "";
             String SQL = "";
             int DVT = 1000;
 
@@ -1159,33 +1160,39 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             //dk phong ban
             if (iID_MaPhongBan != "-1")
             {
-                DKPhongBan += " AND iID_MaPhongBan=@MaPhongBan ";
+                DK += " AND iID_MaPhongBan=@MaPhongBan ";
                 cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
             }
 
-            //dk donvi
+            ////Báo cáo chi tiết các đơn vị
             if (LoaiTongHop == "ChiTiet")
             {
                 if (!String.IsNullOrEmpty(iID_MaDonVi) && iID_MaDonVi != "-1")
                 {
-                    DKDonVi += " AND iID_MaDonVi=@iID_MaDonVi ";
+                    DKLoaiBaoCao += " AND iID_MaDonVi=@iID_MaDonVi ";
                     cmd.Parameters.AddWithValue("@iID_MaDonVi", iID_MaDonVi);
                 }
             }
+            //Báo cáo tổng hợp các đơn vị
             else
             {
                 if (String.IsNullOrEmpty(iID_MaDonVi))
                     iID_MaDonVi = Guid.Empty.ToString();
+
                 String[] arrDonVi = iID_MaDonVi.Split(',');
                 for (int i = 0; i < arrDonVi.Length; i++)
                 {
-                    DKDonVi += " iID_MaDonVi=@MaDonVi" + i;
+                    DKLoaiBaoCao += " iID_MaDonVi=@MaDonVi" + i;
                     cmd.Parameters.AddWithValue("@MaDonVi" + i, arrDonVi[i]);
                     if (i < arrDonVi.Length - 1)
-                        DKDonVi += " OR ";
+                        DKLoaiBaoCao += " OR ";
                 }
-                if (String.IsNullOrEmpty(DKDonVi) == false)
-                    DKDonVi = " AND (" + DKDonVi + ") ";
+
+                if (!String.IsNullOrEmpty(DKLoaiBaoCao))
+                {
+                    DKLoaiBaoCao = " AND (" + DKLoaiBaoCao + ") ";
+                }
+                   
             }
 
             SQL = String.Format(@"
@@ -1199,14 +1206,14 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                         FROM DT_ChungTuChiTiet 
                         WHERE iTrangThai=1 
                                 AND iNamLamViec=@iNamLamViec 
-                                AND iID_MaChungTu IN (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} {2} {4}
+                                AND iID_MaChungTu IN (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} {5} {2} {4}
                         GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
                         HAVING SUM(rTuChi)<>0 
                                 OR SUM(rHangNhap)<>0 
                                 OR SUM(rHienVat)<>0  
                                 OR SUM(rHangMua)<>0  
                                 OR SUM(rPhanCap)<>0 
-                                OR SUM(rDuPhong)<>0", DK, DKDonVi, DKPhongBan, DVT, DKDot);
+                                OR SUM(rDuPhong)<>0", DK, DKDonVi, DKPhongBan, DVT, DKDot, DKLoaiBaoCao);
 
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
