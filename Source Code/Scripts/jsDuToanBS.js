@@ -19,6 +19,7 @@ function jsDuToan_LoadLaiChiTiet() {
             var value = $(controls[i]).val();
             url += "&" + field + "=" + encodeURI(value);
         }
+        ShowPopupThucHien();
         //document.getElementById("formDuyet").submit();
         //gan gia tri
         document.getElementById('ifrChiTietChungTu').contentWindow.Bang_GanMangGiaTri_Bang_arrGiaTri();
@@ -32,6 +33,11 @@ function jsDuToan_LoadLaiChiTiet() {
           }, 100);
         
     }
+}
+function ShowPopupThucHien() {
+    $("#ifrChiTietChungTu").contents().find("#dvText").show();
+    $("#ifrChiTietChungTu").contents().find("body").append('<div id="fade"></div>'); //Add the fade layer to bottom of the body tag.
+    $("#ifrChiTietChungTu").contents().find("#fade").css({ 'filter': 'alpha(opacity=40)' }).fadeIn(); //Fade in the fade layer 
 }
 var jsDuToan_Search_inteval = null;
 
