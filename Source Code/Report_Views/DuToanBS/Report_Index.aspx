@@ -55,7 +55,7 @@
                 <tr>
                     <td align="center" style="padding: 3px 2px;">4</td>
                     <td align="center" style="padding: 3px 2px;"></td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_TongHop_PhongBan_DonVi"), "Dự toán - Báo cáo tổn hợp dự toán chi ngân sách")%></td>                        
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToanTongHopPhongBanDonVi"), "Dự toán - Báo cáo tổn hợp dự toán chi ngân sách")%></td>                        
                     <td align="center" style="padding: 3px 2px;">HungPH</td>
                 </tr>  
                 

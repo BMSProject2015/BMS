@@ -82,7 +82,7 @@
             {
                 for (int i = 0; i < arrMaDonVi.Length; i++)
                 {
-                    arrView[i] = String.Format(@"/rptDuToan_TongHop_PhongBan_DonVi/viewpdf?iID_MaDonVi={0}&sLNS={1}&iID_MaDot={2}&iID_MaPhongBan={3}&MaND={4}&LoaiTongHop={5}",
+                    arrView[i] = String.Format(@"/rptDuToanTongHopPhongBanDonVi/viewpdf?maDonVi={0}&sLNS={1}&maDot={2}&maPhongBan={3}&maND={4}&loaiBaoCao={5}",
                         arrMaDonVi[i], sLNS, iID_MaDot, iID_MaPhongBan, MaND, LoaiTongHop);
                     chuoi += arrView[i];
                     if (i < arrMaDonVi.Length - 1)
@@ -94,7 +94,7 @@
             else
             {
                 arrView = new string[1];
-                arrView[0] = String.Format(@"/rptDuToan_TongHop_PhongBan_DonVi/viewpdf?iID_MaDonVi={0}&sLNS={1}&iID_MaDot={2}&iID_MaPhongBan={3}&MaND={4}&LoaiTongHop={5}",
+                arrView[0] = String.Format(@"/rptDuToanTongHopPhongBanDonVi/viewpdf?maDonVi={0}&sLNS={1}&maDot={2}&maPhongBan={3}&maND={4}&loaiBaoCao={5}",
                         iID_MaDonVi, sLNS, iID_MaDot, iID_MaPhongBan, MaND, LoaiTongHop);
                 chuoi += arrView[0];
             }
@@ -102,7 +102,7 @@
         
         int SoCot = 1;
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
-        using (Html.BeginForm("EditSubmit", "rptDuToan_TongHop_PhongBan_DonVi", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptDuToanTongHopPhongBanDonVi", new { ParentID = ParentID }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
@@ -111,7 +111,7 @@
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                     <td>
-                        <span>Báo cáo tình hình dự toán bổ sung năm <%=iNamLamViec%></span>
+                        <span>Báo cáo tình hình dự toán năm <%=iNamLamViec%></span>
                     </td>
                     <td width="52%" style="text-align: left;">
                         <div class="login1" style="width: 50px; height: 20px; text-align: left;">
@@ -486,7 +486,7 @@
                 var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
 
                 jQuery.ajaxSetup({cache: false});
-                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&iID_MaDonVi=#1&iID_MaDot=#2&iID_MaPhongBan=#3&sLNS=#4", "rptDuToan_TongHop_PhongBan_DonVi") %>')
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&maDonVi=#1&maDot=#2&maPhongBan=#3&sLNS=#4", "rptDuToanTongHopPhongBanDonVi") %>')
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1","<%= iID_MaDonVi %>"));
                 url = unescape(url.replace("#2", iID_MaDot));

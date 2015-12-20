@@ -11,7 +11,7 @@ using VIETTEL.Models.DuToan;
 
 namespace VIETTEL.Report_Controllers.DuToan
 {
-    public class rptDuToan_TongHop_PhongBan_DonViController : Controller
+    public class rptDuToanTongHopPhongBanDonViController : Controller
     {
         public string sViewPath = "~/Report_Views/";
         private const String VIEW_PATCH_DUTOAN_TONGHOP_PHONGBAN_DONVI = "~/Report_Views/DuToan/rptDuToan_TongHop_PhongBan_DonVi.aspx";
@@ -30,7 +30,7 @@ namespace VIETTEL.Report_Controllers.DuToan
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {   
             //Lấy giá trị từ Form
             String sLNS = Request.Form["sLNS"];
@@ -53,21 +53,23 @@ namespace VIETTEL.Report_Controllers.DuToan
         /// <summary>
         /// Xuất file pdf báo cáo dự toán tổng hợp chọn phòng ban đơn vị
         /// </summary>
-        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Loại ngân sách</param>
-        /// <param name="iID_MaDonVi">Mã đơn vị</param>
-        /// <param name="iID_MaDot">Mã đợt cấp phát</param>
-        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
-        /// <param name="LoaiTongHop">Chọn báo cáo xuất ra là tổng hợp hay chi tiết</param>
+        /// <param name="maDonVi">Mã đơn vị</param>
+        /// <param name="maDot">Mã đợt cấp phát</param>
+        /// <param name="maPhongBan">Mã phòng ban</param>
+        /// <param name="loaiBaoCao">Chọn báo cáo xuất ra là tổng hợp hay chi tiết</param>
         /// <returns></returns>
-        public ActionResult ViewPDF(String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot,
-                    String iID_MaPhongBan, String LoaiTongHop)
+        public ActionResult ViewPDF(String maND, String sLNS, String maDonVi, String maDot,
+                    String maPhongBan, String loaiBaoCao)
+            //public ActionResult ViewPDF(String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot,
+            //        String iID_MaPhongBan, String LoaiTongHop)
         {
             HamChung.Language();
             String sDuongDan = "";
 
             //Xuất báo cáo chi tiết
-            if (LoaiTongHop == "ChiTiet")
+            if (loaiBaoCao == "ChiTiet")
             {
                 sDuongDan = sFilePath_ChiTiet;
             }
@@ -77,7 +79,7 @@ namespace VIETTEL.Report_Controllers.DuToan
                 sDuongDan = sFilePath_TongHop;
             }
 
-            ExcelFile xls = CreateReport(Server.MapPath(sDuongDan), MaND, sLNS, iID_MaDonVi, iID_MaDot, iID_MaPhongBan, LoaiTongHop);
+            ExcelFile xls = CreateReport(Server.MapPath(sDuongDan), maND, sLNS, maDonVi, maDot, maPhongBan, loaiBaoCao);
 
             using (FlexCelPdfExport pdf = new FlexCelPdfExport())
             {
@@ -98,32 +100,32 @@ namespace VIETTEL.Report_Controllers.DuToan
         /// tạo file pdf báo cáo dự toán tổng hợp 
         /// </summary>
         /// <param name="path">Đường dẫn đến file excel</param>
-        /// <param name="MaND">Mã người dùng</param>
+        /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Mã phòng ban</param>
-        /// <param name="iID_MaDonVi">Mã đơn vị</param>
-        /// <param name="iID_MaDot">Mã đợt</param>
-        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
-        /// <param name="LoaiTongHop">Loại báo cáo tổng hợp hay chi tiết</param>
+        /// <param name="maDonVi">Mã đơn vị</param>
+        /// <param name="maDot">Mã đợt</param>
+        /// <param name="maPhongBan">Mã phòng ban</param>
+        /// <param name="loaiBaoCao">Loại báo cáo tổng hợp hay chi tiết</param>
         /// <returns></returns>
-        public ExcelFile CreateReport(String path, String MaND, String sLNS, String iID_MaDonVi,
-                        String iID_MaDot, String iID_MaPhongBan, String LoaiTongHop)
+        public ExcelFile CreateReport(String path, String maND, String sLNS, String maDonVi,
+                        String maDot, String maPhongBan, String loaiBaoCao)
         {
             XlsFile Result = new XlsFile(true);
             Result.Open(path);
             FlexCelReport fr = new FlexCelReport();
-            fr = ReportModels.LayThongTinChuKy(fr, "rptDuToan_TongHop_PhongBan_DonVi");
+            fr = ReportModels.LayThongTinChuKy(fr, "rptDuToanTongHopPhongBanDonVi");
 
             //Lấy dữ liệu
-            LoadData(fr, MaND, sLNS, iID_MaDonVi, iID_MaDot, iID_MaPhongBan, LoaiTongHop);
+            LoadData(fr, maND, sLNS, maDonVi, maDot, maPhongBan, loaiBaoCao);
 
             //Lấy năm làm việc của người dùng
-            String Nam = ReportModels.LayNamLamViec(MaND);
+            String Nam = ReportModels.LayNamLamViec(maND);
 
             //Lấy đơn vị của người dùng
-            String sTenDonVi = DonViModels.Get_TenDonVi(iID_MaDonVi);
+            String sTenDonVi = DonViModels.Get_TenDonVi(maDonVi);
 
             //Lấy tên đơn vị, phòng ban
-            if (LoaiTongHop == "ChiTiet")
+            if (loaiBaoCao == "ChiTiet")
             {
                 fr.SetValue("sTenDonVi", sTenDonVi);
                 fr.SetValue("sTenPhongBan", "");
@@ -131,9 +133,9 @@ namespace VIETTEL.Report_Controllers.DuToan
             else
             {
                 fr.SetValue("sTenDonVi", "");
-                if (iID_MaPhongBan != "-1")
+                if (maPhongBan != "-1")
                 {
-                    String sTenPhongBan = "Tổng hợp theo B" + iID_MaPhongBan;
+                    String sTenPhongBan = "Tổng hợp theo B" + maPhongBan;
                     fr.SetValue("sTenPhongBan", sTenPhongBan);
                 }
                 else
@@ -143,10 +145,10 @@ namespace VIETTEL.Report_Controllers.DuToan
                 }
             }
 
-            ViewData["iID_MaPhongBan"] = iID_MaPhongBan;
+            ViewData["iID_MaPhongBan"] = maPhongBan;
             fr.SetValue("Nam", Nam);
             fr.SetValue("NgayThang", ReportModels.Ngay_Thang_Nam_HienTai());
-            fr.SetValue("madot", iID_MaDot);
+            fr.SetValue("madot", maDot);
             fr.Run(Result);
 
             return Result;
@@ -155,18 +157,18 @@ namespace VIETTEL.Report_Controllers.DuToan
         /// <summary>
         /// Lấy dữ liệu chi tiết của dự toán tổng hợp
         /// </summary>
-        /// <param name="fr"></param>
-        /// <param name="MaND"></param>
-        /// <param name="sLNS"></param>
-        /// <param name="iID_MaDonVi"></param>
-        /// <param name="iID_MaDot"></param>
-        /// <param name="iID_MaPhongBan"></param>
-        /// <param name="LoaiTongHop"></param>
+        /// <param name="fr">Flecel report</param>
+        /// <param name="maND">Mã người dùng</param>
+        /// <param name="sLNS">Mã loại ngân sách</param>
+        /// <param name="maDonVi">Mã đơn vị</param>
+        /// <param name="maDot">Mã đợt dự toán</param>
+        /// <param name="maPhongBan">Mã phòng ban</param>
+        /// <param name="loaiBaoCao">Loại báo cáo tổng hợp hay chi tiết</param>
         /// HungPH: 2015/11/16
-        private void LoadData(FlexCelReport fr, String MaND, String sLNS, String iID_MaDonVi, String iID_MaDot, String iID_MaPhongBan, String LoaiTongHop)
+        private void LoadData(FlexCelReport fr, String maND, String sLNS, String maDonVi, String maDot, String maPhongBan, String loaiBaoCao)
         {
             DataTable dtDonVi = new DataTable();
-            dtDonVi = DuToan_ReportModels.rptDuToan_TongHop_PhongBan_DonVi(MaND, sLNS, iID_MaDonVi, iID_MaDot, iID_MaPhongBan, LoaiTongHop);
+            dtDonVi = DuToan_ReportModels.rptDuToanTongHopPhongBanDonVi(maND, sLNS, maDonVi, maDot, maPhongBan, loaiBaoCao);
             DataTable data = HamChung.SelectDistinct("ChiTiet", dtDonVi, "sLNS,sL,sK,sM,sTM,sTTM,sNG", "sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa");
             data.TableName = "ChiTiet";            
             DataTable dtsTM = HamChung.SelectDistinct("dtsTM", data, "sLNS,sL,sK,sM,sTM", "sLNS,sL,sK,sM,sTM,sMoTa", "sLNS,sL,sK,sM,sTM,sTTM");
@@ -193,24 +195,24 @@ namespace VIETTEL.Report_Controllers.DuToan
         /// Lấy danh sách đơn vị dựa vào loại ngân sách, đợt dự toán, phòng ban
         /// </summary>
         /// <param name="ParentID"></param>
-        /// <param name="iID_MaDonVi">Mã đơn vị</param>
-        /// <param name="iID_MaDot">Đợt dự toán</param>
-        /// <param name="iID_MaPhongBan">Mã phòng ban</param>
+        /// <param name="maDonVi">Mã đơn vị</param>
+        /// <param name="maDot">Đợt dự toán</param>
+        /// <param name="maPhongBan">Mã phòng ban</param>
         /// <param name="sLNS">Loại ngân sách</param>
         /// <returns></returns>
-        public JsonResult LayDanhSachDonVi(String ParentID, String iID_MaDonVi, String iID_MaDot, String iID_MaPhongBan, String sLNS)
+        public JsonResult LayDanhSachDonVi(String ParentID, String maDonVi, String maDot, String maPhongBan, String sLNS)
         {
             String MaND = User.Identity.Name;
             String sViewPatch = "~/Views/DungChung/DonVi/DonVi_DanhSach.ascx";
 
-            DataTable dt = DuToan_ReportModels.laydtPhongBan_LNS_DonVi(MaND, iID_MaDot, iID_MaPhongBan, sLNS);
+            DataTable dt = DuToan_ReportModels.laydtPhongBan_LNS_DonVi(MaND, maDot, maPhongBan, sLNS);
 
-            if (String.IsNullOrEmpty(iID_MaDonVi))
+            if (String.IsNullOrEmpty(maDonVi))
             {
-                iID_MaDonVi = Guid.Empty.ToString();
+                maDonVi = Guid.Empty.ToString();
             }
 
-            DanhSachDonViModels Model = new DanhSachDonViModels(MaND, iID_MaDonVi, dt, ParentID);
+            DanhSachDonViModels Model = new DanhSachDonViModels(MaND, maDonVi, dt, ParentID);
             String strDonVi = HamChung.RenderPartialViewToStringLoad(sViewPatch, Model, this);
 
             return Json(strDonVi, JsonRequestBehavior.AllowGet);
