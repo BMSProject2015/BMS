@@ -5,6 +5,7 @@
 <%@ Import Namespace="System.Data.SqlClient" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
@@ -109,7 +110,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToan_ChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=1 }))
+                    using (Html.BeginForm("SearchSubmit", "DuToanChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=1 }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -170,7 +171,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-        using (Html.BeginForm("EditSubmit_Gom", "DuToan_ChungTu_BaoDam", new { ParentID = ParentID, sLNS1 = sLNS,iLan2="1" }))
+        using (Html.BeginForm("EditSubmit_Gom", "DuToan_ChungTuBaoDam", new { ParentID = ParentID, sLNS1 = sLNS,iLan2="1" }))
         {
 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1)%>

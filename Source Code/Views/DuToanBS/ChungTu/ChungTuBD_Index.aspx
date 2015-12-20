@@ -77,7 +77,7 @@
         if (iKyThuat == "1") sLNS = "1040100";
 
         string iID_MaNguon = Request.QueryString["iID_MaNguon"];
-        DataTable dtNguon = DuToanBS_ChungTuModels.getNguon();
+        DataTable dtNguon = DuToanBSChungTuModels.getNguon();
         SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
         //dtNguon.Dispose();
 
@@ -93,10 +93,10 @@
         if (checkTroLyTongHop) check = true;
 
         //Lấy danh sách chứng từ page hiện tại
-        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
+        DataTable dt = DuToanBSChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat, CurrentPage, Globals.PageSize);
 
         //Lấy số lượng tổng cộng chứng từ
-        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat).Rows.Count; 
+        double nums = DuToanBSChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao, iKyThuat).Rows.Count; 
         
         //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
@@ -142,7 +142,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -210,7 +210,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iKyThuat = iKyThuat }))
+                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new { ParentID = ParentID, sLNS1 = sLNS1, iKyThuat = iKyThuat }))
                     {       
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1)%>
@@ -398,8 +398,8 @@
                     {
                         if (checkTroLyTongHop && (LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeChiTieu, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])) || (LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])))))
                         {
-                            strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                            strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                            strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                            strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                         }
                         else
                         {
@@ -408,8 +408,8 @@
                                                 || (LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])))))
                                                 && check)
                             {
-                                strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                                strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                                strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                                strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                             }
                         }
                     }
@@ -417,16 +417,16 @@
                     {
                         if (checkTroLyTongHop && (LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeDuToan, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])) || (LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])))))
                         {
-                            strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                            strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                            strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                            strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                         }
                         else
                         {
                             if (LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND) &&
                                                LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeDuToan, Convert.ToInt32(R["iID_MaTrangThaiDuyet"])) || (LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, Convert.ToInt32(R["iID_MaTrangThaiDuyet"]))) && check)
                             {
-                                strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                                strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                                strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                                strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTu", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = sLNS1, MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, iKyThuat = iKyThuat }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                             }
                         }
                     }
@@ -436,19 +436,19 @@
                     <b><%=R["rownum"]%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1="104"}).ToString(), R["iID_MaPhongBanDich"], "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1="104"}).ToString(), R["iID_MaPhongBanDich"], "Detail", "")%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), R["sDSLNS"], "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), R["sDSLNS"], "Detail", "")%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach, iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTuChiTiet", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach, iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
                 </td>
                 <td align="left">
                     <%=HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"])%>
                 </td>
                 <td align="center">
-                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"")%>
+                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS1 = "104" }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"")%>
                 </td>
                 <td align="center">
                     <%=strEdit%>

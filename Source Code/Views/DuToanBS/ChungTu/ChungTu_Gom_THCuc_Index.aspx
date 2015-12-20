@@ -59,12 +59,12 @@
         
         //Lấy danh sách chứng từ TLTH để gom
         //DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopCucDuyet(MaND);
-        DataTable dtChungTuTLTH = DuToanBS_ChungTuModels.LayDanhSachChungTuDeGomTLTHCuc(MaND);
+        DataTable dtChungTuTLTH = DuToanBSChungTuModels.LayDanhSachChungTuDeGomTLTHCuc(MaND);
         //Lấy danh sách chứng từ theo page
-        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
+        DataTable dt = DuToanBSChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize);
         
         //Lấy số lượng tất cả chứng từ
-        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
+        double nums = DuToanBSChungTuModels.LayDanhSachChungTuTLTHCuc(MaND, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
         
         //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
@@ -103,7 +103,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID,  iLoai = iLoai }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new { ParentID = ParentID,  iLoai = iLoai }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -157,7 +157,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID}))
+                    using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBSChungTu", new { ParentID = ParentID}))
                     {
 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -335,17 +335,17 @@
                     String strDelete = "";
                     if (check && (Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) == 3))
                     {
-                        strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"]}).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                        strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTHCuc", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"], MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                        strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTHCuc", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"]}).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                        strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTHCuc", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"], MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                     }
-                    String strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"], bTLTH = 1,iloai=1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
+                    String strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"], bTLTH = 1,iloai=1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
             %>
             <tr <%=strColor %>>
                 <td align="center">
                     <b><%=R["rownum"]%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach,iloai=1,bTLTH=1,iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"] }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach,iloai=1,bTLTH=1,iID_MaChungTu = R["iID_MaChungTu_TLTHCuc"] }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
                 </td>
                 <td align="left">
                     <%=HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"])%>

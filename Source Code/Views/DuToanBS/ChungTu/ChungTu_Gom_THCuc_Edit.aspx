@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -24,12 +25,12 @@
         string[] arrChungTu = dsMaChungTuTLTH.Split(',');
         
         //Lấy thông tin chứng từ TLTHCuc
-        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTHCuc(maChungTuTLTHCuc);
+        NameValueCollection data = DuToanBSChungTuModels.LayThongTinChungTuTLTHCuc(maChungTuTLTHCuc);
         
         //Lấy danh sách chứng từ TLTH
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTHCuc(MaND, maChungTuTLTHCuc);
+        DataTable dtChungTuDuyet = DuToanBSChungTuModels.LayDanhSachChungTuDeSuaTLTHCuc(MaND, maChungTuTLTHCuc);
         int columnCount = 1;
-        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { iLoai =2});
+        string BackURL = Url.Action("Index", "DuToanBSChungTu", new { iLoai =2});
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -51,7 +52,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTHCuc }))
+        using (Html.BeginForm("ThemSuaChungTuTLTHCuc", "DuToanBSChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTHCuc }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

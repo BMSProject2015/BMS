@@ -65,13 +65,13 @@
         }
 
         //DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTu_TongHopDuyet(MaND, sLNS1);
-        DataTable dtChungTuDV = DuToanBS_ChungTuModels.LayDanhSachChungDeGomTLTH(MaND);
+        DataTable dtChungTuDV = DuToanBSChungTuModels.LayDanhSachChungDeGomTLTH(MaND);
         
         //Lấy danh sách chứng từ TLTH page hiện tại
-        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
+        DataTable dt = DuToanBSChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
         
         //Lấy số lượng tất cả chứng từ TLTH
-        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet).Rows.Count;
+        double nums = DuToanBSChungTuModels.LayDanhSachChungTuTLTH(iID_MaChungTu_TLTHCuc, MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet).Rows.Count;
         
         //Phân trang
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
@@ -111,7 +111,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("TimKiemChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, iLoai = iLoai }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new { ParentID = ParentID, iLoai = iLoai }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -167,7 +167,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu", new { ParentID = ParentID }))
+                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { ParentID = ParentID }))
                     {
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -220,12 +220,20 @@
                                                 {
                                                     if (i + c < dtChungTuDV.Rows.Count)
                                                     {
-                                                        strTen = Convert.ToString(dtChungTuDV.Rows[i + c]["sDSLNS"]).Substring(0, 7) + '-' +
+                                                        if (dtChungTuDV.Rows[i + c]["sDSLNS"].ToString().Length >= 7)
+                                                        {
+                                                            strTen = dtChungTuDV.Rows[i + c]["sDSLNS"].ToString().Substring(0, 7);
+                                                        }
+                                                        else
+                                                        {
+                                                            strTen = dtChungTuDV.Rows[i + c]["sDSLNS"].ToString().Substring(0, 3);
+                                                        }
+                                                        strTen = Convert.ToString(strTen + '-' +
                                                                 CommonFunction.LayXauNgay(
                                                                 Convert.ToDateTime(dtChungTuDV.Rows[i + c]["dNgayChungTu"])) + '-' +
                                                                 Convert.ToString(dtChungTuDV.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' +
                                                                 Convert.ToString(dtChungTuDV.Rows[i + c]["sNoiDung"]) + '-' +
-                                                                Convert.ToString(dtChungTuDV.Rows[i + c]["sLyDo"]);
+                                                                Convert.ToString(dtChungTuDV.Rows[i + c]["sLyDo"]));
                                                         strMa = Convert.ToString(dtChungTuDV.Rows[i + c]["iID_MaChungTu"]);
                                             %>
                                                 <td align="center" style="width: 40px;">
@@ -371,8 +379,8 @@
                     if (check && (Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) == maTrangThaiDVTrinhDuyet) ||
                         Convert.ToInt32(R["iID_MaTrangThaiDuyet"]) ==maTrangThaiTHCucTuChoi)
                     {
-                        strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTH", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"]}).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
-                        strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTH", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
+                        strEdit = MyHtmlHelper.ActionLink(Url.Action("SuaChungTuTLTH", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"]}).ToString(), "<img src='../Content/Themes/images/edit.gif' alt='' />", "Edit", "", "title=\"Sửa chứng từ\"");
+                        strDelete = MyHtmlHelper.ActionLink(Url.Action("XoaChungTuTLTH", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach }).ToString(), "<img src='../Content/Themes/images/delete.gif' alt='' />", "Delete", "", "title=\"Xóa chứng từ\"");
                     }
             %>
             <tr <%=strColor %>>
@@ -380,13 +388,13 @@
                     <b><%=R["rownum"]%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach, bTLTH = 1, iID_MaChungTu = R["iID_MaChungTu_TLTH"] }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { ChiNganSach = ChiNganSach, MaDotNganSach = MaDotNganSach, bTLTH = 1, iID_MaChungTu = R["iID_MaChungTu_TLTH"] }).ToString(), "Đợt ngày: " + NgayChungTu, "Detail", "")%></b>
                 </td>
                 <td align="left">
                     <%=HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"])%>
                 </td>
                 <td align="center">
-                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], bTLTH = 1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"")%>
+                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu_TLTH"], bTLTH = 1 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"")%>
                 </td>
                 <td align="center">
                     <%=strEdit%>

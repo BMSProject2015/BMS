@@ -25,11 +25,11 @@
         string[] arrChungTu = iID_MaChungTu_CT.Split(',');
 
         //Thông tin chứng từ TLTH
-        NameValueCollection data = DuToanBS_ChungTuModels.LayThongTinChungTuTLTH(maChungTuTLTH);
+        NameValueCollection data = DuToanBSChungTuModels.LayThongTinChungTuTLTH(maChungTuTLTH);
         
         //Danh sách chứng từ
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND, maChungTuTLTH);
-        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new {iLoai = 1});
+        DataTable dtChungTuDuyet = DuToanBSChungTuModels.LayDanhSachChungTuDeSuaTLTH(MaND, maChungTuTLTH);
+        string BackURL = Url.Action("Index", "DuToanBSChungTu", new {iLoai = 1});
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -51,7 +51,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTH }))
+        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTH }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

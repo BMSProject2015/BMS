@@ -89,13 +89,13 @@
         }
         //kiem tra nguoi dung co phan tro ly phong ban
         Boolean CheckNDtao = false;
-        DataTable dt = DuToanBS_ChungTuModels.LayDSChungTuKyThuatBia(MaND);
+        DataTable dt = DuToanBSChungTuModels.LayDSChungTuKyThuatBia(MaND);
 
         //double nums = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Count(iID_MaChungTu_TLTH, bTLTH, iID_MaPhongBan, sLNS, "", MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao);
-        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
+        double nums = DuToanBSChungTuModels.LayDanhSachChungTu(iID_MaChungTu_TLTH, sLNS, MaDotNganSach, MaND, iSoChungTu, sTuNgay, sDenNgay, sLNS_TK, iID_MaTrangThaiDuyet, CheckNDtao).Rows.Count;
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
         String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
-        String strThemMoi = Url.Action("Edit", "DuToanBS_ChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
+        String strThemMoi = Url.Action("SuaChungTu", "DuToanBSChungTu", new { MaDotNganSach = MaDotNganSach, sLNS = sLNS, ChiNganSach = ChiNganSach });
 
         String sKyThuat = "";
         if (iKyThuat == "1")
@@ -180,11 +180,11 @@
                     String strduyet = "", strTuChoi;
 
                     String NgayChungTu = CommonFunction.LayXauNgay(Convert.ToDateTime(R["dNgayChungTu"]));
-                    String strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = R["iID_MaChungTu"], iLoai = 4 }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
+                    String strURL = MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], iLoai = 4, sLNS ="104" }).ToString(), "<img src='../Content/Themes/images/btnSetting.png' alt='' />", "Detail", null, "title=\"Xem chi tiết chứng từ\"");
                     String strURLTuChoi = "", strTex = "";
                     if (LuongCongViecModel.KiemTra_NguoiDungDuocDuyet(MaND, PhanHeModels.iID_MaPhanHeChiTieu) && Convert.ToInt16(R["iID_MaTrangThaiDuyet"]) == LuongCongViecModel.layTrangThaiDuyet(PhanHeModels.iID_MaPhanHeChiTieu))
                     {
-                        strURLTuChoi = Url.Action("TuChoi", "DuToanBS_ChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaChungTu = R["iID_MaChungTu"] });
+                        strURLTuChoi = Url.Action("TuChoi", "DuToanBSChungTuChiTiet", new { ChiNganSach = ChiNganSach, iID_MaChungTu = R["iID_MaChungTu"] });
                         strTex = "Từ chối";
 
                     }
@@ -194,8 +194,8 @@
                         DaDuyet = true;
                     }
                     if (DaDuyet == false)
-                        strduyet = MyHtmlHelper.ActionLink(Url.Action("TrinhDuyet", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_up.png' alt='' />", "", "", "title=\"Duyệt chứng từ\"");
-                    strTuChoi = MyHtmlHelper.ActionLink(Url.Action("TuChoi", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_down.png' alt='' />", "", "", "title=\"Từ chối chứng từ\""); 
+                        strduyet = MyHtmlHelper.ActionLink(Url.Action("TrinhDuyet", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_up.png' alt='' />", "", "", "title=\"Duyệt chứng từ\"");
+                    strTuChoi = MyHtmlHelper.ActionLink(Url.Action("TuChoi", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = sLNS, iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_down.png' alt='' />", "", "", "title=\"Từ chối chứng từ\""); 
                     
             %>
             <tr>
@@ -203,7 +203,7 @@
                     <b><%=STT%></b>
                 </td>
                 <td align="center">
-                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { iID_MaChungTu = R["iID_MaChungTu"],iLoai=4 }).ToString(),"Đợt ngày: " +  NgayChungTu, "Detail", "")%></b>
+                    <b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"],iLoai=4 }).ToString(),"Đợt ngày: " +  NgayChungTu, "Detail", "")%></b>
                 </td>
                 <td align="left">
                     <%=HttpUtility.HtmlEncode(dt.Rows[i]["sNoiDung"])%>

@@ -6,6 +6,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
 </asp:Content>
@@ -59,7 +60,7 @@
         dtTrangThai.Rows[0]["sTen"] = "-- Chọn trạng thái --";
         SelectOptionList slTrangThai = new SelectOptionList(dtTrangThai, "iID_MaTrangThaiDuyet", "sTen");
         dtTrangThai.Dispose();
-        DataTable dtChungTuDuyet = DuToanBS_ChungTuModels.getDanhSachChungTuNganhKyThuatChuyenBKhac(MaND);
+        DataTable dtChungTuDuyet = DuToanBSChungTuModels.getDanhSachChungTuNganhKyThuatChuyenBKhac(MaND);
         string[] arrChungTu = new String[2];
         if (String.IsNullOrEmpty(page) == false)
         {
@@ -71,8 +72,8 @@
         if (check) CheckNDtao = true;
 
         //DataTable dt = DuToanBS_ChungTuModels.Get_DanhSachChungTu_Gom(iKyThuat,iLoai,"",iID_MaPhongBan, MaND, sTuNgay, sDenNgay,iID_MaTrangThaiDuyet, CheckNDtao, CurrentPage, Globals.PageSize,sLNS);
-        DataTable dt = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
-        double nums = DuToanBS_ChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize).Rows.Count;
+        DataTable dt = DuToanBSChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize);
+        double nums = DuToanBSChungTuModels.LayDanhSachChungTuTLTH("", MaND, CheckNDtao, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, CurrentPage, Globals.PageSize).Rows.Count;
         int TotalPages = (int)Math.Ceiling(nums / Globals.PageSize);
         string strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new { SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x }));
 
@@ -108,7 +109,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("SearchSubmit", "DuToanBS_ChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=1 }))
+                    using (Html.BeginForm("SearchSubmit", "DuToanBSChungTu", new { ParentID = ParentID, sLNS = sLNS,iLoai=1 }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -162,7 +163,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("EditSubmit_GomNhanBKhac", "DuToanBS_ChungTu_BaoDam", new {ParentID = ParentID, sLNS1 = sLNS}))
+                    using (Html.BeginForm("EditSubmit_GomNhanBKhac", "DuToanBSChungTu_BaoDam", new {ParentID = ParentID, sLNS1 = sLNS}))
                     {
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>

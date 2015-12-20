@@ -16,7 +16,7 @@
         string sLNS1 = Convert.ToString(ViewData["sLNS1"]);
         string MaPhongBanNguoiDung = NganSach_HamChungModels.MaPhongBanCuaMaND(UserID);
 
-        DataTable dtChungTu = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
+        DataTable dtChungTu = DuToanBSChungTuModels.LayChungTu(MaChungTu);
         string dNgayChungTu = "";
         string sNoiDung = "";
         if (dtChungTu.Rows.Count > 0)
@@ -28,9 +28,9 @@
         {
             dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
         }
-        string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1 });
+        string BackURL = Url.Action("Index", "DuToanBSChungTu", new { sLNS1 = sLNS1 });
 
-        using (Html.BeginForm("ThemSuaChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1 }))
+        using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1 }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>
@@ -86,11 +86,11 @@
                                         <tr>
                                             <td width="65%" class="td_form2_td5">&nbsp;</td>   
                                             <td width="30%" align="right" class="td_form2_td5">
-                                                <input type="submit" class="button" id="Submit1" value="Lưu" />
+                                                <input type="submit" class="button" id="btLuu" value="Lưu" />
                                             </td>          
                                             <td width="5px">&nbsp;</td>          
                                             <td class="td_form2_td5">
-                                                <input class="button" type="button" value="Hủy" onclick="Huy()" />
+                                                <input class="button" type="button" id="btHuy" value="Hủy" onclick="Huy()" />
                                             </td>
                                         </tr>
                                     </table>
