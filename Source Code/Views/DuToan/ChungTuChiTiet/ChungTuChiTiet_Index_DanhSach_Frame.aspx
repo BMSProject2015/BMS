@@ -345,5 +345,10 @@
         }
     </script>
     <div id="idDialog" style="display: none;"></div>
+    <div id="dvText" class="popup_block">
+        <img src="../../../Content/ajax-loader.gif" /><br />
+        <p>
+            Hệ thống đang thực hiện yêu cầu...</p>
+    </div>
         <%} %>
 </asp:Content>
