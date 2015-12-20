@@ -40,7 +40,13 @@
     }
     Boolean LayTheoMaNDTao = false;
     if (LuongCongViecModel.KiemTra_TroLyPhongBan(MaND)) LayTheoMaNDTao = true;
-    String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
+    string MaPhongBan = "";
+    DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
+    if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+    {
+        MaPhongBan = Convert.ToString(dtPhongBan.Rows[0]["sKyHieu"]);
+        dtPhongBan.Dispose();
+    }
     DataTable dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(QuyetToanModels.iID_MaPhanHeQuyetToan);
     DataTable dt = QuyetToan_ChungTuModels.Get_DanhSachChungTu(MaPhongBan, Loai, MaND, MaDonVi, iSoChungTu, sTuNgay, sDenNgay, iID_MaTrangThaiDuyet, sThangQuy, LayTheoMaNDTao, CurrentPage, Globals.PageSize);
 
