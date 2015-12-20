@@ -54,6 +54,7 @@
             int iID_MaTrangThaiDuyet_TuChoi = QuyetToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TuChoi(MaND, iID_MaChungTu);
             int iID_MaTrangThaiDuyet_TrinhDuyet = QuyetToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaChungTu);
     %>
+   
     <div class="box_tong">
         <style>
             .popup_block
@@ -100,10 +101,6 @@
                         }
                     %>
                 </div>
-                <%
-                    if (bang.ChiDoc == false)
-                    {
-                %>
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" class="table_form2">
                     <tr>
                         <td>
@@ -111,57 +108,58 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="right" style="width: 40%; padding-right: 10px;">
+                        <td align="right" style="padding-right:10px;width:40%;>
+                        </td>
+                    <%
+                    if (bang.ChiDoc == false)
+                    {
+                    %>
+                        <td align="right" style="width: 6%; padding-right: 10px;">
                             <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();"
                                 value="<%=NgonNgu.LayXau("Thực hiện")%>" />
                         </td>
-                        <td align="right" style="padding-right: 10px;">
-                            <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
+                        <%
+                        if (iID_MaTrangThaiDuyet_TuChoi > 0)
+                        {%>
+                        <td align="right" style="padding-right:10px;width:6%">        
+                            <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
+                                <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "QuyetToan_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
+                            </div>
                         </td>
-                        <td align="right" style="padding-right: 10px;">
+                        <%
+                        }
+                        if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
+                        {%>
+                        <td align="right" style="padding-right:10px;width:6%">        
+                            <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
+                                <%= Ajax.ActionLink("Trình Duyệt", "Index", "NhapNhanh", new { id = "QuyetToan_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
+                            </div>
+                        </td>
+                        <%
+                        }%>
+                    <%
+                    }
+                    %>
+                    <td align="right" style="padding-right: 10px;width:6%">
                             <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
                                 <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "QUYETTOAN_TuyChinh", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                             </div>
                         </td>
-                        <td style="padding-right: 10px;">
+                        <td style="padding-right: 10px;width:6%">
                             <div onclick="OnInit_CT_NEW(700, 'Báo cáo in kiểm');">
                                 <%= Ajax.ActionLink("In kiểm", "Index", "NhapNhanh", new { id = "QUYETTOAN_BAOCAOINKIEM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                             </div>
                         </td>
-                        <td style="padding-right: 10px;">
+                        <td style="padding-right: 10px;width:6%">
                             <div onclick="OnInit_CT_NEW(700, 'Thông tri');">
                                 <%= Ajax.ActionLink("Thông tri", "Index", "NhapNhanh", new { id = "QUYETTOAN_BAOCAOTHONGTRI", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                             </div>
                         </td>
-                        <td align="right" style="padding-right: 10px; width: 40%;">
-                        </td>
-                        <%--  <td align="left">
-                <%
-                if (iID_MaTrangThaiDuyet_TuChoi > 0)
-                {
-                    %>
-                    <div style="float: left; padding-right: 10px;">
-                        <button class='button' style="float:left;"  onclick="javascript:return Bang_HamTruocKhiKetThuc(1);">Từ chối</button>
-                    </div>
-                    <%
-                }
-                %>
-                <%
-                if (iID_MaTrangThaiDuyet_TrinhDuyet > 0)
-                {
-                    String TrinhDuyet = "Trình duyệt";
-                    if (LuongCongViecModel.KiemTra_ThuTruong(MaND))
-                    {
-                        TrinhDuyet = "Phê duyệt";
-                    }
-                    %>
-                    <div style="float: left;">
-                        <button class='button' style="float:left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);"><%=TrinhDuyet %></button>
-                    </div>
-                    <%
-                }
-                %>  
-            </td>--%>
+                    <td align="right" style="padding-right: 10px;width:6%">
+                        <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
+                    </td>
+                    <td align="right" style="padding-right:10px;width:40%;">
+                    </td>
                     </tr>
                     <tr>
                         <td>
@@ -169,9 +167,7 @@
                         </td>
                     </tr>
                 </table>
-                <%
-                    }
-                %>
+               
                 <%
 //dtChungTuChiTiet_TongCong.Dispose();
                 %>
@@ -197,7 +193,24 @@
      $("#btnLuu").click(function () {
            ShowPopupThucHien();
         });
+    $('#btnDuyet').live("click", function () {
+            Bang_GanMangGiaTri_Bang_arrGiaTri();
+            if (document.getElementById("idAction")) document.getElementById("idAction").value = 2;
+            if (document.getElementById("sLyDo")) {
+                document.getElementById("sLyDo").value = document.getElementById("DuToan_sLyDo1").value;
+            }
 
+            document.getElementById("formDuyet").submit();
+        });
+
+    $('#btnTuChoi').live("click", function () {
+        Bang_GanMangGiaTri_Bang_arrGiaTri();
+        if (document.getElementById("idAction")) document.getElementById("idAction").value = 1;
+        if (document.getElementById("sLyDo")) {
+            document.getElementById("sLyDo").value = document.getElementById("DuToan_sLyDo1").value;
+        }
+        document.getElementById("formDuyet").submit();
+    });
     function Huy() {
         window.parent.location.href = '<%=BackURL %>';
     }
