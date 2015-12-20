@@ -653,7 +653,7 @@ namespace VIETTEL.Controllers.QuyetToan
             cmd.Dispose();
 
             int iID_MaTrangThaiTuChoi = QuyetToan_ChungTuChiTietModels.Get_iID_MaTrangThaiDuyet_TrinhDuyet(MaND, iID_MaChungTu);
-            return RedirectToAction("Index", "QuyetToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
+            return RedirectToAction("ChungTuChiTiet_Frame", "QuyetToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
         }
 
         [Authorize]
@@ -686,7 +686,7 @@ namespace VIETTEL.Controllers.QuyetToan
             QuyetToan_ChungTuModels.UpdateRecord(iID_MaChungTu, cmd.Parameters, MaND, Request.UserHostAddress);
             cmd.Dispose();
 
-            return RedirectToAction("Index", "QuyetToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
+            return RedirectToAction("ChungTuChiTiet_Frame", "QuyetToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
         }
 
         //TuChoi khi da duyet
