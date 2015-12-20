@@ -8,13 +8,34 @@ namespace VIETTEL.Models
 {
     public class CapPhat_DonVi_BangDuLieu : BangDuLieu
     {
+        // loai hien thi chung tu chi tiet: tat ca, cap phat, chua cap phat
+        public static string MALOAI = "TATCA";
+        
+        /// <summary>
+        /// Thiết lập hiển thị bảng dữ liệu
+        /// </summary>
+        public static void ThietLapHienThi(int option)
+        { 
+            switch(option)
+            {
+                case 0: MALOAI = "TATCA";
+                    break;
+                case 1: MALOAI = "CAPPHAT";
+                    break;
+                case 2: MALOAI = "CHUACAPPHAT";
+                    break;
+                default: MALOAI = "TATCA";
+                    break;
+            }
+            
+        }
         /// <summary>
         /// Hàm khởi tạo
         /// </summary>
         /// <param name="iID_MaChungTu"></param>
         /// <param name="MaND">Mã người dùng</param>
         /// <param name="IPSua">IP của máy yêu cầu</param>
-        public CapPhat_DonVi_BangDuLieu(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem, String MaND, String IPSua)
+        public CapPhat_DonVi_BangDuLieu(String iID_MaCapPhat, Dictionary<String, String> arrGiaTriTimKiem,String sMaLoai, String MaND, String IPSua)
         {
             this._iID_Ma = iID_MaCapPhat;
             this._MaND = MaND;
@@ -58,18 +79,77 @@ namespace VIETTEL.Models
 
             _dtChiTiet = CapPhat_ChungTuChiTiet_DonViModels.LayDtCapPhatChiTietDonVi(_iID_Ma, arrGiaTriTimKiem,MaND);
             _dtChiTiet_Cu = _dtChiTiet.Copy();
-            DienDuLieu();
+            DienDuLieu(sMaLoai);
         }
 
         /// <summary>
         /// Hàm điền dữ liệu
         /// Mục đích: Điền tất cả thông tin vào các tham số của đối tượng Bảng dữ liệu
         /// </summary>
-        protected void DienDuLieu()
+        protected void DienDuLieu(String sMaLoai)
         {
+            // lấy danh sách trường tiền chứng từ
+            String[] arrDSTruongTien = MucLucNganSachModels.strDSTruongTien.Split(',');
             if (_arrDuLieu == null)
             {
-                CapNhapHangTongCong();
+                if (sMaLoai.ToUpper() == "CAPPHAT")
+                {
+                    CapNhapHangTongCong();
+
+                    if (sMaLoai == "CapPhat")
+                    {
+                        int count = dtChiTiet.Rows.Count - 1;
+                        bool ok = true;
+                        for (int i = count; i >= 0; i--)
+                        {
+                            ok = false;
+                            for (int j = 0; j < arrDSTruongTien.Length; j++)
+                            {
+                                if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) && Convert.ToDecimal(_dtChiTiet.Rows[i][arrDSTruongTien[j]]) > 0)
+                                {
+                                    ok = true;
+                                }
+                                //neu ma phong ban nguoi dung khac ma phong ban tao
+                            }
+
+                            //Loai bo het dong khong co du lieu
+                            if (ok == false)
+                            {
+                                _dtChiTiet.Rows.RemoveAt(i);
+                            }
+
+                        }
+
+                    }
+                }
+                else if (sMaLoai.ToUpper() == "CHUACAPPHAT")
+                {
+                    int count = dtChiTiet.Rows.Count - 1;
+                    bool ok = true;
+
+                    for (int i = count; i >= 0; i--)
+                    {
+                        ok = false;
+                        for (int j = 0; j < arrDSTruongTien.Length; j++)
+                        {
+                            if ((!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) && Convert.ToDecimal(_dtChiTiet.Rows[i][arrDSTruongTien[j]]) > 0))
+                            {
+                                ok = true;
+                            }
+                        }
+
+                        //Loai bo het dong  co du lieu
+                        if (ok)
+                        {
+                            _dtChiTiet.Rows.RemoveAt(i);
+                        }
+
+                    }
+                    CapNhapHangTongCong();
+                }
+                else
+                    CapNhapHangTongCong();
+
                 CapNhapDanhSachMaHang();
                 CapNhapDanhSachMaCot_Fixed();
                 CapNhapDanhSachMaCot_Slide();

@@ -62,5 +62,30 @@ namespace VIETTEL.Models
             }
             return vR;
         }
+        /// <summary>
+        /// Lay danh sach tuy chinh chung tu chi tiet cap phat
+        /// </summary>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        public static DataTable LayDanhSachTuyChinhCapPhat()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("MaLoai", typeof(String));
+            dt.Columns.Add("sTen", typeof(String));
+            DataRow dr = dt.NewRow();
+            dr["MaLoai"] = "TatCa";
+            dr["sTen"] = "Tất cả mục lục ngân sách";
+            dt.Rows.InsertAt(dr, 0);
+            dr = dt.NewRow();
+            dr["MaLoai"] = "CapPhat";
+            dr["sTen"] = "Hiện dữ liệu cấp phát đã nhập";
+            dt.Rows.InsertAt(dr, 1);
+            dr = dt.NewRow();
+            dr["MaLoai"] = "ChuaCapPhat";
+            dr["sTen"] = "Hiện dữ liệu cấp phát chưa nhập";
+            dt.Rows.InsertAt(dr, 2);
+            dt.Dispose();
+            return dt;
+        }
     }
 }
