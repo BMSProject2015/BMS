@@ -27,8 +27,13 @@
     {
         arrGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
     }
-
-    CapPhat_DonVi_BangDuLieu bang = new CapPhat_DonVi_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem, MaND, IPSua);
+    String sMaLoai = Convert.ToString(ViewData["MaLoai"]);
+    if (String.IsNullOrEmpty(sMaLoai))
+        sMaLoai = CapPhat_DonVi_BangDuLieu.MALOAI;
+    else
+        CapPhat_DonVi_BangDuLieu.MALOAI = sMaLoai;
+    
+    CapPhat_DonVi_BangDuLieu bang = new CapPhat_DonVi_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem,sMaLoai, MaND, IPSua);
 
     DataTable dtCapPhat = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
     String Loai = Convert.ToString(dtCapPhat.Rows[0]["iLoai"]);
@@ -90,8 +95,14 @@ if (bang.ChiDoc == false)
     <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td align="right" style="padding-right:10px;width:30%">
-                <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Thực hiện")%>"/>
+            <td align="left" style="padding-left:10px;width:40%" ></td>
+            <td align="right" style="padding-right:10px;width:6%">
+                <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
+                    <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "CAPPHATDONVI_TUYCHINH", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                </div>
+            </td>
+            <td align="right" style="padding-right:10px;width:6%">
+                <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Lưu")%>"/>
             </td>
             <td align="center" style="width:1%">
                 <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
@@ -123,7 +134,7 @@ if (bang.ChiDoc == false)
                     <%--<div style="float: left;">
                         <button class='button' style="float:left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);"><%=TrinhDuyet %></button>
                     </div>--%>
-                    <td align="left" style="padding-left:10px;width:30%">
+                    <td align="left" style="padding-left:10px;width:6%">
                         <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
                             <%= Ajax.ActionLink(TrinhDuyet, "Index", "NhapNhanh", new { id = "CapPhatDonVi_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                         </div>
@@ -131,6 +142,7 @@ if (bang.ChiDoc == false)
                     <%
                 }
                 %>  
+                <td align="left" style="padding-left:10px;width:40%" ></td>
         </tr>
     </table>                    
 <%
@@ -143,9 +155,16 @@ if (bang.ChiDoc == true)
     <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
         <tr><td>&nbsp;</td></tr>
         <tr>
+            <td align="left" style="padding-left:10px;width:40%" ></td>
+            <td align="right" style="padding-right:10px;width:6%">
+                <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
+                    <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "CAPPHATDONVI_TUYCHINH", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                </div>
+            </td>
             <td align="center">
                 <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
             </td>
+            <td align="left" style="padding-left:10px;width:40%" ></td>
         </tr>
         <tr><td>&nbsp;</td></tr>
     </table>                    

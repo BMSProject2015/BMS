@@ -45,6 +45,8 @@ String strTenDonVi = DonViModels.Get_TenDonVi(Convert.ToString(data["iID_MaDonVi
                         <td>
                             <span>Thông tin cấp phát cho đơn vị <%=strTenDonVi%></span>
                         </td>
+                        <td align="left"><span>F10 - Lưu</span></td>
+                        <td>&nbsp;</td>
                     </tr>
                 </table>
             </div>
