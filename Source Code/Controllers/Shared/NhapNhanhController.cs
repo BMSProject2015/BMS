@@ -203,6 +203,12 @@ namespace VIETTEL.Controllers.Shared
                 case "QUYETTOAN_BAOCAOTHONGTRI":
                     ViewData["Partial_View"] = "~/Views/QuyetToan/ChungTuChiTiet/QuyetToan_BaoCaoThongTri.aspx";
                     break;
+                case "QUYETTOAN_TRINHDUYETCHITIET":
+                    ViewData["Partial_View"] = "~/Views/QuyetToan/ChungTuChiTiet/QuyetToan_TrinhDuyetChiTiet.aspx";
+                    break;
+                case "QUYETTOAN_TUCHOICHITIET":
+                    ViewData["Partial_View"] = "~/Views/QuyetToan/ChungTuChiTiet/QuyetToan_TuChoiChiTiet.aspx";
+                    break;
                 //Du Toan
                 case "DUTOAN_TRINHDUYETCHITIET":
                     ViewData["Partial_View"] = "~/Views/DuToan/ChungTuChiTiet/DuToan_TrinhDuyetChiTiet.aspx";
@@ -245,10 +251,10 @@ namespace VIETTEL.Controllers.Shared
                     ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
                     break;
                 case "CAPPHAT_TUCHOICHITIET":
-                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TuChoiChungTu.aspx";
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTuChiTiet/CapPhat_TrinhDuyetChungTu.aspx";
                     break;
                 case "CAPPHATDONVI_TUCHOICHITIET":
-                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TuChoiChungTu.aspx";
+                    ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TrinhDuyetChungTu.aspx";
                     break;
                 case "CAPPHATDONVI_TRINHDUYETCHITIET":
                     ViewData["Partial_View"] = "~/Views/CapPhat/ChungTu_DonVi/CapPhatDonVi_TrinhDuyetChungTu.aspx";
@@ -261,7 +267,7 @@ namespace VIETTEL.Controllers.Shared
                     ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_TuChoiChungTu.aspx";
                     break;
                 case "DUTOANBS_BAOCAOINKIEM_GOM":
-                    ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_BaoCaoInKiem_gom.aspx";
+                    ViewData["Partial_View"] = "~/Report_Views/DuToanBS/rptDuToan_BaoCaoInKiem_gom.aspx";
                     break;
                 case "DUTOANBS_TRINHDUYETCHUNGTU_GOM":
                     ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_TrinhDuyetChungTu_Gom.aspx";
@@ -279,7 +285,7 @@ namespace VIETTEL.Controllers.Shared
                     ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_TrinhDuyetChiTiet.aspx";
                     break;
                 case "DUTOANBS_BAOCAOINKIEM":
-                    ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_BaoCaoInKiem.aspx";
+                    ViewData["Partial_View"] = "~/Report_Views/DuToanBS/rptDuToan_BaoCaoInKiem.aspx";
                     break;
                 case "DUTOANBS_TUYCHINH":
                     ViewData["Partial_View"] = "~/Views/DuToanBS/ChungTuChiTiet/DuToan_TuyChinh.aspx";
