@@ -35,6 +35,8 @@ namespace VIETTEL.Controllers.CapPhat
         /// <returns></returns>
         public ActionResult CapPhatChiTiet_Frame(String iID_MaCapPhat)
         {
+            string sMaLoai = Request.Form["CapPhat_MaLoai"];
+            ViewData["MaLoai"] = sMaLoai;
             return View(VIEW_ROOTPATH + VIEW_CAPPHAT_DONVI_INDEX_DANHSACH_FRAME);
         }
         /// <summary>
@@ -45,16 +47,20 @@ namespace VIETTEL.Controllers.CapPhat
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TimKiemChungTu(String ParentID, String DonVi)
+        public ActionResult TimKiemChungTu(String ParentID, String DonVi, String Loai)
         {
             String TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
             String DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
             String SoCapPhat = Request.Form[ParentID + "_iSoCapPhat"];
             String iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
             String iDM_MaLoaiCapPhat = Request.Form[ParentID + "_iDM_MaLoaiCapPhat"];
+            String iID_MaTinhChatCapThu = Request.Form[ParentID + "_iID_MaTinhChatCapThu"];
+            String iID_MaDonVi = Request.Form[ParentID + "_iID_MaDonVi"];
+            String sLNS = Request.Form[ParentID + "_sLNS"];
+
             String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(User.Identity.Name);
 
-            return RedirectToAction("Index", "CapPhat_ChungTu_Donvi", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, DonVi = DonVi });
+            return RedirectToAction("Index", "CapPhat_ChungTu_Donvi", new { MaPhongBan = MaPhongBan, SoCapPhat = SoCapPhat, TuNgay = TuNgay, DenNgay = DenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, iDM_MaLoaiCapPhat = iDM_MaLoaiCapPhat, iID_MaTinhChatCapThu = iID_MaTinhChatCapThu, iID_MaDonVi = iID_MaDonVi,sLNS = sLNS, Loai = Loai });
         }
 
         /// <summary>
@@ -157,6 +163,8 @@ namespace VIETTEL.Controllers.CapPhat
             String iID_MaDonVi = Convert.ToString(Request.Form[ParentID + "_iID_MaDonVi"]);
             //Chi tiết đến
             String sLoai = Convert.ToString(Request.Form[ParentID + "_iID_Loai"]);
+            if (String.IsNullOrEmpty(sLoai))
+                sLoai = "sNG";
             //Ngày chứng từ
             String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayCapPhat"]);
             //Loại ngân sách
@@ -322,6 +330,10 @@ namespace VIETTEL.Controllers.CapPhat
         [Authorize]
         public ActionResult ChungTuChiTiet()
         {
+            int opt = 0;
+            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["HienThiOpt"])))
+                 opt = Convert.ToInt32(Request.QueryString["HienThiOpt"]);
+            CapPhat_DonVi_BangDuLieu.ThietLapHienThi(opt);
             return View(VIEW_ROOTPATH + VIEW_CHUNGTU_DONVI_CHUNGTUCHITIET_INDEX);
         }
         /// <summary>
