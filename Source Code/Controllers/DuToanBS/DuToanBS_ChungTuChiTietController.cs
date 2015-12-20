@@ -13,7 +13,7 @@ using VIETTEL.Models.DuToanBS;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
-    public class DuToanBS_ChungTuChiTietController : Controller
+    public class DuToanBSChungTuChiTietController : Controller
     {
         //
         // GET: /DuToanBS_ChungTuChiTiet/
@@ -26,6 +26,8 @@ namespace VIETTEL.Controllers.DuToanBS
         private const string PERMITION_MESSAGE = "PermitionMessage";
         private const string VIEW_CHUNGTU_CHITIET_INDEX = "ChungTuChiTiet_Index.aspx";
         private const string VIEW_CHUNGTU_CHITIET_FRAME = "ChungTuChiTiet_Index_DanhSach_Frame.aspx";
+
+        #region Index
         /// <summary>
         /// Index
         /// </summary>
@@ -50,23 +52,10 @@ namespace VIETTEL.Controllers.DuToanBS
             ViewData["iChiTapTrung"] = iChiTapTrung;
 
             return View(sViewPath + VIEW_CHUNGTU_CHITIET_INDEX);
-        }
+        } 
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="iID_MaChungTu"></param>
-        /// <returns></returns>
-        [Authorize]
-        public ActionResult Index_Gom(string iID_MaChungTu)
-        {
-
-            ViewData["iID_MaChungTu"] = iID_MaChungTu;
-            //loai gom
-            ViewData["iLoai"] = 1;
-            return View(sViewPath + "ChungTuChiTiet_Index.aspx");
-        }
-
+        #region Lưới chứng từ chi tiết
         /// <summary>
         /// Lưới chứng từ chi tiết
         /// </summary>
@@ -76,7 +65,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="iChiTapTrung"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult ChungTuChiTiet_Frame(string MaLoai, string iLoai, string iChiTapTrung)
+        public ActionResult ChungTuChiTietFrame(string MaLoai, string iLoai, string iChiTapTrung)
         {
             //Kiểm tra quyền của người dùng với chức năng
             if (BaoMat.ChoPhepLamViec(User.Identity.Name, BANG_CHUNGTU_CHITIET, DETAIL) == false)
@@ -91,238 +80,63 @@ namespace VIETTEL.Controllers.DuToanBS
             ViewData["iLoai"] = iLoai;
             ViewData["iChiTapTrung"] = iChiTapTrung;
             return View(sViewPath + VIEW_CHUNGTU_CHITIET_FRAME);
-        }
-        
+        } 
+        #endregion
+
+        #region Cập nhật chứng từ chi tiết
+        /// <summary>
+        /// Cập nhật chứng từ chi tiết
+        /// </summary>
+        /// <param name="ChiNganSach">Chi ngân sách</param>
+        /// <param name="iID_MaChungTu">Mã chứng từ</param>
+        /// <param name="sLNS">Loại ngân sách</param>
+        /// <param name="iLoai">Loại</param>
+        /// <param name="iChiTapTrung">Chi tập trung</param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult DetailSubmit(string ChiNganSach, string iID_MaChungTu, string sLNS,string iLoai,string iChiTapTrung)
+        public ActionResult CapNhatChungTuChiTiet(string ChiNganSach, string iID_MaChungTu, string sLNS, string iLoai, string iChiTapTrung)
         {
             NameValueCollection data;
             if (iLoai == "4")
             {
-                 data = DuToanBS_ChungTuModels.LayThongTinChungTuKyThuatLan2(iID_MaChungTu);
+                data = DuToanBSChungTuModels.LayThongTinChungTuKyThuatLan2(iID_MaChungTu);
             }
             else
             {
-                data = DuToanBS_ChungTuModels.LayThongTinChungTu(iID_MaChungTu);
+                data = DuToanBSChungTuModels.LayThongTinChungTu(iID_MaChungTu);
             }
+
             string MaND = User.Identity.Name;
-            string TenBangChiTiet = "DTBS_ChungTuChiTiet";
+            string ipAddress = Request.UserHostAddress;
+            //Lấy thông tin của Bang
             string idXauMaCacHang = Request.Form["idXauMaCacHang"];
             string idXauMaCacCot = Request.Form["idXauMaCacCot"];
             string idXauGiaTriChiTiet = Request.Form["idXauGiaTriChiTiet"];
             string idXauCacHangDaXoa = Request.Form["idXauCacHangDaXoa"];
             string idXauDuLieuThayDoi = Request.Form["idXauDuLieuThayDoi"];
             string idMaMucLucNganSach = Request.Form["idMaMucLucNganSach"];
-            string MaLoai = Request.Form["DuToan_MaLoai1"];
-            string DSTruong = "iID_MaDonVi," + MucLucNganSachModels.strDSTruong;
-            string[] arrDSTruong = DSTruong.Split(',');
-            Dictionary<string, string> dicGiaTriTimKiem = new Dictionary<string, string>();
-            for (int i = 0; i < arrDSTruong.Length; i++)
-            {
-                dicGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
-            }
+            //Cập nhật vào database
+            DuToanBSChungTuChiTietModels.CapNhatChungTuChiTiet(iID_MaChungTu, iLoai, iChiTapTrung, MaND, idXauDuLieuThayDoi, ipAddress, idMaMucLucNganSach, idXauMaCacHang, idXauCacHangDaXoa, idXauMaCacCot, idXauGiaTriChiTiet);
 
-            string[] arrMaMucLucNganSach = idMaMucLucNganSach.Split(',');
-            string[] arrMaHang = idXauMaCacHang.Split(',');
-            string[] arrHangDaXoa = idXauCacHangDaXoa.Split(',');
-            string[] arrMaCot = idXauMaCacCot.Split(',');
-            string[] arrHangGiaTri = idXauGiaTriChiTiet.Split(new string[] { CapPhat_BangDuLieu.DauCachHang }, StringSplitOptions.None);
-            string maChungTuChiTiet;
-
-            //Luu cac hang sua
-            String[] arrHangThayDoi = idXauDuLieuThayDoi.Split(new string[] { PhanBo_ChiTieu_BangDuLieu.DauCachHang }, StringSplitOptions.None);
-            for (int i = 0; i < arrMaHang.Length; i++)
-            {
-                if (arrMaHang[i] != "")
-                {
-                    maChungTuChiTiet = arrMaHang[i].Split('_')[0];
-
-                    //Trường hợp delete.
-                    if (arrHangDaXoa[i] == "1")
-                    {
-                        //Lưu các hàng đã xóa
-                        if (maChungTuChiTiet != "")
-                        {
-                            //Dữ liệu đã có
-                            Bang bang = new Bang(TenBangChiTiet);
-                            bang.DuLieuMoi = false;
-                            bang.GiaTriKhoa = maChungTuChiTiet;
-                            bang.CmdParams.Parameters.AddWithValue("@iTrangThai", 0);
-                            bang.MaNguoiDungSua = User.Identity.Name;
-                            bang.IPSua = Request.UserHostAddress;
-                            bang.Save();
-                        }
-                    }
-                    else
-                    {
-                        string[] arrGiaTri = arrHangGiaTri[i].Split(new string[] { DuToanBS_BangDuLieu.DauCachO }, StringSplitOptions.None);
-                        string[] arrThayDoi = arrHangThayDoi[i].Split(new string[] { DuToanBS_BangDuLieu.DauCachO }, StringSplitOptions.None);
-
-                        // Kiểm tra thay đổi.
-                        bool coThayDoi = false;
-                        for (int j = 0; j < arrMaCot.Length; j++)
-                        {
-                            if (arrThayDoi[j] == "1")
-                            {
-                                if (arrMaCot[j].StartsWith("iID_MaDonVi"))
-                                {
-                                    if (arrGiaTri[j] == "")
-                                    {
-                                        if (maChungTuChiTiet == "")
-                                        {
-                                            coThayDoi = false;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            coThayDoi = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                coThayDoi = true;
-                            }
-
-                        }
-                        if (coThayDoi)
-                        {
-                            if (i == 1 && iLoai == "4")
-                                TenBangChiTiet = "DTBS_ChungTuChiTiet_PhanCap";
-                            else
-                                TenBangChiTiet = BANG_CHUNGTU_CHITIET;
-                            Bang bang = new Bang(TenBangChiTiet);
-                            if (maChungTuChiTiet == "")
-                            {
-                                //Du Lieu Moi
-                                bang.DuLieuMoi = true;
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBan", data["iID_MaPhongBan"]);
-                                bang.CmdParams.Parameters.AddWithValue("@sTenPhongBan", data["sTenPhongBan"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaNguon", data["iID_MaNguon"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iNamLamViec", data["iNamLamViec"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaNguonNganSach", data["iID_MaNguonNganSach"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaNamNganSach", data["iID_MaNamNganSach"]);
-                                bang.CmdParams.Parameters.AddWithValue("@bChiNganSach", data["bChiNganSach"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", data["iID_MaTrangThaiDuyet"]);
-                                bang.CmdParams.Parameters.AddWithValue("@iKyThuat", data["iKyThuat"]);
-                                bang.CmdParams.Parameters.AddWithValue("@dNgayCapPhat", data["dngayChungTu"]);
-                                if (iChiTapTrung == "1")
-                                {
-                                    bang.CmdParams.Parameters.AddWithValue("@iID_MaDonVi", data["iID_MaDonVi"]);
-                                    bang.CmdParams.Parameters.AddWithValue("@sTenDonVi", data["iID_MaDonVi"]+" - "+DonViModels.Get_TenDonVi(data["iID_MaDonVi"]));
-                                }
-
-                                string maMucLucNganSach = arrMaHang[i].Split('_')[1];
-                                DataTable dtMucLuc = MucLucNganSachModels.dt_ChiTietMucLucNganSach(maMucLucNganSach);
-                                //Dien thong tin cua Muc luc ngan sach
-                                NganSach_HamChungModels.ThemThongTinCuaMucLucNganSach(dtMucLuc.Rows[0], bang.CmdParams.Parameters);
-                                dtMucLuc.Dispose();
-                            }
-                            else
-                            {
-                                //Du Lieu Da Co
-                                bang.GiaTriKhoa = maChungTuChiTiet;
-                                bang.DuLieuMoi = false;
-                               
-                            }
-                            if (iLoai == "4")
-                                bang.CmdParams.Parameters.AddWithValue("@MaLoai", "2");
-                            bang.MaNguoiDungSua = User.Identity.Name;
-                            bang.IPSua = Request.UserHostAddress;
-
-                            //Them tham so
-                            for (int j = 0; j < arrMaCot.Length; j++)
-                            {
-                                if (arrThayDoi[j] == "1")
-                                {
-                                    if (arrMaCot[j].EndsWith("_ConLai") == false)
-                                    {
-                                        string Truong = "@" + arrMaCot[j];
-                                        //doi lai ten truong
-                                        if (arrMaCot[j] == "sTenDonVi_BaoDam")
-                                        {
-                                            Truong = "@sTenDonVi";
-                                        }
-                                        if (arrMaCot[j].StartsWith("b"))
-                                        {
-                                            //Nhap Kieu checkbox
-                                            if (arrGiaTri[j] == "1")
-                                            {
-                                                bang.CmdParams.Parameters.AddWithValue(Truong, true);
-                                            }
-                                            else
-                                            {
-                                                bang.CmdParams.Parameters.AddWithValue(Truong, false);
-                                            }
-                                        }
-                                        else if (arrMaCot[j].StartsWith("r") || (arrMaCot[j].StartsWith("i") && arrMaCot[j].StartsWith("iID") == false))
-                                        {
-                                            //Nhap Kieu so
-                                            if (CommonFunction.IsNumeric(arrGiaTri[j]))
-                                            {
-                                                bang.CmdParams.Parameters.AddWithValue(Truong, Convert.ToDouble(arrGiaTri[j]));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            //Nhap kieu xau
-                                            bang.CmdParams.Parameters.AddWithValue(Truong, arrGiaTri[j]);
-                                        }
-                                    }
-                                }
-                            }
-                            if (!bang.CmdParams.Parameters.Contains("iID_MaPhongBanDich"))
-                                bang.CmdParams.Parameters.AddWithValue("@iID_MaPhongBanDich", data["iID_MaPhongBan"]);
-                            bang.Save();
-                        }
-                    }
-                }
-            }
+            //Kiểm tra trình duyệt/từ chối
             string idAction = Request.Form["idAction"];
             //Từ chối chứng từ.
             string sLyDo = Request.Form["sLyDo"];
             if (idAction == "1")
             {
-                return RedirectToAction("TuChoiChungTu", "DuToanBS_ChungTu", new { maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = data["iKyThuat"], sLyDo = sLyDo, chiTiet = "1" });
+                return RedirectToAction("TuChoiChungTu", "DuToanBSChungTu", new { maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = data["iKyThuat"], sLyDo = sLyDo, chiTiet = "1" });
             }
             //Trình duyệt chứng từ.
             else if (idAction == "2")
             {
-                return RedirectToAction("TrinhDuyetChungTu", "DuToanBS_ChungTu", new { maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = data["iKyThuat"], sLyDo = sLyDo, chiTiet = "1" });
+                return RedirectToAction("TrinhDuyetChungTu", "DuToanBSChungTu", new { maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = data["iKyThuat"], sLyDo = sLyDo, chiTiet = "1" });
             }
-            return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai,iChiTapTrung=iChiTapTrung });
-        }
+            return RedirectToAction("ChungTuChiTietFrame", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai, iChiTapTrung = iChiTapTrung });
+        } 
+        #endregion
 
-        [Authorize]
-        public ActionResult Delete(String iID_MaChungTuChiTiet, String iID_MaChungTu)
-        {
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTuChiTiet", "Delete") == false)
-            {
-                return RedirectToAction("Index", "PermitionMessage");
-            }
-            int iXoa = 0;
-            iXoa = DuToanBS_ChungTuChiTietModels.XoaChungTuChiTiet(iID_MaChungTuChiTiet, Request.UserHostAddress, User.Identity.Name);
-            return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
-        }
-
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchSubmit(String ParentID, String iID_MaChungTu)
-        {
-            String iID_MaDonVi = Request.Form[ParentID + "_iID_MaDonVi"];
-            String sLNS = Request.Form[ParentID + "_sLNS"];
-            String sL = Request.Form[ParentID + "_sL"];
-            String sK = Request.Form[ParentID + "_sK"];
-            String sM = Request.Form[ParentID + "_sM"];
-            String sTM = Request.Form[ParentID + "_sTM"];
-            String sTTM = Request.Form[ParentID + "_sTTM"];
-            String sNG = Request.Form[ParentID + "_sNG"];
-            String sTNG = Request.Form[ParentID + "_sTNG"];
-
-            return RedirectToAction("Index", new { iID_MaChungTu = iID_MaChungTu, iID_MaDonVi = iID_MaDonVi, sLNS = sLNS, sL = sL, sK = sK, sM = sM, sTM = sTM, sTTM = sTTM, sNG = sNG, sTNG = sTNG });
-        }
-        
+        #region Upload excel
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UpLoadExcel(string iID_MaChungTu, string iLoai)
@@ -381,9 +195,9 @@ namespace VIETTEL.Controllers.DuToanBS
             {
 
                 String SQL = String.Format(@"SELECT *
-FROM DTBS_ChungTuChiTiet
-WHERE iTrangThai=1 AND iID_MaChungTuChiTiet=@iID_MaChungTu
-AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
+                            FROM DTBS_ChungTuChiTiet
+                            WHERE iTrangThai=1 AND iID_MaChungTuChiTiet=@iID_MaChungTu
+                            AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
                 cmd1 = new SqlCommand(SQL);
                 cmd1.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
                 DataTable dtChungTu = Connection.GetDataTable(cmd1);
@@ -441,7 +255,7 @@ AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR r
                         SQL = String.Format(@"INSERT INTO DTBS_ChungTuChiTiet_PhanCap(iID_MaChungTu,iID_MaPhongBan,sTenPhongBan,iID_MaPhongBanDich,iID_MaTrangThaiDuyet,
                         iNamLamViec,iID_MaNguonNganSach,iID_MaNamNganSach,iID_MaDonVi,sTenDonVi,iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,sXauNoiMa,sLNS,sL,sK,sM,sTM,sTTM,sNG,
                         sMoTa,rTuChi,rHienVat,iID_MaNhomNguoiDung_DuocGiao,sID_MaNguoiDung_DuocGiao,sID_MaNguoiDungTao,sIPSua,sID_MaNguoiDungSua) VALUES (@iID_MaChungTu,@iID_MaPhongBan,@sTenPhongBan,@iID_MaPhongBanDich,@iID_MaTrangThaiDuyet,@iNamLamViec,@iID_MaNguonNganSach,@iID_MaNamNganSach,
-@iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
+                                @iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
                         cmd1 = new SqlCommand(SQL);
                         cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
                         cmd1.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
@@ -494,9 +308,9 @@ AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR r
             else
             {
                 String SQL = String.Format(@"SELECT *
-FROM DTBS_ChungTuChiTiet
-WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu
-AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
+                    FROM DTBS_ChungTuChiTiet
+                    WHERE iTrangThai=1 AND iID_MaChungTu=@iID_MaChungTu
+                    AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR rDuPhong<>0)");
                 cmd1 = new SqlCommand(SQL);
                 cmd1.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
                 DataTable dtChungTu = Connection.GetDataTable(cmd1);
@@ -554,7 +368,7 @@ AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR r
                         SQL = String.Format(@"INSERT INTO DTBS_ChungTuChiTiet_PhanCap(iID_MaChungTu,iID_MaPhongBan,sTenPhongBan,iID_MaPhongBanDich,iID_MaTrangThaiDuyet,
                         iNamLamViec,iID_MaNguonNganSach,iID_MaNamNganSach,iID_MaDonVi,sTenDonVi,iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,sXauNoiMa,sLNS,sL,sK,sM,sTM,sTTM,sNG,
                         sMoTa,rTuChi,rHienVat,iID_MaNhomNguoiDung_DuocGiao,sID_MaNguoiDung_DuocGiao,sID_MaNguoiDungTao,sIPSua,sID_MaNguoiDungSua) VALUES (@iID_MaChungTu,@iID_MaPhongBan,@sTenPhongBan,@iID_MaPhongBanDich,@iID_MaTrangThaiDuyet,@iNamLamViec,@iID_MaNguonNganSach,@iID_MaNamNganSach,
-@iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
+                                @iID_MaDonVi,@sTenDonVi,@iID_MaMucLucNganSach,@iID_MaMucLucNganSach_Cha,@sXauNoiMa,@sLNS,@sL,@sK,@sM,@sTM,@sTTM,@sNG, @sMoTa,@rTuChi,@rHienVat,@iID_MaNhomNguoiDung_DuocGiao,@sID_MaNguoiDung_DuocGiao,@sID_MaNguoiDungTao,@sIPSua,@sID_MaNguoiDungSua)");
                         cmd1 = new SqlCommand(SQL);
                         cmd1.Parameters.AddWithValue("@iID_MaChungTu", R["iID_MaChungTuChiTiet"]);
                         cmd1.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
@@ -618,9 +432,10 @@ AND( rTuChi<>0 OR rPhanCap<>0 OR rHienVat<>0 OR rHangNhap<>0 OR rHangMua<>0 OR r
 
             //}
             if (iLoai == "PC")
-                return RedirectToAction("ChungTuChiTiet_Frame", "DuToan_phanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
+                return RedirectToAction("ChungTuChiTietFrame", "DuToan_phanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
             return RedirectToAction("ChungTuChiTiet_Frame", "DuToan_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu });
-        }
+        } 
+        #endregion
 
         #region Lấy 1 hang AJAX: rTongSoNamTruoc
         [Authorize]

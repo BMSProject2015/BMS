@@ -10,14 +10,14 @@ using VIETTEL.Models.DuToanBS;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
-    public class DuToanBS_ChungTuController : Controller
+    public class DuToanBSChungTuController : Controller
     {
         #region Hằng Số
 
         private const string CREATE = "Create";
         private const string EDIT = "Edit";
         private const string DELETE = "Delete";
-        private const string CONTROLLER_NAME = "DuToanBS_ChungTu";
+        private const string CONTROLLER_NAME = "DuToanBSChungTu";
         private const string PERMITION_MESSAGE_CONTROLLER = "PermitionMessage";
         private const string VIEW_ROOTPATH = "~/Views/DuToanBS/ChungTu/";
         private const string VIEW_CHUNGTU_INDEX = "ChungTu_Index.aspx";
@@ -90,15 +90,13 @@ namespace VIETTEL.Controllers.DuToanBS
         {
             string TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
             string DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-            string SoChungTu = Request.Form[ParentID + "_iSoChungTu"];
-            string sLNS_TK = Request.Form[ParentID + "_sLNS_TK"];
-            string iID_MaTrangThaiDuyet = Request.Form[ParentID + "_iID_MaTrangThaiDuyet"];
+            string sLNS_TK = Request.Form[ParentID + "_ddlLNStk"];
+            string iID_MaTrangThaiDuyet = Request.Form[ParentID + "_ddlIDMaTrangThai"];
             return RedirectToAction("Index", CONTROLLER_NAME,
                 new
                 {
                     sLNS1 = sLNS1,
                     iLoai = iLoai,
-                    SoChungTu = SoChungTu,
                     TuNgay = TuNgay,
                     DenNgay = DenNgay,
                     iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet,
@@ -232,8 +230,8 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    string maChungTuAddNew = DuToanBS_ChungTuModels.ThemChungTu(bang, maND, sLNS, iKyThuat);
-                    return RedirectToAction("Index", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu = maChungTuAddNew});
+                    string maChungTuAddNew = DuToanBSChungTuModels.ThemChungTu(bang, maND, sLNS, iKyThuat);
+                    return RedirectToAction("Index", "DuToanBSChungTuChiTiet", new {iID_MaChungTu = maChungTuAddNew});
                 }
                 catch (Exception ex)
                 {
@@ -252,7 +250,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBS_ChungTuModels.SuaChungTu(bang, MaChungTu);
+                    DuToanBSChungTuModels.SuaChungTu(bang, MaChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -303,7 +301,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBS_ChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu);
+                    DuToanBSChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -319,7 +317,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBS_ChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu);
+                    DuToanBSChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -368,7 +366,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBS_ChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH);
+                    DuToanBSChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -384,7 +382,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBS_ChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH);
+                    DuToanBSChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -447,7 +445,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 {
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
-                    return RedirectToAction("index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 3 });
+                    return RedirectToAction("index", "DuToanBSChungTu", new { iLoai = 3 });
 
                 }
                 else
@@ -524,14 +522,14 @@ namespace VIETTEL.Controllers.DuToanBS
                     String MaChungTuAddNew = Convert.ToString(bang.Save());
                     //DuToanBS_ChungTu_BaoDamModels.InsertDuyetChungTu(MaChungTuAddNew, "Mới ", User.Identity.Name, Request.UserHostAddress);
 
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 3, sLNS = sLNS1 });
+                    return RedirectToAction("Index", "DuToanBSChungTu", new { iLoai = 3, sLNS = sLNS1 });
                 }
                 else
                 {
                     bang.GiaTriKhoa = MaChungTu;
                     bang.DuLieuMoi = false;
                     bang.Save();
-                    return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iLoai = 3, sLNS = sLNS1 });
+                    return RedirectToAction("Index", "DuToanBSChungTu", new { iLoai = 3, sLNS = sLNS1 });
                 }
             }
 
@@ -556,7 +554,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            DuToanBS_ChungTuModels.XoaChungTu(iID_MaChungTu);
+            DuToanBSChungTuModels.XoaChungTu(iID_MaChungTu);
             return RedirectToAction("Index", CONTROLLER_NAME,
                 new {MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, sLNS1 = sLNS1});
         }
@@ -574,7 +572,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            DuToanBS_ChungTuModels.XoaChungTuTLTH(iID_MaChungTu);
+            DuToanBSChungTuModels.XoaChungTuTLTH(iID_MaChungTu);
             return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
         }
 
@@ -591,7 +589,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
-            DuToanBS_ChungTuModels.XoaChungTuTLTHCuc(iID_MaChungTu);
+            DuToanBSChungTuModels.XoaChungTuTLTHCuc(iID_MaChungTu);
             return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
         }
 
@@ -617,9 +615,9 @@ namespace VIETTEL.Controllers.DuToanBS
             //Xác định trạng thái duyệt tiếp theo
             int maTrangThaiTiepTheo = 0;
             if (sLNS.StartsWith("1040100") && iKyThuat == "1")
-                maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, maChungTu);
+                maTrangThaiTiepTheo = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, maChungTu);
             else
-                maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, maChungTu);
+                maTrangThaiTiepTheo = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, maChungTu);
 
             if (maTrangThaiTiepTheo <= 0)
             {
@@ -630,19 +628,19 @@ namespace VIETTEL.Controllers.DuToanBS
                 sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
 
             //update ly do
-            DuToanBS_ChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
+            DuToanBSChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
             ///Update trạng thái cho bảng chứng từ
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, maTrangThaiTiepTheo, true, MaND,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, maTrangThaiTiepTheo, true, MaND,
                 Request.UserHostAddress);
 
             //Update trạng thái chứng từ TLTH
-            DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, MaND);
+            DuToanBSChungTuModels.CapNhatChungTuTLTH(maChungTu, MaND);
             ViewData["LoadLai"] = "1";
             if (!String.IsNullOrEmpty(chiTiet) && chiTiet == "1")
             {
-                return RedirectToAction("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = maChungTu });
+                return RedirectToAction("ChungTuChiTietFrame", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = maChungTu });
             }
-            return RedirectToAction("Index", "DuToanBS_ChungTu",
+            return RedirectToAction("Index", "DuToanBSChungTu",
                 new {sLNS1 = sLNS, iKyThuat = iKyThuat, iID_MaChungTu = maChungTuTLTH});
         }
 
@@ -661,11 +659,7 @@ namespace VIETTEL.Controllers.DuToanBS
             String MaND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
             int iID_MaTrangThaiDuyet_TrinhDuyet = 0;
-            if (sLNS.StartsWith("1040100"))
-                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTHBaoDam(MaND,
-                    maChungTuTLTH);
-            else
-                iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTH(MaND,
+            iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyetTLTH(MaND,
                     maChungTuTLTH);
             if (iID_MaTrangThaiDuyet_TrinhDuyet <= 0)
             {
@@ -673,11 +667,11 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             //Update trạng thái duyệt
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, iID_MaTrangThaiDuyet_TrinhDuyet, MaND,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, iID_MaTrangThaiDuyet_TrinhDuyet, MaND,
                 Request.UserHostAddress);
-            DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, MaND);
+            DuToanBSChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, MaND);
             
-            return RedirectToAction("Index", "DuToanBS_ChungTu",
+            return RedirectToAction("Index", "DuToanBSChungTu",
                 new {sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
         }
 
@@ -693,15 +687,15 @@ namespace VIETTEL.Controllers.DuToanBS
         {
             string maND = User.Identity.Name;
             //Xác định trạng thái duyệt tiếp theo
-            int maTrangThaiTiepTheo = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetTLTHCuc(maND, maChungTuTLTHCuc);
+            int maTrangThaiTiepTheo = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyetTLTHCuc(maND, maChungTuTLTHCuc);
             if (maTrangThaiTiepTheo <= 0)
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
             //Update mã trạng thái duyệt
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, maTrangThaiTiepTheo, maND,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, maTrangThaiTiepTheo, maND,
                 Request.UserHostAddress);
-            return RedirectToAction("Index", "DuToanBS_ChungTu", new {sLNS = sLNS, iLoai = iLoai});
+            return RedirectToAction("Index", "DuToanBSChungTu", new {sLNS = sLNS, iLoai = iLoai});
         }
 
         #endregion
@@ -724,9 +718,9 @@ namespace VIETTEL.Controllers.DuToanBS
             //Xác định trạng thái duyệt tiếp theo
             int iIdMaTrangThaiDuyetTuChoi = 0;
             if (sLNS.StartsWith("1040100"))
-                iIdMaTrangThaiDuyetTuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiBaoDam(maND, maChungTu);
+                iIdMaTrangThaiDuyetTuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoiBaoDam(maND, maChungTu);
             else
-                iIdMaTrangThaiDuyetTuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(maND, maChungTu);
+                iIdMaTrangThaiDuyetTuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoi(maND, maChungTu);
             if (iIdMaTrangThaiDuyetTuChoi <= 0)
             {
                 return RedirectToAction("Index", "PermitionMessage");
@@ -734,19 +728,19 @@ namespace VIETTEL.Controllers.DuToanBS
             if (String.IsNullOrEmpty(sLyDo))
                 sLyDo = Convert.ToString(Request.Form["DuToan_sLyDo"]);
             //update ly do
-            DuToanBS_ChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
+            DuToanBSChungTuModels.CapNhatLyDoChungTu(maChungTu, sLyDo);
 
             //Update mã trạng thái duyệt
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, iIdMaTrangThaiDuyetTuChoi, true, maND,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTu(maChungTu, iIdMaTrangThaiDuyetTuChoi, true, maND,
                 Request.UserHostAddress);
 
             //Update chứng từ TLTH
-            DuToanBS_ChungTuModels.CapNhatChungTuTLTH(maChungTu, maND);
+            DuToanBSChungTuModels.CapNhatChungTuTLTH(maChungTu, maND);
             if (!String.IsNullOrEmpty(chiTiet) && chiTiet == "1")
             {
-                return RedirectToAction("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = maChungTu });
+                return RedirectToAction("ChungTuChiTietFrame", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = maChungTu });
             }
-            return RedirectToAction("Index", "DuToanBS_ChungTu", new {sLNS1 = sLNS, iID_MaChungTu = maChungTuTLTH});
+            return RedirectToAction("Index", "DuToanBSChungTu", new {sLNS1 = sLNS, iID_MaChungTu = maChungTuTLTH});
         }
 
         /// <summary>
@@ -764,21 +758,18 @@ namespace VIETTEL.Controllers.DuToanBS
 
             //Xác định trạng thái duyệt tiếp theo
             int idMaTrangThaiDuyetTuChoi = 0;
-            if (sLNS.StartsWith("1040100"))
-                idMaTrangThaiDuyetTuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTHBaoDam(maND, maChungTuTLTH);
-            else
-                idMaTrangThaiDuyetTuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTH(maND, maChungTuTLTH);
+            idMaTrangThaiDuyetTuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoiTLTH(maND, maChungTuTLTH);
 
             if (idMaTrangThaiDuyetTuChoi <= 0)
             {
                 return RedirectToAction("Index", "PermitionMessage");
             }
             //Updatr mã trạng thái duyệt
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, idMaTrangThaiDuyetTuChoi, maND,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTuTLTH(maChungTuTLTH, idMaTrangThaiDuyetTuChoi, maND,
                 Request.UserHostAddress);
 
-            DuToanBS_ChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, maND);
-            return RedirectToAction("Index", "DuToanBS_ChungTu",
+            DuToanBSChungTuModels.CapNhatChungTuTLTHCuc(maChungTuTLTH, maND);
+            return RedirectToAction("Index", "DuToanBSChungTu",
                 new {sLNS1 = sLNS, iLoai = iLoai, iID_MaChungTu = maChungTuTLTHCuc});
         }
 
@@ -795,16 +786,16 @@ namespace VIETTEL.Controllers.DuToanBS
             string maND = User.Identity.Name;
 
             //Xác định trạng thái duyệt tiếp theo
-            int maTrangThaiTuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiTLTHCuc(maND,
+            int maTrangThaiTuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoiTLTHCuc(maND,
                 maChungTuTLTHCuc);
             if (maTrangThaiTuChoi <= 0)
             {
                 return RedirectToAction("Index", PERMITION_MESSAGE_CONTROLLER);
             }
 
-            DuToanBS_ChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, maTrangThaiTuChoi,
+            DuToanBSChungTuModels.CapNhatTrangThaiDuyetChungTuTLTHCuc(maChungTuTLTHCuc, maTrangThaiTuChoi,
                 maND, Request.UserHostAddress);
-            return RedirectToAction("Index", "DuToanBS_ChungTu", new {sLNS = sLNS, iLoai = iLoai});
+            return RedirectToAction("Index", "DuToanBSChungTu", new {sLNS = sLNS, iLoai = iLoai});
         }
 
         #endregion
