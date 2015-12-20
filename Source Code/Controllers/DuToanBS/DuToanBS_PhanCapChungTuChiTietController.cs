@@ -9,45 +9,73 @@ using VIETTEL.Models.DuToanBS;
 
 namespace VIETTEL.Controllers.DuToanBS
 {
-    public class DuToanBS_PhanCapChungTuChiTietController : Controller
+    public class DuToanBSPhanCapChungTuChiTietController : Controller
     {
-        //
-        // GET: /DuToan_PhanCapChungTuChiTiet/
-        public string sViewPath = "~/Views/DuToanBS/ChungTuChiTiet/";
+        private string sViewPath = "~/Views/DuToanBS/ChungTuChiTiet/";
+        private const string DETAIL = "Detail";
+        private const string EDIT = "Edit";
+        private const string CREATE = "Create";
+        private const string BANG_CHUNGTU_CHITIET = "DTBS_ChungTuChiTiet";
+        private const string BANG_CHUNGTU_CHITIET_PHANCAP = "DTBS_ChungTuChiTiet_PhanCap";
+        private const string PERMITION_MESSAGE = "PermitionMessage";
+        private const string VIEW_PHANCAP_CHITIET_INDEX = "PhanCap_ChungTuChiTiet_Index.aspx";
+        private const string VIEW_PHANCAP_CHITIET_FRAME = "PhanCap_ChungTuChiTiet_Index_DanhSach_Frame.aspx";
 
+        #region Index
+        /// <summary>
+        /// Index
+        /// </summary>
+        /// <param name="iID_MaChungTu"></param>
+        /// <returns></returns>
         [Authorize]
         public ActionResult Index(String iID_MaChungTu)
         {
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTuChiTiet", "Detail") == false)
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, BANG_CHUNGTU_CHITIET, DETAIL) == false)
             {
-                return RedirectToAction("Index", "PermitionMessage");
+                return RedirectToAction("Index", PERMITION_MESSAGE);
             }
             ViewData["iID_MaChungTu"] = iID_MaChungTu;
-            return View(sViewPath + "PhanCap_ChungTuChiTiet_Index.aspx");
-        }
+            return View(sViewPath + VIEW_PHANCAP_CHITIET_INDEX);
+        } 
+        #endregion
 
+        #region ChungTuChiTietFrame
+        /// <summary>
+        /// Lưới chứng từ chi tiết
+        /// </summary>
+        /// <param name="sLNS"></param>
+        /// <param name="MaLoai"></param>
+        /// <returns></returns>
         [Authorize]
-        public ActionResult ChungTuChiTiet_Frame(String sLNS, String MaLoai)
+        public ActionResult ChungTuChiTietFrame(String sLNS, String MaLoai)
         {
             //Kiểm tra quyền của người dùng với chức năng
-            if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTuChiTiet", "Detail") == false)
+            if (BaoMat.ChoPhepLamViec(User.Identity.Name, BANG_CHUNGTU_CHITIET, DETAIL) == false)
             {
-                return RedirectToAction("Index", "PermitionMessage");
+                return RedirectToAction("Index", PERMITION_MESSAGE);
             }
             String iID_MaChungTu = Request.Form["DuToan_iID_MaChungTu"];
             MaLoai = Request.Form["DuToan_MaLoai"];
             ViewData["iID_MaChungTu"] = iID_MaChungTu;
             ViewData["MaLoai"] = MaLoai;
-            return View(sViewPath + "PhanCap_ChungTuChiTiet_Index_DanhSach_Frame.aspx", new { sLNS = sLNS });
-            //return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, LoadLai = "1" });
-        }
+            return View(sViewPath + VIEW_PHANCAP_CHITIET_FRAME, new { sLNS = sLNS });
+        } 
+        #endregion
 
+        #region CapNhatChungTuChiTiet
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ChiNganSach"></param>
+        /// <param name="iID_MaChungTu"></param>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult DetailSubmit(String ChiNganSach, String iID_MaChungTu, String sLNS)
+        public ActionResult CapNhatChungTuChiTiet(String ChiNganSach, String iID_MaChungTu, String sLNS)
         {
-            DataTable dtCT = DuToanBS_ChungTuChiTietModels.LayDongChungTuChiTiet(iID_MaChungTu);
+            DataTable dtCT = DuToanBSChungTuChiTietModels.LayDongChungTuChiTiet(iID_MaChungTu);
             DataRow data = dtCT.Rows[0];
             String MaND = User.Identity.Name;
             String TenBangChiTiet = "DTBS_ChungTuChiTiet_PhanCap";
@@ -59,21 +87,19 @@ namespace VIETTEL.Controllers.DuToanBS
             string idXauDuLieuThayDoi = Request.Form["idXauDuLieuThayDoi"];
             string idMaMucLucNganSach = Request.Form["idMaMucLucNganSach"];
 
-            String[] arrMaMucLucNganSach = idMaMucLucNganSach.Split(',');
-            String[] arrMaHang = idXauMaCacHang.Split(',');
-            String[] arrHangDaXoa = idXauCacHangDaXoa.Split(',');
-            String[] arrMaCot = idXauMaCacCot.Split(',');
-            String[] arrHangGiaTri = idXauGiaTriChiTiet.Split(new string[] { CapPhat_BangDuLieu.DauCachHang }, StringSplitOptions.None);
+            string[] arrMaMucLucNganSach = idMaMucLucNganSach.Split(',');
+            string[] arrMaHang = idXauMaCacHang.Split(',');
+            string[] arrHangDaXoa = idXauCacHangDaXoa.Split(',');
+            string[] arrMaCot = idXauMaCacCot.Split(',');
+            string[] arrHangGiaTri = idXauGiaTriChiTiet.Split(new string[] { CapPhat_BangDuLieu.DauCachHang }, StringSplitOptions.None);
 
             String iID_MaCapPhatChiTiet;
 
             //Luu cac hang sua
-            String[] arrHangThayDoi = idXauDuLieuThayDoi.Split(new string[] { PhanBo_ChiTieu_BangDuLieu.DauCachHang }, StringSplitOptions.None);
-
-
-            String iKyThuat = Convert.ToString(data["iKyThuat"]);
-            String MaLoai = Convert.ToString(data["MaLoai"]);
-            String iID_MaPhongBan = "", sTenPhongBan="";
+            string[] arrHangThayDoi = idXauDuLieuThayDoi.Split(new string[] { PhanBo_ChiTieu_BangDuLieu.DauCachHang }, StringSplitOptions.None);
+            string iKyThuat = Convert.ToString(data["iKyThuat"]);
+            string MaLoai = Convert.ToString(data["MaLoai"]);
+            string iID_MaPhongBan = "", sTenPhongBan = "";
             DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(MaND);
             if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
             {
@@ -83,7 +109,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 dtPhongBan.Dispose();
             }
             #region Nganh Ky thuat
-            if (iKyThuat == "1" && MaLoai!="2")
+            if (iKyThuat == "1" && MaLoai != "2")
             {
                 for (int i = 0; i < arrMaHang.Length; i++)
                 {
@@ -102,15 +128,13 @@ namespace VIETTEL.Controllers.DuToanBS
                                 break;
                             }
                         }
-
-
                         iID_MaCapPhatChiTiet = arrMaHang[i].Split('_')[0];
                         //lay ma don vi truong hop sua
                         if (!String.IsNullOrEmpty(iID_MaCapPhatChiTiet))
                         {
                             iID_MaDonVi = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTuChiTiet", "iID_MaChungTuChiTiet", iID_MaCapPhatChiTiet, "iID_MaDonVi"));
                         }
-                        if (DuToanBS_ChungTuChiTietModels.CheckDonViBaoDam2Lan(iID_MaDonVi))
+                        if (DuToanBSChungTuChiTietModels.KiemTraDonViPhanCap2Lan(iID_MaDonVi))
                         {
                             TenBangChiTiet = "DTBS_ChungTuChiTiet";
                         }
@@ -175,25 +199,25 @@ namespace VIETTEL.Controllers.DuToanBS
                                     NganSach_HamChungModels.ThemThongTinCuaMucLucNganSach(dtMucLuc.Rows[0], bang.CmdParams.Parameters);
                                     dtMucLuc.Dispose();
 
-                                    if (DuToanBS_ChungTuChiTietModels.CheckDonViBaoDam2Lan(iID_MaDonVi))
+                                    if (DuToanBSChungTuChiTietModels.KiemTraDonViPhanCap2Lan(iID_MaDonVi))
                                     {
                                         bang.CmdParams.Parameters.AddWithValue("@iKyThuat", 1);
                                         bang.CmdParams.Parameters.AddWithValue("@MaLoai", 1);
                                         if (bang.CmdParams.Parameters.IndexOf("@sLNS") >= 0)
                                         {
-                                            bang.CmdParams.Parameters["@sLNS"].Value = DuToanBS_ChungTuChiTietModels.sLNSBaoDam;
+                                            bang.CmdParams.Parameters["@sLNS"].Value = DuToanBSChungTuChiTietModels.sLNSBaoDam;
                                         }
                                         else
                                         {
-                                            bang.CmdParams.Parameters.AddWithValue("@sLNS", DuToanBS_ChungTuChiTietModels.sLNSBaoDam);
+                                            bang.CmdParams.Parameters.AddWithValue("@sLNS", DuToanBSChungTuChiTietModels.sLNSBaoDam);
                                         }
                                         if (bang.CmdParams.Parameters.IndexOf("@sXauNoiMa") >= 0)
                                         {
-                                            bang.CmdParams.Parameters["@sXauNoiMa"].Value = DuToanBS_ChungTuChiTietModels.sLNSBaoDam + "-" + data["sL"] + "-" + data["sK"] + "-" + data["sM"] + "-" + data["sTM"] + "-" + data["sTTM"] + "-" + data["sNG"];
+                                            bang.CmdParams.Parameters["@sXauNoiMa"].Value = DuToanBSChungTuChiTietModels.sLNSBaoDam + "-" + data["sL"] + "-" + data["sK"] + "-" + data["sM"] + "-" + data["sTM"] + "-" + data["sTTM"] + "-" + data["sNG"];
                                         }
                                         else
                                         {
-                                            bang.CmdParams.Parameters.AddWithValue("@sXauNoiMa", DuToanBS_ChungTuChiTietModels.sLNSBaoDam + "-" + data["sL"] + "-" + data["sK"] + "-" + data["sM"] + "-" + data["sTM"] + "-" + data["sTTM"] + "-" + data["sNG"]);
+                                            bang.CmdParams.Parameters.AddWithValue("@sXauNoiMa", DuToanBSChungTuChiTietModels.sLNSBaoDam + "-" + data["sL"] + "-" + data["sK"] + "-" + data["sM"] + "-" + data["sTM"] + "-" + data["sTTM"] + "-" + data["sNG"]);
                                         }
                                     }
                                     bang.CmdParams.Parameters.AddWithValue("@iID_MaChungTu", iID_MaChungTu);
@@ -263,212 +287,212 @@ namespace VIETTEL.Controllers.DuToanBS
                                 if (TenBangChiTiet == "DTBS_ChungTuChiTiet")
                                 {
                                     String SQL = String.Format(@"INSERT INTO DTBS_ChungTuChiTiet_PhanCap
-(
-      [iID_MaDotNganSach]
-      ,[iID_MaChungTu]
-      ,[iID_MaPhongBan]
-      ,[sTenPhongBan]
-      ,[iID_MaPhongBanDich]
-      ,[iID_MaTrangThaiDuyet]
-      ,[iNamLamViec]
-      ,[iID_MaNguonNganSach]
-      ,[iID_MaNamNganSach]
-      ,[bChiNganSach]
-      ,[iID_MaDuyetChungTuChiTiet]
-      ,[bDongY]
-      ,[sLyDo]
-      ,[sGhiChu]
-      ,[iID_MaDonVi]
-      ,[sTenDonVi]
-      ,[iID_MaMucLucNganSach]
-      ,[iID_MaMucLucNganSach_Cha]
-      ,[sXauNoiMa]
-      ,[bLaHangCha]
-      ,[sLNS]
-      ,[sL]
-      ,[sK]
-      ,[sM]
-      ,[sTM]
-      ,[sTTM]
-      ,[sNG]
-      ,[sTNG]
-      ,[sMoTa]
-      ,[rTongSoNamTruoc]
-      ,[rUocThucHien]
-      ,[sMaCongTrinh]
-      ,[sTenCongTrinh]
-      ,[rNgay]
-      ,[rSoNguoi]
-      ,[rChiTaiKhoBac]
-      ,[rTonKho]
-      ,[rTuChi]
-      ,[rChiTapTrung]
-      ,[rHangNhap]
-      ,[rHangMua]
-      ,[rHienVat]
-      ,[rDuPhong]
-      ,[rPhanCap]
-      ,[rTienThu]
-      ,[rTongSo]
-      ,[rNgay_DonVi]
-      ,[rSoNguoi_DonVi]
-      ,[rChiTaiKhoBac_DonVi]
-      ,[rTonKho_DonVi]
-      ,[rTuChi_DonVi]
-      ,[rChiTapTrung_DonVi]
-      ,[rHangNhap_DonVi]
-      ,[rHangMua_DonVi]
-      ,[rHienVat_DonVi]
-      ,[rDuPhong_DonVi]
-      ,[rPhanCap_DonVi]
-      ,[rTienThu_DonVi]
-      ,[rTongSo_DonVi]
-      ,[bsMaCongTrinh]
-      ,[bsTenCongTrinh]
-      ,[brNgay]
-      ,[brSoNguoi]
-      ,[brChiTaiKhoBac]
-      ,[brTonKho]
-      ,[brTuChi]
-      ,[brChiTapTrung]
-      ,[brHangNhap]
-      ,[brHangMua]
-      ,[brHienVat]
-      ,[brDuPhong]
-      ,[brPhanCap]
-      ,[brTienThu]
-      ,[bsMaCongTrinh_DonVi]
-      ,[bsTenCongTrinh_DonVi]
-      ,[brNgay_DonVi]
-      ,[brSoNguoi_DonVi]
-      ,[brChiTaiKhoBac_DonVi]
-      ,[brTonKho_DonVi]
-      ,[brTuChi_DonVi]
-      ,[brChiTapTrung_DonVi]
-      ,[brHangNhap_DonVi]
-      ,[brHangMua_DonVi]
-      ,[brHienVat_DonVi]
-      ,[brDuPhong_DonVi]
-      ,[brPhanCap_DonVi]
-      ,[brTienThu_DonVi]
-      ,[iSTT]
-      ,[iTrangThai]
-      ,[bPublic]
-      ,[iID_MaNhomNguoiDung_Public]
-      ,[iID_MaNhomNguoiDung_DuocGiao]
-      ,[sID_MaNguoiDung_DuocGiao]
-      ,[dNgayTao]
-      ,[sID_MaNguoiDungTao]
-      ,[iSoLanSua]
-      ,[dNgaySua]
-      ,[sIPSua]
-      ,[sID_MaNguoiDungSua]
-      ,[MaLoai])
+                                                            (
+                                                                  [iID_MaDotNganSach]
+                                                                  ,[iID_MaChungTu]
+                                                                  ,[iID_MaPhongBan]
+                                                                  ,[sTenPhongBan]
+                                                                  ,[iID_MaPhongBanDich]
+                                                                  ,[iID_MaTrangThaiDuyet]
+                                                                  ,[iNamLamViec]
+                                                                  ,[iID_MaNguonNganSach]
+                                                                  ,[iID_MaNamNganSach]
+                                                                  ,[bChiNganSach]
+                                                                  ,[iID_MaDuyetChungTuChiTiet]
+                                                                  ,[bDongY]
+                                                                  ,[sLyDo]
+                                                                  ,[sGhiChu]
+                                                                  ,[iID_MaDonVi]
+                                                                  ,[sTenDonVi]
+                                                                  ,[iID_MaMucLucNganSach]
+                                                                  ,[iID_MaMucLucNganSach_Cha]
+                                                                  ,[sXauNoiMa]
+                                                                  ,[bLaHangCha]
+                                                                  ,[sLNS]
+                                                                  ,[sL]
+                                                                  ,[sK]
+                                                                  ,[sM]
+                                                                  ,[sTM]
+                                                                  ,[sTTM]
+                                                                  ,[sNG]
+                                                                  ,[sTNG]
+                                                                  ,[sMoTa]
+                                                                  ,[rTongSoNamTruoc]
+                                                                  ,[rUocThucHien]
+                                                                  ,[sMaCongTrinh]
+                                                                  ,[sTenCongTrinh]
+                                                                  ,[rNgay]
+                                                                  ,[rSoNguoi]
+                                                                  ,[rChiTaiKhoBac]
+                                                                  ,[rTonKho]
+                                                                  ,[rTuChi]
+                                                                  ,[rChiTapTrung]
+                                                                  ,[rHangNhap]
+                                                                  ,[rHangMua]
+                                                                  ,[rHienVat]
+                                                                  ,[rDuPhong]
+                                                                  ,[rPhanCap]
+                                                                  ,[rTienThu]
+                                                                  ,[rTongSo]
+                                                                  ,[rNgay_DonVi]
+                                                                  ,[rSoNguoi_DonVi]
+                                                                  ,[rChiTaiKhoBac_DonVi]
+                                                                  ,[rTonKho_DonVi]
+                                                                  ,[rTuChi_DonVi]
+                                                                  ,[rChiTapTrung_DonVi]
+                                                                  ,[rHangNhap_DonVi]
+                                                                  ,[rHangMua_DonVi]
+                                                                  ,[rHienVat_DonVi]
+                                                                  ,[rDuPhong_DonVi]
+                                                                  ,[rPhanCap_DonVi]
+                                                                  ,[rTienThu_DonVi]
+                                                                  ,[rTongSo_DonVi]
+                                                                  ,[bsMaCongTrinh]
+                                                                  ,[bsTenCongTrinh]
+                                                                  ,[brNgay]
+                                                                  ,[brSoNguoi]
+                                                                  ,[brChiTaiKhoBac]
+                                                                  ,[brTonKho]
+                                                                  ,[brTuChi]
+                                                                  ,[brChiTapTrung]
+                                                                  ,[brHangNhap]
+                                                                  ,[brHangMua]
+                                                                  ,[brHienVat]
+                                                                  ,[brDuPhong]
+                                                                  ,[brPhanCap]
+                                                                  ,[brTienThu]
+                                                                  ,[bsMaCongTrinh_DonVi]
+                                                                  ,[bsTenCongTrinh_DonVi]
+                                                                  ,[brNgay_DonVi]
+                                                                  ,[brSoNguoi_DonVi]
+                                                                  ,[brChiTaiKhoBac_DonVi]
+                                                                  ,[brTonKho_DonVi]
+                                                                  ,[brTuChi_DonVi]
+                                                                  ,[brChiTapTrung_DonVi]
+                                                                  ,[brHangNhap_DonVi]
+                                                                  ,[brHangMua_DonVi]
+                                                                  ,[brHienVat_DonVi]
+                                                                  ,[brDuPhong_DonVi]
+                                                                  ,[brPhanCap_DonVi]
+                                                                  ,[brTienThu_DonVi]
+                                                                  ,[iSTT]
+                                                                  ,[iTrangThai]
+                                                                  ,[bPublic]
+                                                                  ,[iID_MaNhomNguoiDung_Public]
+                                                                  ,[iID_MaNhomNguoiDung_DuocGiao]
+                                                                  ,[sID_MaNguoiDung_DuocGiao]
+                                                                  ,[dNgayTao]
+                                                                  ,[sID_MaNguoiDungTao]
+                                                                  ,[iSoLanSua]
+                                                                  ,[dNgaySua]
+                                                                  ,[sIPSua]
+                                                                  ,[sID_MaNguoiDungSua]
+                                                                  ,[MaLoai])
      
        
-      SELECT 
-      [iID_MaDotNganSach]
-      ,iID_MaChungTuChiTiet
-      ,[iID_MaPhongBan]
-      ,[sTenPhongBan]
-      ,[iID_MaPhongBanDich]
-      ,[iID_MaTrangThaiDuyet]
-      ,[iNamLamViec]
-      ,[iID_MaNguonNganSach]
-      ,[iID_MaNamNganSach]
-      ,[bChiNganSach]
-      ,[iID_MaDuyetChungTuChiTiet]
-      ,[bDongY]
-      ,[sLyDo]
-      ,[sGhiChu]
-      ,[iID_MaDonVi]
-      ,[sTenDonVi]
-      ,[iID_MaMucLucNganSach]
-      ,[iID_MaMucLucNganSach_Cha]
-      ,[sXauNoiMa]
-      ,[bLaHangCha]
-      ,sLNS='1020100'
-      ,[sL]
-      ,[sK]
-      ,[sM]
-      ,[sTM]
-      ,[sTTM]
-      ,[sNG]
-      ,[sTNG]
-      ,[sMoTa]
-      ,[rTongSoNamTruoc]
-      ,[rUocThucHien]
-      ,[sMaCongTrinh]
-      ,[sTenCongTrinh]
-      ,[rNgay]
-      ,[rSoNguoi]
-      ,[rChiTaiKhoBac]
-      ,[rTonKho]
-      ,[rTuChi]
-      ,[rChiTapTrung]
-      ,[rHangNhap]
-      ,[rHangMua]
-      ,[rHienVat]
-      ,[rDuPhong]
-      ,[rPhanCap]
-      ,[rTienThu]
-      ,[rTongSo]
-      ,[rNgay_DonVi]
-      ,[rSoNguoi_DonVi]
-      ,[rChiTaiKhoBac_DonVi]
-      ,[rTonKho_DonVi]
-      ,[rTuChi_DonVi]
-      ,[rChiTapTrung_DonVi]
-      ,[rHangNhap_DonVi]
-      ,[rHangMua_DonVi]
-      ,[rHienVat_DonVi]
-      ,[rDuPhong_DonVi]
-      ,[rPhanCap_DonVi]
-      ,[rTienThu_DonVi]
-      ,[rTongSo_DonVi]
-      ,[bsMaCongTrinh]
-      ,[bsTenCongTrinh]
-      ,[brNgay]
-      ,[brSoNguoi]
-      ,[brChiTaiKhoBac]
-      ,[brTonKho]
-      ,[brTuChi]
-      ,[brChiTapTrung]
-      ,[brHangNhap]
-      ,[brHangMua]
-      ,[brHienVat]
-      ,[brDuPhong]
-      ,[brPhanCap]
-      ,[brTienThu]
-      ,[bsMaCongTrinh_DonVi]
-      ,[bsTenCongTrinh_DonVi]
-      ,[brNgay_DonVi]
-      ,[brSoNguoi_DonVi]
-      ,[brChiTaiKhoBac_DonVi]
-      ,[brTonKho_DonVi]
-      ,[brTuChi_DonVi]
-      ,[brChiTapTrung_DonVi]
-      ,[brHangNhap_DonVi]
-      ,[brHangMua_DonVi]
-      ,[brHienVat_DonVi]
-      ,[brDuPhong_DonVi]
-      ,[brPhanCap_DonVi]
-      ,[brTienThu_DonVi]
-      ,[iSTT]
-      ,[iTrangThai]
-      ,[bPublic]
-      ,[iID_MaNhomNguoiDung_Public]
-      ,[iID_MaNhomNguoiDung_DuocGiao]
-      ,[sID_MaNguoiDung_DuocGiao]
-      ,[dNgayTao]
-      ,[sID_MaNguoiDungTao]
-      ,[iSoLanSua]
-      ,[dNgaySua]
-      ,[sIPSua]
-      ,[sID_MaNguoiDungSua]
-      ,MaLoai=2
-       FROM DTBS_ChungTuChiTiet
-WHERE iID_MaChungTuChiTiet=@iID_MaChungTuChiTiet");
+                                                                  SELECT 
+                                                                  [iID_MaDotNganSach]
+                                                                  ,iID_MaChungTuChiTiet
+                                                                  ,[iID_MaPhongBan]
+                                                                  ,[sTenPhongBan]
+                                                                  ,[iID_MaPhongBanDich]
+                                                                  ,[iID_MaTrangThaiDuyet]
+                                                                  ,[iNamLamViec]
+                                                                  ,[iID_MaNguonNganSach]
+                                                                  ,[iID_MaNamNganSach]
+                                                                  ,[bChiNganSach]
+                                                                  ,[iID_MaDuyetChungTuChiTiet]
+                                                                  ,[bDongY]
+                                                                  ,[sLyDo]
+                                                                  ,[sGhiChu]
+                                                                  ,[iID_MaDonVi]
+                                                                  ,[sTenDonVi]
+                                                                  ,[iID_MaMucLucNganSach]
+                                                                  ,[iID_MaMucLucNganSach_Cha]
+                                                                  ,[sXauNoiMa]
+                                                                  ,[bLaHangCha]
+                                                                  ,sLNS='1020100'
+                                                                  ,[sL]
+                                                                  ,[sK]
+                                                                  ,[sM]
+                                                                  ,[sTM]
+                                                                  ,[sTTM]
+                                                                  ,[sNG]
+                                                                  ,[sTNG]
+                                                                  ,[sMoTa]
+                                                                  ,[rTongSoNamTruoc]
+                                                                  ,[rUocThucHien]
+                                                                  ,[sMaCongTrinh]
+                                                                  ,[sTenCongTrinh]
+                                                                  ,[rNgay]
+                                                                  ,[rSoNguoi]
+                                                                  ,[rChiTaiKhoBac]
+                                                                  ,[rTonKho]
+                                                                  ,[rTuChi]
+                                                                  ,[rChiTapTrung]
+                                                                  ,[rHangNhap]
+                                                                  ,[rHangMua]
+                                                                  ,[rHienVat]
+                                                                  ,[rDuPhong]
+                                                                  ,[rPhanCap]
+                                                                  ,[rTienThu]
+                                                                  ,[rTongSo]
+                                                                  ,[rNgay_DonVi]
+                                                                  ,[rSoNguoi_DonVi]
+                                                                  ,[rChiTaiKhoBac_DonVi]
+                                                                  ,[rTonKho_DonVi]
+                                                                  ,[rTuChi_DonVi]
+                                                                  ,[rChiTapTrung_DonVi]
+                                                                  ,[rHangNhap_DonVi]
+                                                                  ,[rHangMua_DonVi]
+                                                                  ,[rHienVat_DonVi]
+                                                                  ,[rDuPhong_DonVi]
+                                                                  ,[rPhanCap_DonVi]
+                                                                  ,[rTienThu_DonVi]
+                                                                  ,[rTongSo_DonVi]
+                                                                  ,[bsMaCongTrinh]
+                                                                  ,[bsTenCongTrinh]
+                                                                  ,[brNgay]
+                                                                  ,[brSoNguoi]
+                                                                  ,[brChiTaiKhoBac]
+                                                                  ,[brTonKho]
+                                                                  ,[brTuChi]
+                                                                  ,[brChiTapTrung]
+                                                                  ,[brHangNhap]
+                                                                  ,[brHangMua]
+                                                                  ,[brHienVat]
+                                                                  ,[brDuPhong]
+                                                                  ,[brPhanCap]
+                                                                  ,[brTienThu]
+                                                                  ,[bsMaCongTrinh_DonVi]
+                                                                  ,[bsTenCongTrinh_DonVi]
+                                                                  ,[brNgay_DonVi]
+                                                                  ,[brSoNguoi_DonVi]
+                                                                  ,[brChiTaiKhoBac_DonVi]
+                                                                  ,[brTonKho_DonVi]
+                                                                  ,[brTuChi_DonVi]
+                                                                  ,[brChiTapTrung_DonVi]
+                                                                  ,[brHangNhap_DonVi]
+                                                                  ,[brHangMua_DonVi]
+                                                                  ,[brHienVat_DonVi]
+                                                                  ,[brDuPhong_DonVi]
+                                                                  ,[brPhanCap_DonVi]
+                                                                  ,[brTienThu_DonVi]
+                                                                  ,[iSTT]
+                                                                  ,[iTrangThai]
+                                                                  ,[bPublic]
+                                                                  ,[iID_MaNhomNguoiDung_Public]
+                                                                  ,[iID_MaNhomNguoiDung_DuocGiao]
+                                                                  ,[sID_MaNguoiDung_DuocGiao]
+                                                                  ,[dNgayTao]
+                                                                  ,[sID_MaNguoiDungTao]
+                                                                  ,[iSoLanSua]
+                                                                  ,[dNgaySua]
+                                                                  ,[sIPSua]
+                                                                  ,[sID_MaNguoiDungSua]
+                                                                  ,MaLoai=2
+                                                                   FROM DTBS_ChungTuChiTiet
+                                                            WHERE iID_MaChungTuChiTiet=@iID_MaChungTuChiTiet");
                                     SqlCommand cmd = new SqlCommand(SQL);
                                     cmd.Parameters.AddWithValue("@iID_MaChungTuChiTiet", iID_MaChungTuNew);
                                     Connection.UpdateDatabase(cmd);
@@ -628,25 +652,8 @@ WHERE iID_MaChungTuChiTiet=@iID_MaChungTuChiTiet");
                 }
             }
             #endregion
-         
             return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS });
-        }
-        [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SearchSubmit(String ParentID, String iID_MaChungTu, string iLoai)
-        {
-            String iID_MaDonVi = Request.Form[ParentID + "_iID_MaDonVi"];
-            String sLNS = Request.Form[ParentID + "_sLNS"];
-            String sL = Request.Form[ParentID + "_sL"];
-            String sK = Request.Form[ParentID + "_sK"];
-            String sM = Request.Form[ParentID + "_sM"];
-            String sTM = Request.Form[ParentID + "_sTM"];
-            String sTTM = Request.Form[ParentID + "_sTTM"];
-            String sNG = Request.Form[ParentID + "_sNG"];
-            String sTNG = Request.Form[ParentID + "_sTNG"];
-
-            return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai, iID_MaDonVi = iID_MaDonVi, sLNS = sLNS, sL = sL, sK = sK, sM = sM, sTM = sTM, sTTM = sTTM, sNG = sNG, sTNG = sTNG });
-        }
-
+        } 
+        #endregion
     }
 }
