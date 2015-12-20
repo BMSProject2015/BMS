@@ -4,76 +4,17 @@ using System.Data;
 using System.Data.SqlClient;
 using DomainModel;
 using DomainModel.Abstract;
-using VIETTEL.Models.DungChung;
 
 namespace VIETTEL.Models.DuToanBS
 {
-    public class DuToanBS_ChungTuModels
+    public class DuToanBSChungTuModels
     {
-        public static Boolean UpdateRecord(String iID_MaChungTu, SqlParameterCollection Params, String MaND, String IPSua)
-        {
-            Bang bang = new Bang("DTBS_ChungTu");
-            bang.MaNguoiDungSua = MaND;
-            bang.IPSua = IPSua;
-            bang.GiaTriKhoa = iID_MaChungTu;
-            bang.DuLieuMoi = false;
-            for (int i = 0; i < Params.Count; i++)
-            {
-                bang.CmdParams.Parameters.AddWithValue(Params[i].ParameterName, Params[i].Value);
-            }
-            bang.Save();
-            return false;
-        }
-        public static DataTable getDanhSachChungTuNganhKyThuatChuyenBKhac(String sMaND)
-        {
-            DataTable vR;
-            int iID_MaTrangThaiDuyet;
-            SqlCommand cmd = new SqlCommand();
-            bool bTrolyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(sMaND);
-            String iID_MaPhongBan = "";
-            String DK = "";
-
-            if (bTrolyTongHop)
-            {
-                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(sMaND);
-                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
-                {
-                    DataRow drPhongBan = dtPhongBan.Rows[0];
-                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
-                }
-                DK += " AND 1=1 AND iID_MaPhongBan<>iID_MaPhongBanDich ";
-                cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-                dtPhongBan.Dispose();
-                DK += " AND 1=1 AND iID_MaPhongBanDich=@iID_MaPhongBan";
-
-            }
-            else
-            {
-                DK += " AND 0=1";
-            }
-            //nếu là ngân sách bảo đảm
-
-            iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeChiTieu));
-
-
-            string SQL = String.Format(@"SELECT * FROM (
-SELECT DISTINCT iID_MaChungTu FROM DTBS_ChungTuChiTiet_PhanCap
-WHERE sLNS=1040100 AND  iTrangThai=1 AND iNamLamViec=@iNamLamViec {0}
- ) as a
-INNER JOIN 
-(SELECT iID_MaChungTuChiTiet,iID_MaChungTu as MaChungTu
- FROM DTBS_ChungTuChiTiet 
- WHERE iTrangThai=1 AND sLNS='1040100' AND iNamLamViec=@iNamLamViec) as CTCT
- ON CTCT.iID_MaChungTuChiTiet=a.iID_MaChungTu
-INNER JOIN (SELECT * FROM DTBS_ChungTu WHERE iTrangThai=1 AND sDSLNS='1040100' AND iNamLamViec=@iNamLamViec AND iKyThuat=0) as b
-ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
-            cmd.CommandText = SQL;
-            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
-            //cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", iID_MaTrangThaiDuyet);
-            vR = Connection.GetDataTable(cmd);
-            cmd.Dispose();
-            return vR;
-        }
+        #region Cập nhật lý do
+        /// <summary>
+        /// Cập nhật lý do
+        /// </summary>
+        /// <param name="iID_MaChungTu"></param>
+        /// <param name="sLyDo"></param>
         public static void CapNhatLyDoChungTu(String iID_MaChungTu, String sLyDo)
         {
             String SQL = "";
@@ -86,13 +27,8 @@ ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
             cmd.Parameters.AddWithValue("@sLyDo", sLyDo);
             Connection.UpdateDatabase(cmd);
             cmd.Dispose();
-        }
-        public static DataTable getNguon()
-        {
-            String SQL = "SELECT iID_MaNguon,sKyHieu+sTen as TenHT FROM DT_Nguon";
-            DataTable dt = Connection.GetDataTable(SQL);
-            return dt;
-        }
+        } 
+        #endregion
 
         #region Lấy danh sách đơn vị ngành kỹ thuật
         /// <summary>
@@ -1014,7 +950,7 @@ ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
             SqlCommand cmd = new SqlCommand();
             string dk = "";
             //Trang thai tro ly tong hop duyet lan 1
-            int iID_MaTrangThaiDuyet = DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT;
+            int iID_MaTrangThaiDuyet = DuToanBSChungTuChiTietModels.iMaTrangThaiDuyetKT;
             string iNamLamViec = ReportModels.LayNamLamViec(maND);
             string iID_MaNguonNganSach = "";
             string iID_MaNamNganSach = "";
@@ -1136,6 +1072,58 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
 
             cmd.Dispose();
             return dtResult;
+        } 
+        #endregion
+
+        #region Lấy Danh Sach Chung Tu Nganh Ky Thuat Chuyen B Khac
+        public static DataTable getDanhSachChungTuNganhKyThuatChuyenBKhac(String sMaND)
+        {
+            DataTable vR;
+            int iID_MaTrangThaiDuyet;
+            SqlCommand cmd = new SqlCommand();
+            bool bTrolyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(sMaND);
+            String iID_MaPhongBan = "";
+            String DK = "";
+
+            if (bTrolyTongHop)
+            {
+                DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(sMaND);
+                if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+                {
+                    DataRow drPhongBan = dtPhongBan.Rows[0];
+                    iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
+                }
+                DK += " AND 1=1 AND iID_MaPhongBan<>iID_MaPhongBanDich ";
+                cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
+                dtPhongBan.Dispose();
+                DK += " AND 1=1 AND iID_MaPhongBanDich=@iID_MaPhongBan";
+
+            }
+            else
+            {
+                DK += " AND 0=1";
+            }
+            //nếu là ngân sách bảo đảm
+
+            iID_MaTrangThaiDuyet = LuongCongViecModel.Luong_iID_MaTrangThaiDuyet_TrinhDuyet(LuongCongViecModel.Get_iID_MaTrangThaiDuyetMoi(PhanHeModels.iID_MaPhanHeChiTieu));
+
+
+            string SQL = String.Format(@"SELECT * FROM (
+                    SELECT DISTINCT iID_MaChungTu FROM DTBS_ChungTuChiTiet_PhanCap
+                    WHERE sLNS=1040100 AND  iTrangThai=1 AND iNamLamViec=@iNamLamViec {0}
+                     ) as a
+                    INNER JOIN 
+                    (SELECT iID_MaChungTuChiTiet,iID_MaChungTu as MaChungTu
+                     FROM DTBS_ChungTuChiTiet 
+                     WHERE iTrangThai=1 AND sLNS='1040100' AND iNamLamViec=@iNamLamViec) as CTCT
+                     ON CTCT.iID_MaChungTuChiTiet=a.iID_MaChungTu
+                    INNER JOIN (SELECT * FROM DTBS_ChungTu WHERE iTrangThai=1 AND sDSLNS='1040100' AND iNamLamViec=@iNamLamViec AND iKyThuat=0) as b
+                    ON CTCT.MaChungTu=b.iID_MaChungTu", DK);
+            cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(sMaND));
+            vR = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return vR;
         } 
         #endregion
         #endregion
@@ -1546,7 +1534,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
             cmd = new SqlCommand();
             cmd.Parameters.AddWithValue("@iID_MaTrangThaiDuyet", maTrangThaiTiepTheo);
             //update trang Thai duyet dtChungTu
-            DuToanBS_ChungTuModels.UpdateRecord(maChungTu, cmd.Parameters, MaND, IPSua);
+            DuToanBSChungTuModels.UpdateRecord(maChungTu, cmd.Parameters, MaND, IPSua);
             cmd.Dispose();
 
             //Sửa dữ liệu trong bảng DTBS_ChungTuChiTiet            
@@ -1830,7 +1818,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTrinhDuyet(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iID_MaNguoiDungTao = Convert.ToString(dt.Rows[0]["sID_MaNguoiDungTao"]);
@@ -1879,7 +1867,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTrinhDuyetBaoDam(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iID_MaNguoiDungTao = Convert.ToString(dt.Rows[0]["sID_MaNguoiDungTao"]);
@@ -1956,7 +1944,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTrinhDuyetTLTH(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1972,7 +1960,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTrinhDuyetTLTHBaoDam(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -1988,7 +1976,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTuChoiTLTHCuc(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTHCuc(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -2001,11 +1989,10 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
             }
             return vR;
         }
-
         public static int LayMaTrangThaiTuChoi(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             dt.Dispose();
@@ -2051,7 +2038,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTuChoiBaoDam(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTu(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTu(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             int iCheck = Convert.ToInt32(dt.Rows[0]["iCheck"]);
             String iKyThuat = Convert.ToString(dt.Rows[0]["iKyThuat"]);
@@ -2114,7 +2101,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTuChoiTLTHBaoDam(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -2136,7 +2123,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTuChoiTLTH(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTH(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTH(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -2158,7 +2145,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         public static int LayMaTrangThaiTrinhDuyetTLTHCuc(String MaND, String MaChungTu)
         {
             int vR = -1;
-            DataTable dt = DuToanBS_ChungTuModels.LayChungTuTLTHCuc(MaChungTu);
+            DataTable dt = DuToanBSChungTuModels.LayChungTuTLTHCuc(MaChungTu);
             int iID_MaTrangThaiDuyet = Convert.ToInt32(dt.Rows[0]["iID_MaTrangThaiDuyet"]);
             dt.Dispose();
             if (LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeDuToan, MaND, iID_MaTrangThaiDuyet))
@@ -2170,6 +2157,31 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
                 }
             }
             return vR;
+        } 
+        #endregion
+
+        #region Update chứng từ theo param
+        /// <summary>
+        /// Update chứng từ theo param
+        /// </summary>
+        /// <param name="iID_MaChungTu"></param>
+        /// <param name="Params"></param>
+        /// <param name="MaND"></param>
+        /// <param name="IPSua"></param>
+        /// <returns></returns>
+        public static bool UpdateRecord(String iID_MaChungTu, SqlParameterCollection Params, String MaND, String IPSua)
+        {
+            Bang bang = new Bang("DTBS_ChungTu");
+            bang.MaNguoiDungSua = MaND;
+            bang.IPSua = IPSua;
+            bang.GiaTriKhoa = iID_MaChungTu;
+            bang.DuLieuMoi = false;
+            for (int i = 0; i < Params.Count; i++)
+            {
+                bang.CmdParams.Parameters.AddWithValue(Params[i].ParameterName, Params[i].Value);
+            }
+            bang.Save();
+            return false;
         } 
         #endregion
     }

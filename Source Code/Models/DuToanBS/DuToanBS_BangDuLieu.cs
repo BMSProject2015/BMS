@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DomainModel.Abstract;
-using System.Collections.Specialized;
 using DomainModel;
 using System.Data;
-using DomainModel.Controls;
 using System.Data.SqlClient;
 
 namespace VIETTEL.Models.DuToanBS
@@ -14,14 +9,14 @@ namespace VIETTEL.Models.DuToanBS
     /// <summary>
     /// Lớp DuToanBS_BangDuLieu cho phần bảng của Phân bổ chỉ tiêu
     /// </summary>
-    public class DuToanBS_BangDuLieu : BangDuLieu
+    public class DuToanBSBangDuLieu : BangDuLieu
     {
         protected int _iNamLamViec;
-        private List<List<Double>> _arrGiaTriNhom = new List<List<Double>>();
+        private List<List<double>> _arrGiaTriNhom = new List<List<double>>();
         private List<int> _arrChiSoNhom = new List<int>();
-        private List<String> _arrMaMucLucNganSach = new List<String>();
+        private List<string> _arrMaMucLucNganSach = new List<string>();
         private DataTable _dtDonVi = null;
-        public String strDSChiSoNhom
+        public string strDSChiSoNhom
         {
             get
             {
@@ -34,7 +29,7 @@ namespace VIETTEL.Models.DuToanBS
                 return vR;
             }
         }
-        public String strMaMucLucNganSach
+        public string strMaMucLucNganSach
         {
             get
             {
@@ -50,11 +45,11 @@ namespace VIETTEL.Models.DuToanBS
         /// <summary>
         /// Thuộc tính lấy danh sách mã đơn vị và tên đơn vị cho Javascript
         /// </summary>
-        public String strDSDonVi
+        public string strDSDonVi
         {
             get
             {
-                String _strDSDonVi = "";
+                string _strDSDonVi = "";
                 for (int csDonVi = 0; csDonVi < _dtDonVi.Rows.Count; csDonVi++)
                 {
                     if (csDonVi > 0) _strDSDonVi += "##";
@@ -63,29 +58,26 @@ namespace VIETTEL.Models.DuToanBS
                 return _strDSDonVi;
             }
         }
+
+        #region DuToanBSBangDuLieu
         /// <summary>
         /// Hàm khởi tạo
         /// </summary>
         /// <param name="maChungTu"></param>
         /// <param name="maND">Mã người dùng</param>
-        /// <param name="IPSua">IP của máy yêu cầu</param>
+        /// <param name="iPSua">IP của máy yêu cầu</param>
         ///sLNS,sL,sK,sM,sTM,sTTM
-        public DuToanBS_BangDuLieu(String maChungTu, Dictionary<String, String> dicGiaTriTimKiem, String maND, String IPSua, String sLNS, String MaLoai, String iLoai, String iChiTapTrung)
+        public DuToanBSBangDuLieu(String maChungTu, Dictionary<string, string> dicGiaTriTimKiem, string maND,
+            string iPSua, string sLNS, string sKieuXem, string iLoai, string iChiTapTrung)
         {
             this._iID_Ma = maChungTu;
             this._MaND = maND;
-            this._IPSua = IPSua;
+            this._IPSua = iPSua;
             _dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(_MaND);
             string SQL;
             SqlCommand cmd;
 
-            //Chứng từ TLTH.
-            if (iLoai == "1")
-            {
-                SQL = "SELECT * FROM DTBS_ChungTu_TLTH WHERE iID_MaChungTu_TLTH=@iID_MaChungTu AND iTrangThai=1";
-            }
-            //Chung tu nganh ky thuat
-            else if (iLoai == "4")
+            if (iLoai == "4")
             {
                 SQL = "SELECT * FROM DTBS_ChungTuChiTiet WHERE iID_MaChungTuChiTiet=@iID_MaChungTu AND iTrangThai=1";
                 sLNS = "1040100";
@@ -102,35 +94,35 @@ namespace VIETTEL.Models.DuToanBS
             cmd.Dispose();
 
             _iNamLamViec = Convert.ToInt32(_dtBang.Rows[0]["iNamLamViec"]);
-            string iID_MaNguoiDungTao = Convert.ToString(_dtBang.Rows[0]["sID_MaNguoiDungTao"]);
-            int iID_MaTrangThaiDuyet = Convert.ToInt32(_dtBang.Rows[0]["iID_MaTrangThaiDuyet"]);
+            string maNDTao = Convert.ToString(_dtBang.Rows[0]["sID_MaNguoiDungTao"]);
+            int maTrangThaiDuyet = Convert.ToInt32(_dtBang.Rows[0]["iID_MaTrangThaiDuyet"]);
             string iKyThuat = Convert.ToString(_dtBang.Rows[0]["iKyThuat"]);
-            // String sLNS = Convert.ToString(_dtBang.Rows[0]["sDSLNS"]);
-            if (sLNS != "1040100")
+
+            if (sLNS != "1040100" && !sLNS.Contains("109"))
             {
-                bool ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND,
-                                                                                        iID_MaTrangThaiDuyet);
+                bool bDuocSuaCT = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND,
+                                                                                        maTrangThaiDuyet);
                 _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, maND);
                 //Trolytonghop duoc sua chung tu do minh tạo
-                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
-                bool CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanBSModels.iID_MaPhanHe, iID_MaTrangThaiDuyet);
-                if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
+                bool bTroLyTH = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
+                bool bMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(DuToanBSModels.iID_MaPhanHe, maTrangThaiDuyet);
+                if (bTroLyTH && bMoiTao)
                 {
-                    ND_DuocSuaChungTu = true;
+                    bDuocSuaCT = true;
                     _DuocSuaChiTiet = true;
                 }
-                if (ND_DuocSuaChungTu == false)
+                if (bDuocSuaCT == false)
                 {
                     _ChiDoc = true;
                 }
                 //duoc sua khi o trang thai moi tao
-                if (CheckTrangThaiDuyetMoiTao == false) _DuocSuaChiTiet = false;
-                if (LuongCongViecModel.KiemTra_TrangThaiDaDuyet(DuToanBSModels.iID_MaPhanHe, iID_MaTrangThaiDuyet))
+                if (bMoiTao == false) _DuocSuaChiTiet = false;
+                if (LuongCongViecModel.KiemTra_TrangThaiDaDuyet(DuToanBSModels.iID_MaPhanHe, maTrangThaiDuyet))
                 {
                     _ChiDoc = true;
                 }
                 //Trang thai tu choi
-                if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
+                if (maND == maNDTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, maTrangThaiDuyet))
                 {
                     _DuocSuaChiTiet = true;
                     _ChiDoc = false;
@@ -140,56 +132,55 @@ namespace VIETTEL.Models.DuToanBS
             //bao dam
             else
             {
-                bool ND_DuocSuaChungTu = false;
-                bool CheckTrangThaiDuyetMoiTao = false;
+                bool bDuocSuaCT = false;
+                bool bMoiTao = false;
                 if (iKyThuat == "1")
                 {
-                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, maND,iID_MaTrangThaiDuyet);
+                    bDuocSuaCT = LuongCongViecModel.NguoiDung_DuocSuaChungTu(PhanHeModels.iID_MaPhanHeChiTieu, maND, maTrangThaiDuyet);
                     _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(PhanHeModels.iID_MaPhanHeChiTieu, maND);
-                    CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet);
+                    bMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeChiTieu, maTrangThaiDuyet);
                 }
                 else
                 {
-                    ND_DuocSuaChungTu = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND,iID_MaTrangThaiDuyet);
+                    bDuocSuaCT = LuongCongViecModel.NguoiDung_DuocSuaChungTu(DuToanBSModels.iID_MaPhanHe, maND, maTrangThaiDuyet);
                     _DuocSuaChiTiet = LuongCongViecModel.NguoiDung_DuocThemChungTu(DuToanBSModels.iID_MaPhanHe, maND);
-                    CheckTrangThaiDuyetMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet);
+                    bMoiTao = LuongCongViecModel.KiemTra_TrangThaiKhoiTao(PhanHeModels.iID_MaPhanHeDuToan, maTrangThaiDuyet);
                 }
 
                 //Trolytonghop duoc sua chung tu do minh tạo
-                bool checkTroLyTongHop = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
+                bool bTroLyTH = LuongCongViecModel.KiemTra_TroLyTongHop(maND);
 
-                if (checkTroLyTongHop && CheckTrangThaiDuyetMoiTao)
+                if (bTroLyTH && bMoiTao)
                 {
-                    ND_DuocSuaChungTu = true;
+                    bDuocSuaCT = true;
                     _DuocSuaChiTiet = true;
                 }
-                if (ND_DuocSuaChungTu == false)
+                if (bDuocSuaCT == false)
                 {
                     _ChiDoc = true;
                 }
                 //duoc sua khi o trang thai moi tao
-                if (CheckTrangThaiDuyetMoiTao == false) _DuocSuaChiTiet = false;
+                if (bMoiTao == false) _DuocSuaChiTiet = false;
 
                 if (iKyThuat == "1")
                 {
                     //Trang thai tu choi
-                    if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, iID_MaTrangThaiDuyet))
+                    if (maND == maNDTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeChiTieu, maTrangThaiDuyet))
                     {
                         _DuocSuaChiTiet = true;
                         _ChiDoc = false;
                     }
                     //Tro ly tong hop dc sua chung tu
-                    if (checkTroLyTongHop && iID_MaTrangThaiDuyet == DuToanBS_ChungTuChiTietModels.iMaTrangThaiDuyetKT)
+                    if (bTroLyTH && maTrangThaiDuyet == DuToanBSChungTuChiTietModels.iMaTrangThaiDuyetKT)
                     {
-                        ND_DuocSuaChungTu = true;
+                        bDuocSuaCT = true;
                         _DuocSuaChiTiet = true;
                     }
-
                 }
                 else
                 {
                     //Trang thai tu choi
-                    if (maND == iID_MaNguoiDungTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, iID_MaTrangThaiDuyet))
+                    if (maND == maNDTao && LuongCongViecModel.KiemTra_TrangThaiTuChoi(PhanHeModels.iID_MaPhanHeDuToan, maTrangThaiDuyet))
                     {
                         _DuocSuaChiTiet = true;
                         _ChiDoc = false;
@@ -199,7 +190,7 @@ namespace VIETTEL.Models.DuToanBS
             //phần nhaapk chi tâp chng
             if (iChiTapTrung == "1")
             {
-                _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTiet_ChiTapTrung(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
+                _dtChiTiet = DuToanBSChungTuChiTietModels.LayChungTuChiTietChiTapTrung(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                 _DuocSuaChiTiet = true;
             }
             else
@@ -207,34 +198,36 @@ namespace VIETTEL.Models.DuToanBS
                 //phan nhap ky thuat lan 2
                 if (iLoai == "4")
                 {
-                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.GetChungTuChiTietLan2(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
+                    _dtChiTiet = DuToanBSChungTuChiTietModels.LayChungTuChiTietLan2(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                     _DuocSuaChiTiet = true;
                 }
                 else
                 {
-                    _dtChiTiet = DuToanBS_ChungTuChiTietModels.LayChungTuChiTiet(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
+                    _dtChiTiet = DuToanBSChungTuChiTietModels.LayChungTuChiTiet(_iID_Ma, dicGiaTriTimKiem, maND, sLNS);
                 }
             }
 
-            ThemHangTongCong();
-
             _dtChiTiet_Cu = _dtChiTiet.Copy();
-            if (iLoai == "1") MaLoai = "DuToan";
-            DienDuLieu(sLNS, MaLoai, iLoai, iKyThuat, iChiTapTrung);
-        }
-        protected void CapNhapHangTongCong(String iLoai = "",String iChiTapTrung="")
+            if (iLoai == "1") sKieuXem = "DuToan";
+            DienDuLieu(sLNS, sKieuXem, iLoai, iKyThuat, iChiTapTrung);
+        } 
+        #endregion
+
+        #region CapNhapHangTongCong
+        /// <summary>
+        /// Cập nhật hàng tổng cộng
+        /// </summary>
+        /// <param name="iLoai"></param>
+        /// <param name="iChiTapTrung"></param>
+        protected void CapNhapHangTongCong(String iLoai = "", String iChiTapTrung = "")
         {
-            String strDSTruongTien = MucLucNganSachModels.strDSTruongTien_So;
-            String[] arrDSTruongTien = strDSTruongTien.Split(',');
-
-
+            string strDSTruongTien = MucLucNganSachModels.strDSTruongTien_So;
+            string[] arrDSTruongTien = strDSTruongTien.Split(',');
             int len = arrDSTruongTien.Length;
-
 
             //Tinh lai cac hang cha
             for (int i = _dtChiTiet.Rows.Count - 1; i >= 0; i--)
             {
-
                 if (Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]))
                 {
                     String iID_MaMucLucNganSach = Convert.ToString(_dtChiTiet.Rows[i]["iID_MaMucLucNganSach"]);
@@ -244,27 +237,26 @@ namespace VIETTEL.Models.DuToanBS
                         {
                             i = 2;
                         }
-                        double S, S_PhanBo, S_DaCap, S_ConLai;
+                        double sTongSo;
                         //rTongSo
-                        S = 0;
+                        sTongSo = 0;
                         for (int j = i + 1; j < _dtChiTiet.Rows.Count; j++)
                         {
                             if (iID_MaMucLucNganSach == Convert.ToString(_dtChiTiet.Rows[j]["iID_MaMucLucNganSach_Cha"]))
                             {
                                 if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[j][arrDSTruongTien[k]])))
                                 {
-                                    S += Convert.ToDouble(_dtChiTiet.Rows[j][arrDSTruongTien[k]]);
+                                    sTongSo += Convert.ToDouble(_dtChiTiet.Rows[j][arrDSTruongTien[k]]);
                                 }
                             }
                         }
-
-                        _dtChiTiet.Rows[i][arrDSTruongTien[k]] = S;
+                        _dtChiTiet.Rows[i][arrDSTruongTien[k]] = sTongSo;
                     }
                 }
             }
+
             //Them Hàng tổng cộng
             DataRow dr = _dtChiTiet.NewRow();
-
             DataRow[] arrdr = _dtChiTiet.Select("sNG<>'' AND sLNS<>'1020100' ");
             if (iChiTapTrung == "1")
             {
@@ -295,44 +287,26 @@ namespace VIETTEL.Models.DuToanBS
             }
             dr["bLaHangCha"] = true;
             _dtChiTiet.Rows.Add(dr);
-        }
-        protected void ThemHangTongCong()
-        {
-            ////Thêm hàng tổng cộng 
-            //DataRow R = _dtChiTiet.NewRow();
-            //_dtChiTiet.Rows.Add(R);
+        } 
+        #endregion
 
-            //for (int j = 0; j < _dtChiTiet.Columns.Count; j++)
-            //{
-            //    String TenCot = _dtChiTiet.Columns[j].ColumnName;
-            //    if (TenCot.StartsWith("r"))
-            //    {
-            //        Double S = 0;
-            //        for (int i = 0; i < _dtChiTiet.Rows.Count - 1; i++)
-            //        {
-            //            S += Convert.ToDouble(_dtChiTiet.Rows[i][TenCot]);
-            //        }
-            //        R[TenCot] = S;
-            //    }
-
-            //}
-        }
-
+        #region DienDuLieu
         /// <summary>
         /// Hàm điền dữ liệu
         /// Mục đích: Điền tất cả thông tin vào các tham số của đối tượng Bảng dữ liệu
         /// </summary>
-        protected void DienDuLieu(String sLNS, String MaLoai, String iLoai, String iKyThuat,String iChiTapTrung)
+        protected void DienDuLieu(string sLNS, string sKieuXem, string iLoai, string iKyThuat, string iChiTapTrung)
         {
-            String iID_MaPhongBan = "";
+            //Lấy mã phòng ban
+            string maPhongBan = "";
             DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(_MaND);
             if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
             {
-                DataRow drPhongBan = dtPhongBan.Rows[0];
-                iID_MaPhongBan = Convert.ToString(drPhongBan["sKyHieu"]);
+                maPhongBan = Convert.ToString(dtPhongBan.Rows[0]["sKyHieu"]);
                 dtPhongBan.Dispose();
             }
-            String[] arrDSTruongTien = MucLucNganSachModels.strDSTruongTien.Split(',');
+
+            string[] arrDSTruongTien = MucLucNganSachModels.strDSTruongTien.Split(',');
             if (_arrDuLieu == null)
             {
                 if (!String.IsNullOrEmpty(sLNS))
@@ -350,87 +324,83 @@ namespace VIETTEL.Models.DuToanBS
                     }
                 }
                 //Neu la form chi tap trung
+                #region Xóa dòng không hiện thị
                 if (iChiTapTrung == "1")
                 {
                     CapNhapHangTongCong(iLoai, iChiTapTrung);
                     int count = dtChiTiet.Rows.Count - 1;
-                    bool ok = true;
+                    bool isHienThiDong = true;
                     for (int i = count; i >= 0; i--)
                     {
-                        ok = true;
+                        isHienThiDong = true;
                         //neu ma phong ban nguoi dung khac ma phong ban tao
-                        if (String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"])) || Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"])=="0")
+                        if (String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"])) || Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"]) == "0")
                         {
-                            ok = false;
+                            isHienThiDong = false;
                         }
-
-
-                        if (ok == false)
+                        if (!isHienThiDong)
                         {
                             _dtChiTiet.Rows.RemoveAt(i);
                         }
                     }
-                  
                 }
                 else
                 {
-                    if (MaLoai == "DuToan")
+                    //Chi xem dữ liệu đã nhập
+                    if (sKieuXem == "DuToan")
                     {
                         int count = dtChiTiet.Rows.Count - 1;
-                        bool ok = true;
+                        bool isHienThiDong = true;
                         CapNhapHangTongCong(iLoai, iChiTapTrung);
                         for (int i = count; i >= 0; i--)
                         {
-                            ok = false;
+                            isHienThiDong = false;
                             for (int j = 0; j < arrDSTruongTien.Length; j++)
                             {
                                 if (String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])))
                                 {
-                                    ok = false;
+                                    isHienThiDong = false;
                                 }
                                 else if ((!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) && Convert.ToDecimal(_dtChiTiet.Rows[i][arrDSTruongTien[j]]) > 0))
                                 {
-                                    ok = true;
+                                    isHienThiDong = true;
                                 }
-
-
                             }
                             //neu ma phong ban nguoi dung khac ma phong ban tao
-                            if (iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"]) && iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
+                            if (maPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"]) && maPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
                             {
-                                ok = false;
+                                isHienThiDong = false;
                             }
                             //Loai bo het dong khong co du lieu
-                            if (ok == false)
+                            if (isHienThiDong == false)
                             {
                                 _dtChiTiet.Rows.RemoveAt(i);
                             }
-
                         }
-
                     }
-                    else if (MaLoai == "ChuaDuToan")
+                    //Chỉ xem những trường chưa nhập
+                    else if (sKieuXem == "ChuaDuToan")
                     {
                         int count = dtChiTiet.Rows.Count - 1;
-                        bool ok = true;
+                        bool coDuLieu = true;
 
                         for (int i = count; i >= 0; i--)
                         {
-                            ok = false;
+                            coDuLieu = false;
                             for (int j = 0; j < arrDSTruongTien.Length; j++)
                             {
                                 if (String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])))
                                 {
-                                    ok = false;
+                                    coDuLieu = false;
                                 }
                                 else if ((!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) && Convert.ToDecimal(_dtChiTiet.Rows[i][arrDSTruongTien[j]]) > 0))
                                 {
-                                    ok = true;
+                                    coDuLieu = true;
                                 }
                             }
 
                             //Loai bo het dong  co du lieu
-                            if (ok)
+                            if (coDuLieu)
                             {
                                 _dtChiTiet.Rows.RemoveAt(i);
                             }
@@ -438,49 +408,42 @@ namespace VIETTEL.Models.DuToanBS
                         }
                         CapNhapHangTongCong(iLoai, iChiTapTrung);
                     }
-                    else if (MaLoai == "PhanCap")
+                    //Xem dữ liệu phân cấp
+                    else if (sKieuXem == "PhanCap")
                     {
                         int count = dtChiTiet.Rows.Count - 1;
-                        bool ok = true;
+                        bool isHienThiDong = true;
                         CapNhapHangTongCong(iLoai, iChiTapTrung);
                         for (int i = count; i >= 0; i--)
                         {
-                            ok = false;
+                            isHienThiDong = false;
                             for (int j = 0; j < arrDSTruongTien.Length; j++)
                             {
                                 if (arrDSTruongTien[j] == "rPhanCap" || arrDSTruongTien[j] == "rHienVat")
                                 {
                                     if (String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])))
                                     {
-                                        ok = false;
+                                        isHienThiDong = false;
                                     }
-                                    else if (
-                                        (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) &&
+                                    else if ((!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i][arrDSTruongTien[j]])) &&
                                          Convert.ToDecimal(_dtChiTiet.Rows[i][arrDSTruongTien[j]]) > 0))
                                     {
-                                        ok = true;
+                                        isHienThiDong = true;
                                     }
                                 }
                             }
                             // Nếu ngân sách ngành kỹ thuật thì lọc mã phòng ban
                             if (Convert.ToBoolean(_dtBang.Rows[0]["iKyThuat"]) == true)
                             {
-
                                 //neu ma phong ban nguoi dung khac ma phong ban tao
-                                if (iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
+                                if (maPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
                                 {
-                                    ok = false;
+                                    isHienThiDong = false;
                                 }
                             }
-                            else
-                            {
-                                //if (iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"]) && iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
-                                //{
-                                //    ok = false;
-                                //}
-                            }
-                            //Loai bo het dong khong co du lieu
-                            if (ok == false)
+
+                            //Loai bo het dong khong co du lieu phân cấp
+                            if (isHienThiDong == false)
                             {
                                 _dtChiTiet.Rows.RemoveAt(i);
                             }
@@ -490,36 +453,33 @@ namespace VIETTEL.Models.DuToanBS
                         _dtChiTiet.Rows.RemoveAt(count - 1);
                         CapNhapHangTongCong(iLoai, iChiTapTrung);
                     }
-
+                    //Xem tất cả
                     else
                     {
                         int count = dtChiTiet.Rows.Count - 1;
-                        bool ok = true;
+                        bool isHienThiDong = true;
                         for (int i = count; i >= 0; i--)
                         {
-                            ok = true;
+                            isHienThiDong = true;
                             //neu ma phong ban nguoi dung khac ma phong ban tao
-                            if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"])) && iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"]) && iID_MaPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
+                            if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"])) && maPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBan"]) && maPhongBan != Convert.ToString(_dtChiTiet.Rows[i]["iID_MaPhongBanDich"]) && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
                             {
-                                ok = false;
+                                isHienThiDong = false;
                             }
-
-
-                            if (ok == false)
+                            if (!isHienThiDong)
                             {
                                 _dtChiTiet.Rows.RemoveAt(i);
                             }
                         }
                         CapNhapHangTongCong(iLoai, iChiTapTrung);
                     }
-                }//end ko phai chi tap trung
+                }
+                #endregion
+
                 if (iLoai == "4")
                 {
                     DataTable dtCT = _dtBang;
-
                     DataRow rows = dtCT.Rows[0];
-
-
                     DataRow dr = _dtChiTiet.NewRow();
                     dr["sMoTa"] = "Tổng ngành kỹ thuật phân sang";
                     dr["sTenDonVi"] = "";
@@ -547,26 +507,25 @@ namespace VIETTEL.Models.DuToanBS
                     dr["brChiTaiKhoBac"] = false;
                     dr["brChiTapTrung"] = false;
                     dtChiTiet.Rows.InsertAt(dr, 0);
-
-
                 }
 
-
-                String SQL = "UPDATE DTBS_ChungTu SET MaLoai='" + MaLoai + "' WHERE iID_MaChungTu='" + _iID_Ma + "'";
-                SqlCommand cmd = new SqlCommand(SQL);
+                string sql = "UPDATE DTBS_ChungTu SET MaLoai='" + sKieuXem + "' WHERE iID_MaChungTu='" + _iID_Ma + "'";
+                SqlCommand cmd = new SqlCommand(sql);
                 Connection.UpdateDatabase(cmd);
+
                 CapNhapDanhSachMaHang();
-                CapNhapDanhSachMaCot_Fixed(sLNS,iChiTapTrung);
-                CapNhapDanhSachMaCot_Slide(sLNS, MaLoai, iLoai, iKyThuat, iChiTapTrung);
-                CapNhapDanhSachMaCot_Them(sLNS);
-                CapNhap_arrEdit(sLNS, iLoai);
-                CapNhap_arrDuLieu(MaLoai,iChiTapTrung);
+                CapNhapDanhSachMaCotFixed(sLNS, iChiTapTrung);
+                CapNhapDanhSachMaCotSlide(sLNS, sKieuXem, iLoai, iKyThuat, iChiTapTrung);
+                CapNhapDanhSachMaCotThem(sLNS);
+                CapNhapArrEdit(sLNS, iLoai);
+                CapNhapArrDuLieu(sKieuXem, iChiTapTrung);
                 CapNhap_arrThayDoi();
-                CapNhap_arrLaHangCha();
-
+                CapNhatArrLaHangCha();
             }
-        }
+        } 
+        #endregion
 
+        #region CapNhapDanhSachMaHang
         /// <summary>
         /// Hàm cập nhập vào tham số _arrDSMaHang
         /// </summary>
@@ -581,13 +540,13 @@ namespace VIETTEL.Models.DuToanBS
                 {
                     MaHang = String.Format("{0}_{1}", R["iID_MaChungTuChiTiet"], R["iID_MaMucLucNganSach"]);
                 }
-
                 _arrDSMaHang.Add(MaHang);
-
                 _arrMaMucLucNganSach.Add(Convert.ToString(R["iID_MaMucLucNganSach"]));
             }
-        }
+        } 
+        #endregion
 
+        #region CapNhapDanhSachMaCotFixed
         /// <summary>
         /// Hàm thêm danh sách cột Fixed vào bảng
         ///     - Cột Fixed của bảng gồm:
@@ -595,7 +554,7 @@ namespace VIETTEL.Models.DuToanBS
         ///         + Trường sMaCongTrinh, sTenCongTrinh của cột tiền
         ///     - Cập nhập số lượng cột Fixed
         /// </summary>
-        protected void CapNhapDanhSachMaCot_Fixed(String sLNS, String iChiTapTrung)
+        protected void CapNhapDanhSachMaCotFixed(String sLNS, String iChiTapTrung)
         {
             //Khởi tạo các mảng
             _arrHienThiCot = new List<Boolean>();
@@ -649,13 +608,15 @@ namespace VIETTEL.Models.DuToanBS
                 _arrDSMaCot.Add("rTuChi");
                 _arrTieuDe.Add("Chỉ tiêu");
                 _arrWidth.Add(Convert.ToInt32(130));
-                    _arrHienThiCot.Add(true);
+                _arrHienThiCot.Add(true);
                 _arrSoCotCungNhom.Add(1);
                 _arrTieuDeNhomCot.Add("");
             }
             _nCotFixed = _arrDSMaCot.Count;
-        }
+        } 
+        #endregion
 
+        #region CapNhapDanhSachMaCotSlide
         /// <summary>
         /// Hàm thêm danh sách cột Slide vào bảng
         ///     - Cột Slide của bảng gồm:
@@ -664,7 +625,7 @@ namespace VIETTEL.Models.DuToanBS
         ///         + Trường bDongY, sLyDo
         ///     - Cập nhập số lượng cột Slide
         /// </summary>
-        protected void CapNhapDanhSachMaCot_Slide(String sLNS, String MaLoai, String iLoai, String iKyThuat,String iChiTapTrung)
+        protected void CapNhapDanhSachMaCotSlide(string sLNS, string MaLoai, string iLoai, string iKyThuat, string iChiTapTrung)
         {
             String strDSTruong = "";
             String strDSTruongTieuDe = "";
@@ -689,17 +650,13 @@ namespace VIETTEL.Models.DuToanBS
                 strDSTruongDoRong = "130";
             }
 
-            String[] arrDSTruong = strDSTruong.Split(',');
-            String[] arrDSTruongTieuDe = strDSTruongTieuDe.Split(',');
-            String[] arrDSTruongDoRong = strDSTruongDoRong.Split(',');
-
-            String[] arrDSTruongTien = DuToanBSModels.strDSTruongTien_Full.Split(',');
-            String strDSTruongTienTieuDe_Full = "";
-
-            strDSTruongTienTieuDe_Full = DuToanBSModels.strDSTruongTienTieuDe_Full;
-
-            String[] arrDSTruongTienTieuDe = strDSTruongTienTieuDe_Full.Split(',');
-            String[] arrDSTruongTienDoRong = DuToanBSModels.strDSTruongTienDoRong_Full.Split(',');
+            string[] arrDSTruong = strDSTruong.Split(',');
+            string[] arrDSTruongTieuDe = strDSTruongTieuDe.Split(',');
+            string[] arrDSTruongDoRong = strDSTruongDoRong.Split(',');
+            string[] arrDSTruongTien = DuToanBSModels.strDSTruongTien_Full.Split(',');
+            string strDSTruongTienTieuDe_Full = strDSTruongTienTieuDe_Full = DuToanBSModels.strDSTruongTienTieuDe_Full;
+            string[] arrDSTruongTienTieuDe = strDSTruongTienTieuDe_Full.Split(',');
+            string[] arrDSTruongTienDoRong = DuToanBSModels.strDSTruongTienDoRong_Full.Split(',');
 
             //Phần mục lục ngân sách
             for (int j = 0; j < arrDSTruongTieuDe.Length; j++)
@@ -718,11 +675,7 @@ namespace VIETTEL.Models.DuToanBS
             }
 
             //Phần tiền: Bỏ qua trường sMaCongTrinh, sTenCongTrinh
-            if (iChiTapTrung == "1")
-            {
-                
-            }
-            else
+            if (iChiTapTrung != "1")
             {
                 for (int j = 0; j < arrDSTruongTien.Length; j++)
                 {
@@ -743,7 +696,6 @@ namespace VIETTEL.Models.DuToanBS
             }
 
             //ngan sach bao dam- cac nganh phan cap
-
             if (MaLoai == "PhanCap")
             {
                 arrDSMaCot.Add("bPhanCap");
@@ -772,48 +724,18 @@ namespace VIETTEL.Models.DuToanBS
                 _arrSoCotCungNhom.Add(1);
                 _arrTieuDeNhomCot.Add("");
             }
-            //Them cot duyet
-            if (CoCotDuyet)
-            {
-                ////Cột đồng ý
-                //_arrDSMaCot.Add("bDongY");
-                //if (_ChiDoc)
-                //{
-                //    _arrTieuDe.Add("<div class='check'></div>");
-                //}
-                //else
-                //{
-                //    _arrTieuDe.Add("<div class='check' onclick='BangDuLieu_CheckAll();'></div>");
-                //}
-                //_arrWidth.Add(20);
-                //_arrHienThiCot.Add(true);
-                //_arrSoCotCungNhom.Add(1);
-                //_arrTieuDeNhomCot.Add("");
-                ////Cột Lý do
-                //_arrDSMaCot.Add("sLyDo");
-                //_arrTieuDe.Add("Nhận xét");
-                //_arrWidth.Add(200);
-                //_arrHienThiCot.Add(true);
-                //_arrSoCotCungNhom.Add(1);
-                //_arrTieuDeNhomCot.Add("");
-            }
-
             _nCotSlide = _arrDSMaCot.Count - _nCotFixed;
-        }
+        } 
+        #endregion
 
+        #region CapNhapDanhSachMaCotThem
         /// <summary>
         /// Hàm thêm các cột thêm của bảng
         /// </summary>
-        protected void CapNhapDanhSachMaCot_Them(String sLNS)
+        protected void CapNhapDanhSachMaCotThem(String sLNS)
         {
             String strDSTruong = "";
-
-
-            strDSTruong =
-                "sLNS,sL,sK,iID_MaDonVi,iID_MaMucLucNganSach,sMaCongTrinh,sMauSac,sFontColor,sFontBold";
-
-
-
+            strDSTruong = "sLNS,sL,sK,iID_MaDonVi,iID_MaMucLucNganSach,sMaCongTrinh,sMauSac,sFontColor,sFontBold";
             String[] arrDSTruong = strDSTruong.Split(',');
             for (int j = 0; j < arrDSTruong.Length; j++)
             {
@@ -824,12 +746,14 @@ namespace VIETTEL.Models.DuToanBS
                 _arrSoCotCungNhom.Add(1);
                 _arrTieuDeNhomCot.Add("");
             }
-        }
+        } 
+        #endregion
 
+        #region CapNhapArrEdit
         /// <summary>
         /// Hàm xác định các ô có được Edit hay không
         /// </summary>
-        protected void CapNhap_arrEdit(String sLNS, String iLoai)
+        protected void CapNhapArrEdit(String sLNS, String iLoai)
         {
             _arrEdit = new List<List<string>>();
             for (int i = 0; i < _dtChiTiet.Rows.Count; i++)
@@ -915,12 +839,14 @@ namespace VIETTEL.Models.DuToanBS
                     }
                 }
             }
-        }
+        } 
+        #endregion
 
+        #region CapNhapArrDuLieu
         /// <summary>
         /// Hàm cập nhập mảng dữ liệu
         /// </summary>
-        protected void CapNhap_arrDuLieu(String MaLoai,String iChiTapTrung)
+        protected void CapNhapArrDuLieu(String MaLoai, String iChiTapTrung)
         {
             _arrDuLieu = new List<List<string>>();
             for (int i = 0; i < _dtChiTiet.Rows.Count; i++)
@@ -944,8 +870,8 @@ namespace VIETTEL.Models.DuToanBS
 
                     if (MaLoai == "PhanCap" && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
                     {
-                        double dConLaiTC = DuToanBS_ChungTuChiTietModels.dTongConLai(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaChungTuChiTiet"]), "rTuChi");
-                        double dConLaiHV = DuToanBS_ChungTuChiTietModels.dTongConLai(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaChungTuChiTiet"]), "rHienVat");
+                        double dConLaiTC = DuToanBSChungTuChiTietModels.TongConLai(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaChungTuChiTiet"]), "rTuChi");
+                        double dConLaiHV = DuToanBSChungTuChiTietModels.TongConLai(Convert.ToString(_dtChiTiet.Rows[i]["iID_MaChungTuChiTiet"]), "rHienVat");
                         double dPhanCap = Convert.ToDouble(_dtChiTiet.Rows[i]["rPhanCap"]);
                         double dHienVat = Convert.ToDouble(_dtChiTiet.Rows[i]["rHienVat"]);
                         double TongCLTC = dPhanCap - dConLaiTC;
@@ -970,11 +896,11 @@ namespace VIETTEL.Models.DuToanBS
                             _arrDuLieu[i].Add("");
                         }
                     }
-                    else if (iChiTapTrung == "1" &&  Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
+                    else if (iChiTapTrung == "1" && Convert.ToBoolean(_dtChiTiet.Rows[i]["bLaHangCha"]) == false)
                     {
                         double dChiTieu = 0;
-                        if(!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"])))
-                            dChiTieu=Convert.ToDouble(_dtChiTiet.Rows[i]["rTuChi"]);
+                        if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["rTuChi"])))
+                            dChiTieu = Convert.ToDouble(_dtChiTiet.Rows[i]["rTuChi"]);
                         double dChiTapTrung = 0;
                         if (!String.IsNullOrEmpty(Convert.ToString(_dtChiTiet.Rows[i]["rChiTapTrung"])))
                             dChiTapTrung = Convert.ToDouble(_dtChiTiet.Rows[i]["rChiTapTrung"]);
@@ -999,8 +925,14 @@ namespace VIETTEL.Models.DuToanBS
                     }
                 }
             }
-        }
-        protected void CapNhap_arrLaHangCha()
+        } 
+        #endregion
+
+        #region CapNhatArrLaHangCha
+        /// <summary>
+        /// Set cờ cho các hàng cha
+        /// </summary>
+        protected void CapNhatArrLaHangCha()
         {
             //Xác định hàng là hàng cha, con
             _arrCSCha = new List<int>();
@@ -1021,7 +953,7 @@ namespace VIETTEL.Models.DuToanBS
                 }
                 _arrCSCha.Add(CSCha);
             }
-        }
-
+        } 
+        #endregion
     }
 }
