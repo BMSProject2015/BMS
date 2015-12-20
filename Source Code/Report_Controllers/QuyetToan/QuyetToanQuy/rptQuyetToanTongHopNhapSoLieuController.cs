@@ -11,7 +11,7 @@ using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 {
-    public class rptQuyetToan_TongHop_NhapSoLieuController : Controller
+    public class rptQuyetToanTongHopNhapSoLieuController : Controller
     {
         public string sViewPath = "~/Report_Views/";
         private const String VIEW_PATH_QUYETTOAN_TONGHOP_SOLIEU = "~/Report_Views/QuyetToan/QuyetToanQuy/rptQuyetToan_TongHop_NhapSoLieu.aspx";
@@ -28,7 +28,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
         /// </summary>
         /// <param name="ParentID"></param>
         /// HungPH: 2015/11/17
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             //Lấy giá trị từ Form
             String iThang_Quy = Request.Form[ParentID + "_iThang_Quy"];
@@ -144,7 +144,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
         /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         private void LoadData(FlexCelReport fr, String MaND, String iThang_Quy, String iID_MaNamNganSach, String iID_MaPhongBan)
         {
-            DataTable data = QuyetToan_ReportModels.rptQuyetToan_TongHop_NhapSoLieu(MaND, iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan);
+            DataTable data = QuyetToan_ReportModels.rptQuyetToanTongHopNhapSoLieu(MaND, iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan);
             data.TableName = "ChiTiet";
             fr.AddTable("ChiTiet", data);
             DataTable dtDonVi = HamChung.SelectDistinct("dtDonVi", data, "sTenDonVi", "sTenDonVi");

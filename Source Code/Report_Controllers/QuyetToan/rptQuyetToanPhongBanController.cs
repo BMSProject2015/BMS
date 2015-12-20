@@ -13,7 +13,7 @@ using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan
 {
-    public class rptQuyetToan_PhongBanController : Controller
+    public class rptQuyetToanPhongBanController : Controller
     {
         public string sViewPath = "~/Report_Views/";
         public string VIEW_PATH_QUYETTOAN_PHONGBAN = "~/Report_Views/QuyetToan/rptQuyetToan_PhongBan.aspx";
@@ -31,7 +31,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             //Lấy giá trị từ Form
             String sLNS = Request.Form["sLNS"];
@@ -137,7 +137,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan
             DataRow r;
             DataTable data = new DataTable();
             
-            data = QuyetToan_ReportModels.rptQuyetToan_PhongBan(MaND, sLNS, iThang_Quy, iID_MaDonVi, iID_MaPhongBan);
+            data = QuyetToan_ReportModels.rptQuyetToanPhongBan(MaND, sLNS, iThang_Quy, iID_MaDonVi, iID_MaPhongBan);
            
             data.TableName = "ChiTiet";
             fr.AddTable("ChiTiet", data);

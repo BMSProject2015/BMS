@@ -14,7 +14,7 @@ using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 {
-    public class rptQuyetToan_ThongTriController : Controller
+    public class rptQuyetToanThongTriController : Controller
     {
       
         public string sViewPath = "~/Report_Views/";
@@ -34,7 +34,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
         /// Lấy các giá trị từ Form gán vào ViewData
         /// </summary>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+            public ActionResult FormSubmit(String ParentID)
         {
             String sLNS = Request.Form["sLNS"];
             String iID_MaDonVi = Request.Form["iID_MaDonVi"];
@@ -209,11 +209,11 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 
             if(LoaiTongHop == "ChiTiet")
             {
-                data = QuyetToan_ReportModels.rptQuyetToan_ThongTri(MaND, sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaDonVi, LoaiTongHop);
+                data = QuyetToan_ReportModels.rptQuyetToanThongTri(MaND, sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaDonVi, LoaiTongHop);
             }
             if (LoaiTongHop == "TongHop")
             {
-                dtDonVi = QuyetToan_ReportModels.rptQuyetToan_ThongTri(MaND, sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaDonVi, LoaiTongHop);
+                dtDonVi = QuyetToan_ReportModels.rptQuyetToanThongTri(MaND, sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaDonVi, LoaiTongHop);
                 data = HamChung.SelectDistinct("ChiTiet", dtDonVi, "sLNS1,sLNS3,sLNS5,sLNS,sL,sK,sM,sTM,sTTM,sNG", "sLNS1,sLNS3,sLNS5,sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa");
                 fr.AddTable("dtDonVi", dtDonVi);
                 dtDonVi.Dispose();

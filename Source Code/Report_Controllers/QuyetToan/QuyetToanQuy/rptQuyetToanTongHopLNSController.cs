@@ -11,7 +11,7 @@ using VIETTEL.Models.QuyetToan;
 
 namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
 {
-    public class rptQuyetToan_TongHop_LNSController : Controller
+    public class rptQuyetToanTongHopLNSController : Controller
     {
         public string sViewPath = "~/Report_Views/";
         private const string VIEW_PATH_QUYETTOAN_TONGHOP_LNS = "~/Report_Views/QuyetToan/QuyetToanQuy/rptQuyetToan_TongHop_LNS.aspx";
@@ -29,7 +29,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             String sLNS = Request.Form["sLNS"];
             String MaTo = Request.Form["MaTo"];
@@ -225,7 +225,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
             DataRow r;
             DataTable data= new DataTable();
 
-            data = QuyetToan_ReportModels.rptQuyetToan_TongHop_LNS(MaND, sLNS, iThang_Quy, MaTo, iID_MaNamNganSach, iID_MaPhongBan);
+            data = QuyetToan_ReportModels.rptQuyetToanTongHopLNS(MaND, sLNS, iThang_Quy, MaTo, iID_MaNamNganSach, iID_MaPhongBan);
             data.TableName = "ChiTiet";
             fr.AddTable("ChiTiet", data);
 

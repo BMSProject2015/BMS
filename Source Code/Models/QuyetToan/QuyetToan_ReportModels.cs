@@ -891,7 +891,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="LoaiTongHop">Loại báo cáo: tổng hợp hay chi tiết</param>
         /// <returns></returns>
         /// VungNV: 2015/11/18
-        public static DataTable rptQuyetToan_ThongTri(String MaND, String sLNS, String iThang_Quy, String iID_MaNamNganSach, String iID_MaDonVi, String LoaiTongHop)
+        public static DataTable rptQuyetToanThongTri(String MaND, String sLNS, String iThang_Quy, String iID_MaNamNganSach, String iID_MaDonVi, String LoaiTongHop)
         {
             String DKDonVi = "";
             String DKPhongBan = "";
@@ -959,7 +959,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
                 SELECT SUBSTRING(sLNS,1,1) as sLNS1,
                         SUBSTRING(sLNS,1,3) as sLNS3,
                         SUBSTRING(sLNS,1,5) as sLNS5,
-                        sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa {4}
+                        sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa {3}
                         ,SUM(rTuChi) as rTuChi
                     FROM QTA_ChungTuChiTiet
                     WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND iThang_Quy=@iThang_Quy {0} {1} {2}
@@ -1104,7 +1104,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
         /// VungNV
-        public static DataTable rptQuyetToan_LNS_DonVi(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String MaPhongBan)
+        public static DataTable rptQuyetToanLNSDonVi(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String MaPhongBan)
         {
             String DKDonVi = "";
             String DKPhongBan = "";
@@ -1208,7 +1208,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="iID_MaNamNganSach">Năm ngân sách</param>
         /// <param name="MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
-        public static DataTable rptQuyetToan_DonVi_LNS(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String MaPhongBan)
+        public static DataTable rptQuyetToanDonViLNS(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String MaPhongBan)
         {
             String DKDonVi = "";
             String DKPhongBan = "";
@@ -1292,7 +1292,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="iID_MaNamNganSach">Năm ngân sách</param>
         /// <param name="iID_MaPhongBan">Mã phòng ban</param>
         /// <returns></returns>
-        public static DataTable rptQuyetToan_TongHop_LNS(String MaND, String sLNS, String iThang_Quy,
+        public static DataTable rptQuyetToanTongHopLNS(String MaND, String sLNS, String iThang_Quy,
                                                     String MaTo, String iID_MaNamNganSach, String iID_MaPhongBan)
         {
             String DKDonVi = "", DKPhongBan = "", DK = "";
@@ -1587,7 +1587,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="iID_MaDonVi">Mã Đơn Vị</param>
         /// <param name="iID_MaPhongBan">Mã Phòng Ban</param>
         /// <returns></returns>
-        public static DataTable rptQuyetToan_PhongBan(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaPhongBan)
+        public static DataTable rptQuyetToanPhongBan(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaPhongBan)
         {
             String DKDonVi = "", DKPhongBan = "", DK = "";
             SqlCommand cmd = new SqlCommand();
@@ -1668,7 +1668,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="iID_MaNamNganSach"></param>
         /// <param name="iID_MaPhongBan"></param>
         /// <returns></returns>
-        public static DataTable rptQuyetToan_TongQuyetToan_LNS_DonVi(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String iID_MaPhongBan)
+        public static DataTable rptQuyetToanTongQuyetToanLNSDonVi(String MaND, String sLNS, String iThang_Quy, String iID_MaDonVi, String iID_MaNamNganSach, String iID_MaPhongBan)
         {
             String DKDonVi = "";
             String DKPhongBan = "";
@@ -1771,7 +1771,7 @@ ON a.iID_MaDonVi=b.iID_MaDonVi
         /// <param name="iID_MaNamNganSach"></param>
         /// <param name="iID_MaPhongBan"></param>
         /// <returns></returns>
-        public static DataTable rptQuyetToan_TongHop_NhapSoLieu(String MaND, String iThang_Quy, String iID_MaNamNganSach, String iID_MaPhongBan)
+        public static DataTable rptQuyetToanTongHopNhapSoLieu(String MaND, String iThang_Quy, String iID_MaNamNganSach, String iID_MaPhongBan)
         {
             String DKPhongBan = "";
             String DK = "";

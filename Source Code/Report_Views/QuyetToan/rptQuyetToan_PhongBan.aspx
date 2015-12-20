@@ -84,7 +84,7 @@
             for (int i = 0; i < arrLNS.Length; i++)
             {
                 arrView[i] =
-                    String.Format(@"/rptQuyetToan_PhongBan/viewpdf?sLNS={0}&iThang_Quy={1}&iID_MaDonVi={2}&MaND={3}&iID_MaPhongBan={4}",
+                    String.Format(@"/rptQuyetToanPhongBan/viewpdf?sLNS={0}&iThang_Quy={1}&iID_MaDonVi={2}&MaND={3}&iID_MaPhongBan={4}",
                         arrLNS[i], iThang_Quy, iID_MaDonVi,MaND, iID_MaPhongBan);
                 Chuoi += arrView[i];
                 if (i < arrLNS.Length - 1)
@@ -95,8 +95,8 @@
 
         int SoCot = 1;
         String[] arrMaDonVi = sLNS.Split(',');
-        
-        using (Html.BeginForm("EditSubmit", "rptQuyetToan_PhongBan", new { ParentID = ParentID,MaND = MaND }))
+
+        using (Html.BeginForm("FormSubmit", "rptQuyetToanPhongBan", new { ParentID = ParentID, MaND = MaND }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
@@ -218,7 +218,7 @@
                         </td>
                         <td style="width: 10%">
                             <div id="<%= ParentID %>_tdDonVi">
-                                <%rptQuyetToan_PhongBanController rpt = new rptQuyetToan_PhongBanController();%>
+                                <%rptQuyetToanPhongBanController rpt = new rptQuyetToanPhongBanController();%>
                                 <%=rpt.obj_DonVi(ParentID, iThang_Quy, iID_MaDonVi, iID_MaPhongBan, MaND)%>
                             </div>
                         </td>
@@ -452,7 +452,7 @@
                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&iID_MaPhongBan=#3&MaND=#4", "rptQuyetToan_PhongBan") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&iID_MaPhongBan=#3&MaND=#4", "rptQuyetToanPhongBan") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2", "<%= iID_MaDonVi %>"));
