@@ -19,24 +19,24 @@
         DataTable dtTuyChinh = QuyetToanModels.getDanhSachTuyChinh_DuToan(sLNS);
         SelectOptionList slTuyChinh = new SelectOptionList(dtTuyChinh, "MaLoai", "sTen");     
         dtTuyChinh.Dispose();
-        String MaLoai = "";
-         if (String.IsNullOrEmpty(MaLoai)) MaLoai = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu", "iID_MaChungTu", iID_MaChungTu, "MaLoai"));
-        using (Html.BeginForm("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { ParentID = ParentID }))
+        string MaLoai = "";
+        if (String.IsNullOrEmpty(MaLoai)) MaLoai = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu", "iID_MaChungTu", iID_MaChungTu, "MaLoai"));
+        
+        using (Html.BeginForm("ChungTuChiTietFrame", "DuToanBSChungTuChiTiet", new {  ParentID = ParentID}))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID,iID_MaChungTu,"iID_MaChungTu","") %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td style="width: 20%" class="td_form2_td1"></td>
-               <td class="td_form2_td1" style="width: 20%" >
-                            <div> Chọn tùy chinh:</div> 
-                        </td>
+                <td class="td_form2_td1" style="width: 20%" >
+                    <div> Chọn tùy chinh:</div> 
+                </td>
             <td class="td_form2_td1" style="width: 40%">
              <%=MyHtmlHelper.DropDownList(ParentID,slTuyChinh,MaLoai,"MaLoai","","class=\"input1_2\" style=\"width: 100%\"") %>
             </td>
             <td class="td_form2_td1"></td>
         </tr>
-                           
         <tr>
             <td colspan="4">
                 <div style="margin-top: 10px;">

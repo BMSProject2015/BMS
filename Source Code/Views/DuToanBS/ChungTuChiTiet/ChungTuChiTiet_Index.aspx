@@ -32,11 +32,11 @@
         //ky thuat lan 2
         if(iLoai == "4")
         {
-             data = DuToanBS_ChungTuModels.LayThongTinChungTuKyThuatLan2(iID_MaChungTu);
+             data = DuToanBSChungTuModels.LayThongTinChungTuKyThuatLan2(iID_MaChungTu);
         }
         else
         {
-             data = DuToanBS_ChungTuModels.LayThongTinChungTu(iID_MaChungTu);
+             data = DuToanBSChungTuModels.LayThongTinChungTu(iID_MaChungTu);
         }
         int iID_MaTrangThaiDuyet = Convert.ToInt32(data["iID_MaTrangThaiDuyet"]);
         string MaND = User.Identity.Name;
@@ -57,7 +57,7 @@
                     <%=MyHtmlHelper.ActionLink(Url.Action("Index", "Home"), "Trang chủ")%>|
                     <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToan_DotNganSach", new {ChiNganSach=ChiNganSach }), "Đợt ngân sách")%>
                     |
-                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBS_ChungTu", new { ChiNganSach = ChiNganSach,MaDotNganSach = MaDotNganSach }), "Danh sách chứng từ")%>
+                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu", new { ChiNganSach = ChiNganSach,MaDotNganSach = MaDotNganSach }), "Danh sách chứng từ")%>
                 </div>
             </td>
             <td align="right" style="padding-bottom: 5px; color: #ec3237; font-weight: bold;
@@ -172,9 +172,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             jsDuToan_iID_MaChungTu = "<%=iID_MaChungTu%>";
-            jsDuToan_Url_Frame = '<%=Url.Action("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu,iChiTapTrung=iChiTapTrung })%>';
-            jsDuToan_Url_Submit = '<%=Url.Action("DetailSubmit", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu,sLNS=sLNS })%>';
-            jsDuToan_Url = '<%=Url.Action("Index", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu , iID_MaDonVi=iID_MaDonVi, sLNS=sLNS})%>';
+            jsDuToan_Url_Frame = '<%=Url.Action("ChungTuChiTietFrame", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu,iChiTapTrung=iChiTapTrung })%>';
+            jsDuToan_Url_Submit = '<%=Url.Action("CapNhatChungTuChiTiet", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu,sLNS=sLNS })%>';
+            jsDuToan_Url = '<%=Url.Action("Index", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu , iID_MaDonVi=iID_MaDonVi, sLNS=sLNS})%>';
             $("#tabs").tabs();
         });
     </script>

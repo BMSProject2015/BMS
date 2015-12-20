@@ -13,25 +13,24 @@
 </head>
 <body>
     <%
-        String ParentID = "DuToan";
-        String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
-        String slyDo = "";
-        String idAction = "1";
-         using (Html.BeginForm("DetailSubmit", "DuToanBS_ChungTuChiTiet", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu }))
+        string ParentID = "DuToan";
+        string iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
+        string slyDo = "";
+        string idAction = "1";
+        using (Html.BeginForm("CapNhatChungTuChiTiet", "DuToanBSChungTuChiTiet", new { ParentID = ParentID, iID_MaChungTu = iID_MaChungTu }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td style="width: 10%" class="td_form2_td1"></td>
-               <td class="td_form2_td1" style="width: 20%" >
-                            <div><b> Lý do: </b></div> 
-                        </td>
+                <td class="td_form2_td1" style="width: 20%" >
+                    <div><b> Lý do: </b></div> 
+                </td>
             <td class="td_form2_td1" style="width: 40%">
              <%=MyHtmlHelper.TextArea(ParentID, slyDo, "sLyDo1", "", "class=\"input1_2\" style=\"width: 100%\"")%>
             </td>
-                  </tr>
-                           
+        </tr>
         <tr>
             <td colspan="4">
                 <div style="margin-top: 10px;">

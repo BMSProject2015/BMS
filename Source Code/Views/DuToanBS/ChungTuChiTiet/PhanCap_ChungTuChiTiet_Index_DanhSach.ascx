@@ -2,6 +2,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="System.ComponentModel" %>
 
@@ -19,14 +20,11 @@
     {
          sLNS = Convert.ToString(Request.QueryString["sLNS"]);
     }
-    
     string iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
     bool ChucNangCapNhap = (props["ChucNangCapNhap"] == null) ? false : Convert.ToBoolean(props["ChucNangCapNhap"].GetValue(Model));
-
     //Cập nhập các thông tin tìm kiếm
     string strDSTruong = MucLucNganSachModels.strDSTruong + ",iID_MaDonVi,iID_MaPhongBanDich";
     string strDSTruongDoRong = MucLucNganSachModels.strDSTruongDoRong + ",200,30";  
-    
     string[] arrDSTruong = strDSTruong.Split(',');
     string[] arrDSTruongDoRong = strDSTruongDoRong.Split(',');
     Dictionary<String,String> dicGiaTriTimKiem = new Dictionary<string,string>();
@@ -61,7 +59,7 @@
                 %>
             </tr>
             </table>
-            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTiet_Frame", "DuToanBS_PhanCapChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, sLNS=sLNS})%>"></iframe>
+            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTietFrame", "DuToanBSPhanCapChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, sLNS=sLNS})%>"></iframe>
         </div>
     </div>
 </div>

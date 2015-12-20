@@ -19,7 +19,7 @@
     String MaND=User.Identity.Name;
     String iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
     String iLoai = Request.QueryString["iLoai"];
-    using (Html.BeginForm("UpLoadExcel", "DuToanBS_ChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    using (Html.BeginForm("UpLoadExcel", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai }, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
     %>   
     <div class="box_tong">

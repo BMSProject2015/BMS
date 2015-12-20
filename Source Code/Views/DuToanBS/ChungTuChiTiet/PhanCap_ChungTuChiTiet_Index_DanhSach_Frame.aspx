@@ -23,14 +23,12 @@
         else
         {
             string MaND = User.Identity.Name;
-
             string IPSua = Request.UserHostAddress;
             string iID_MaChungTu = Request.QueryString["iID_MaChungTu"];
             if (String.IsNullOrEmpty(iID_MaChungTu)) iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
             string MaLoai = "";
             if (String.IsNullOrEmpty(MaLoai)) MaLoai = Convert.ToString(ViewData["MaLoai"]);
             if (String.IsNullOrEmpty(MaLoai)) MaLoai = Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu", "iID_MaChungTu", iID_MaChungTu, "MaLoai"));
-
             //Cập nhập các thông tin tìm kiếm
             string DSTruong = "iID_MaDonVi,iID_MaPhongBanDich," + MucLucNganSachModels.strDSTruong;
             string[] arrDSTruong = DSTruong.Split(',');
@@ -42,38 +40,12 @@
             String sLNS = Request.QueryString["sLNS"];
             if (String.IsNullOrEmpty(sLNS))
                 sLNS =Convert.ToString(CommonFunction.LayTruong("DTBS_ChungTu", "iID_MaChungTu", iID_MaChungTu, "sDSLNS"));
-            //int iCheck = 0;
-            //String sL = "", sK = "", sM = "", sTM = "", sTTM = "";
-            //if (sLNS.Substring(0, 2) == "80")
-            //{
-            //    DataTable dt_LNS = DuToanBS_ChungTuChiTietModels.Get_LNS_80(sLNS, ref iCheck);
-            //    if (dt_LNS != null && dt_LNS.Rows.Count > 0 && iCheck == 1)
-            //    {
-            //        sL = Convert.ToString(dt_LNS.Rows[0]["sL"]);
-            //        sK = Convert.ToString(dt_LNS.Rows[0]["sK"]);
-            //        sM = Convert.ToString(dt_LNS.Rows[0]["sM"]);
-            //        sTM = Convert.ToString(dt_LNS.Rows[0]["sTM"]);
-            //        sTTM = Convert.ToString(dt_LNS.Rows[0]["sTTM"]);
-            //        dt_LNS.Dispose();
-            //    }
-            //}
-            //else
-            //{
-            //    DataTable dt_LNS = DuToanBS_ChungTuChiTietModels.Get_LNS(sLNS, ref iCheck);
-            //    if (dt_LNS != null && dt_LNS.Rows.Count > 0 && iCheck == 1)
-            //    {
-            //        sL = Convert.ToString(dt_LNS.Rows[0]["sL"]);
-            //        sK = Convert.ToString(dt_LNS.Rows[0]["sK"]);
-            //        dt_LNS.Dispose();
-            //    }
-            //}
-
-            DuToanBS_PhanCapBangDuLieu bang = new DuToanBS_PhanCapBangDuLieu(iID_MaChungTu, dicGiaTriTimKiem, MaND, IPSua, sLNS, MaLoai);
+            DuToanBSPhanCapBangDuLieu bang = new DuToanBSPhanCapBangDuLieu(iID_MaChungTu, dicGiaTriTimKiem, MaND, IPSua, sLNS, MaLoai);
             string strDSDonVi = bang.strDSDonVi;
             string BangID = "BangDuLieu";
             int Bang_Height = 470;
             int Bang_FixedRow_Height = 50;
-            string BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS = sLNS });
+            string BackURL = Url.Action("Index", "DuToanBSChungTu", new { sLNS1 = sLNS });
     %>
     <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>
         <div style="display: none;">
@@ -92,7 +64,7 @@
             if (bang.ChiDoc == false)
             {
         %>
-        <form action="<%=Url.Action("DetailSubmit", "DuToanBS_PhanCapChungTuChiTiet", new{iID_MaChungTu=iID_MaChungTu,sLNS=sLNS})%>"
+        <form action="<%=Url.Action("CapNhatChungTuChiTiet", "DuToanBSPhanCapChungTuChiTiet", new{iID_MaChungTu=iID_MaChungTu,sLNS=sLNS})%>"
         method="post">
         <%
             } %>
@@ -171,9 +143,9 @@
             Bang_arrDSTruongTien = '<%=MucLucNganSachModels.strDSTruongTien%>'.split(',');
             Bang_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "Public")%>';
             Bang_Url_getDanhSach = '<%=Url.Action("get_DanhSach_LNS", "Public", new {sLNS=sLNS})%>';
-            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToanBS_ChungTuChiTiet")%>';
-            BangDuLieu_Url_PhanCap = '<%=Url.Action("Index", "DuToanBS_ChungTuChiTiet")%>';
-            BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "DuToanBS_ChungTuChiTiet")%>';
+            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToanBSChungTuChiTiet")%>';
+            BangDuLieu_Url_PhanCap = '<%=Url.Action("Index", "DuToanBSChungTuChiTiet")%>';
+            BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "DuToanBSChungTuChiTiet")%>';
             BangDuLieu_iID_MaChungTu = '<%=iID_MaChungTu%>';
             BangDuLieu_DuocSuaChiTiet = <%=bang.DuocSuaChiTiet?"true":"false"%>;
              

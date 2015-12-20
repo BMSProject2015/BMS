@@ -77,7 +77,7 @@
                 %>
             </tr>
             </table>
-            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTiet_Frame", "DuToanBS_ChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, iLoai=iLoai,iChiTapTrung=iChiTapTrung})%>"></iframe>
+            <iframe id="ifrChiTietChungTu" width="100%" height="538px" src="<%= Url.Action("ChungTuChiTietFrame", "DuToanBSChungTuChiTiet", new {iID_MaChungTu=iID_MaChungTu, iID_MaDonVi=iID_MaDonVi, iLoai=iLoai,iChiTapTrung=iChiTapTrung})%>"></iframe>
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.ThuNop" %>
 <%@ Import Namespace="System.Data" %>
@@ -19,9 +20,8 @@
         string iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
         string sLNS = Convert.ToString(Request.QueryString["sLNS"]);
         string slyDo = "";
-        
-        String idAction = "1";
-        using (Html.BeginForm("TrinhDuyetChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = iKyThuat, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
+        string idAction = "1";
+        using (Html.BeginForm("TrinhDuyetChungTu", "DuToanBSChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iKyThuat = iKyThuat, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>
@@ -29,13 +29,12 @@
         <tr>
             <td style="width: 10%" class="td_form2_td1"></td>
                <td class="td_form2_td1" style="width: 20%" >
-                            <div><b> Lý do: </b></div> 
-                        </td>
+                    <div><b> Lý do: </b></div> 
+                </td>
             <td class="td_form2_td1" style="width: 40%">
              <%=MyHtmlHelper.TextArea(ParentID, slyDo, "sLyDo", "", "class=\"input1_2\" style=\"width: 100% resize: none\"")%>
             </td>
-                  </tr>
-                           
+        </tr>
         <tr>
             <td colspan="4">
                 <div style="margin-top: 10px;">

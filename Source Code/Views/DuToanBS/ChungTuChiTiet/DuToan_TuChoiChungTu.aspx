@@ -13,28 +13,26 @@
 </head>
 <body>
     <%
-        String ParentID = "DuToan";
-        String iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
-        String iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
-        String sLNS = Convert.ToString(Request.QueryString["sLNS"]);
-        String slyDo = "";
-        
-        String idAction = "1";
-        using (Html.BeginForm("TuChoiChungTu", "DuToanBS_ChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
+        string ParentID = "DuToan";
+        string iID_MaChungTu = Convert.ToString(Request.QueryString["iID_MaChungTu"]);
+        string iID_MaChungTu_TLTH = Convert.ToString(Request.QueryString["iID_MaChungTu_TLTH"]);
+        string sLNS = Convert.ToString(Request.QueryString["sLNS"]);
+        string slyDo = "";
+        string idAction = "1";
+        using (Html.BeginForm("TuChoiChungTu", "DuToanBSChungTu", new { ParentID = ParentID, maChungTu = iID_MaChungTu, sLNS = sLNS, iLoai = 1, maChungTuTLTH = iID_MaChungTu_TLTH }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, idAction, "idAction", "")%>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td style="width: 10%" class="td_form2_td1"></td>
-               <td class="td_form2_td1" style="width: 20%" >
-                            <div><b> Lý do: </b></div> 
-                        </td>
+                <td class="td_form2_td1" style="width: 20%" >
+                    <div><b> Lý do: </b></div> 
+                </td>
             <td class="td_form2_td1" style="width: 40%">
              <%=MyHtmlHelper.TextArea(ParentID, slyDo, "sLyDo", "", "class=\"input1_2\" style=\"width: 100%  resize: none\"")%>
             </td>
-                  </tr>
-                           
+        </tr>
         <tr>
             <td colspan="4">
                 <div style="margin-top: 10px;">

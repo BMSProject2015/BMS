@@ -54,7 +54,7 @@
             //????
             string iID_MaPhongBanDich = "05";
             
-            DuToanBS_BangDuLieu bang = new DuToanBS_BangDuLieu(iID_MaChungTu, dicGiaTriTimKiem, MaND, IPSua, sLNS, MaLoai, iLoai, iChiTapTrung);
+            DuToanBSBangDuLieu bang = new DuToanBSBangDuLieu(iID_MaChungTu, dicGiaTriTimKiem, MaND, IPSua, sLNS, MaLoai, iLoai, iChiTapTrung);
             string strDSDonVi = bang.strDSDonVi;
             string BangID = "BangDuLieu";
             int Bang_Height = 470;
@@ -65,12 +65,12 @@
                 string sLNS1 = sLNS.Substring(0, 3);
                 if (sLNS1 == "104" || sLNS1 == "109")
                 {
-                    BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1, iKyThuat = iKyThuat });
+                    BackURL = Url.Action("Index", "DuToanBSChungTu", new { sLNS1 = sLNS1, iKyThuat = iKyThuat });
                 }
                 else
                 {
                     sLNS1 = sLNS.Substring(0, 1);
-                    BackURL = Url.Action("Index", "DuToanBS_ChungTu", new { sLNS1 = sLNS1 });
+                    BackURL = Url.Action("Index", "DuToanBSChungTu", new { sLNS1 = sLNS1 });
                 }
             }
             int iID_MaTrangThaiDuyet_TuChoi = 0;
@@ -78,31 +78,25 @@
             //Nếu loại NS bảo đảm
             if (sLNS == "1040100")
             {
-                if(iLoai=="4")
+                if(iLoai!="4")
                 {
-                    
-                }
-                else
-                {
-
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoiBaoDam(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoiBaoDam(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyetBaoDam(MaND, iID_MaChungTu);
                 }
             }
             else
             {
-                if (iLoai == "4")
+                if (iLoai != "4")
                 {
-
-                }
-                else
-                {
-                    iID_MaTrangThaiDuyet_TuChoi = DuToanBS_ChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
-                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBS_ChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TuChoi = DuToanBSChungTuModels.LayMaTrangThaiTuChoi(MaND, iID_MaChungTu);
+                    iID_MaTrangThaiDuyet_TrinhDuyet = DuToanBSChungTuModels.LayMaTrangThaiTrinhDuyet(MaND, iID_MaChungTu);
                 }
             }
     %>
+    
+  
     <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>
+
     <div style="display: none;">
         <input type="hidden" id="idXauHienThiCot" value="<%=HttpUtility.HtmlEncode(bang.strDSHienThiCot)%>" />
         <input type="hidden" id="idXauDoRongCot" value="<%=HttpUtility.HtmlEncode(bang.strDSDoRongCot)%>" />
@@ -119,12 +113,12 @@
             if (bang.ChiDoc == false)
             {
         %>
-        <form id="formDuyet" action="<%=Url.Action("DetailSubmit", "DuToanBS_ChungTuChiTiet", new{iID_MaChungTu=iID_MaChungTu,sLNS=sLNS,iLoai=iLoai})%>"
+        <form id="formDuyet" action="<%=Url.Action("CapNhatChungTuChiTiet", "DuToanBSChungTuChiTiet", new{iID_MaChungTu=iID_MaChungTu,sLNS=sLNS,iLoai=iLoai})%>"
         method="post">
         <%
             } %>
         <input type="hidden" id="idAction" name="idAction" value="0" />
-         <input type="hidden" id="sLyDo" name="sLyDo" />
+        <input type="hidden" id="sLyDo" name="sLyDo" />
         <input type="hidden" id="idXauDuLieuThayDoi" name="idXauDuLieuThayDoi" value="<%=HttpUtility.HtmlEncode(bang.strThayDoi)%>" />
         <input type="hidden" id="idXauLaHangCha" name="idXauLaHangCha" value="<%=HttpUtility.HtmlEncode(bang.strLaHangCha)%>" />
         <input type="hidden" id="idXauMaCacHang" name="idXauMaCacHang" value="<%=HttpUtility.HtmlEncode(bang.strDSMaHang)%>" />
@@ -142,6 +136,7 @@
         }
         %>
     </div>
+    
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table_form2">
         <tr>
             <td>
@@ -170,7 +165,7 @@
             if (iID_MaTrangThaiDuyet_TuChoi > 0)
             {
             %>
-            <td align="right" style="padding-right:10px;width:6%">        
+            <td align="right" style="padding-right:10px;width:6%">
                 <div onclick="OnInit_CT_NEW(500, 'Từ chối chứng từ');">
                     <%= Ajax.ActionLink("Từ chối", "Index", "NhapNhanh", new { id = "DuToanBS_TuChoiChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaChungTu }, new AjaxOptions { }, new { @class = "button" })%>
                 </div>
@@ -234,6 +229,9 @@
 //                ]
 //            });
             sLNS = '<%=sLNS%>';
+            $("#btnLuu").click(function () {
+                ShowPopupThucHien();
+            });
             $('#btnDuyet').live("click", function () {
                 Bang_GanMangGiaTri_Bang_arrGiaTri();
                 if (document.getElementById("idAction")) document.getElementById("idAction").value = 2;
@@ -273,9 +271,9 @@
             Bang_arrDSTruongTien = '<%=MucLucNganSachModels.strDSTruongTien%>'.split(',');
             Bang_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "Public")%>';
             Bang_Url_getDanhSach = '<%=Url.Action("get_DanhSach_LNS", "Public", new {sLNS=sLNS})%>';
-            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToanBS_ChungTuChiTiet")%>';
-            BangDuLieu_Url_PhanCap = '<%=Url.Action("Index", "DuToanBS_phanCapChungTuChiTiet")%>';
-            BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "DuToan_ChungTuChiTiet")%>';
+            BangDuLieu_Url_getGiaTri = '<%=Url.Action("get_GiaTri", "DuToanBSChungTuChiTiet")%>';
+            BangDuLieu_Url_PhanCap = '<%=Url.Action("Index", "DuToanBSphanCapChungTuChiTiet")%>';
+            BangDuLieu_Url_getDanhSach = '<%=Url.Action("get_DanhSach", "DuToanChungTuChiTiet")%>';
             BangDuLieu_iID_MaChungTu = '<%=iID_MaChungTu%>';
             BangDuLieu_DuocSuaChiTiet = <%=bang.DuocSuaChiTiet?"true":"false"%>;
             iiD_MaPhongBanDich='<%=iID_MaPhongBanDich %>';
@@ -306,7 +304,8 @@
     <div id="idDialog" style="display: none;"></div>
     <div id="dvText" class="popup_block">
         <img src="../../../Content/ajax-loader.gif" /><br />
-        <p>Hệ thống đang thực hiện yêu cầu...</p>
+        <p>
+            Hệ thống đang thực hiện yêu cầu...</p>
     </div>
         <%} %>
 </asp:Content>

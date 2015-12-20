@@ -4,6 +4,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
+<%@ Import Namespace="VIETTEL.Models.DuToanBS" %>
 <%@ Import Namespace="VIETTEL.Models" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     <%=ConfigurationManager.AppSettings["TitleView"]%>
@@ -17,7 +18,7 @@
         if (String.IsNullOrEmpty(iID_MaChungTu)) 
             iID_MaChungTu = Convert.ToString(ViewData["iID_MaChungTu"]);
         string MaND = User.Identity.Name;
-        String iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
+        string iID_MaDonVi = Convert.ToString(Request.QueryString["iID_MaDonVi"]);
     %>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
@@ -30,9 +31,8 @@
             <td align="left">
                 <div style="padding-bottom: 5px; color: #ec3237;">
                     <%=MyHtmlHelper.ActionLink(Url.Action("Index", "Home"), "Trang chủ")%>|
-                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToan_DotNganSach"), "Đợt ngân sách")%>
-                    |
-                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToan_ChungTu"), "Danh sách chứng từ")%>
+                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSDotNganSach"), "Đợt ngân sách")%>
+                    <%=MyHtmlHelper.ActionLink(Url.Action("Index", "DuToanBSChungTu"), "Danh sách chứng từ")%>
                 </div>
             </td>
             <td align="right" style="padding-bottom: 5px; color: #ec3237; font-weight: bold;
@@ -93,8 +93,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             jsDuToan_iID_MaChungTu = "<%=iID_MaChungTu%>";
-            jsDuToan_Url_Frame = '<%=Url.Action("ChungTuChiTiet_Frame", "DuToanBS_PhanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu })%>';
-            jsDuToan_Url = '<%=Url.Action("Index", "DuToanBS_PhanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu , iID_MaDonVi=iID_MaDonVi})%>';
+            jsDuToan_Url_Frame = '<%=Url.Action("ChungTuChiTietFrame", "DuToanBSPhanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu })%>';
+            jsDuToan_Url = '<%=Url.Action("Index", "DuToanBSPhanCapChungTuChiTiet", new { iID_MaChungTu = iID_MaChungTu , iID_MaDonVi=iID_MaDonVi})%>';
             $("#tabs").tabs();
         });
     </script>
