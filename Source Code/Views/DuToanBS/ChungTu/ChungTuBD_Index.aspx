@@ -39,7 +39,15 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
-        String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        string dNgayChungTu;
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
 
         //Trạng thái all
         DataTable dtTrangThai_All;

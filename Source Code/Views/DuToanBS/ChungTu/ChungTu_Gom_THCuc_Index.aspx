@@ -37,8 +37,16 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
-        
-        string dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+
+        string dNgayChungTu;
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
         DataTable dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(DuToanModels.iID_MaPhanHe);
 
         DataTable dtTrangThai = LuongCongViecModel.Get_dtDSTrangThaiDuyet_DuocXem(DuToanModels.iID_MaPhanHe, MaND);
@@ -171,7 +179,7 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%= MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi(this.checked)\"") %>
+                                            <%= MyHtmlHelper.CheckBox(ParentID, iThemMoi, "iThemMoi", "", "onclick=\"CheckThemMoi()\"") %>
                                                 <span style="color: brown;">
                                                     (Trường hợp bổ sung đợt mới, đánh dấu chọn "Bổ sung đợtmới". Nếu không chọn đợt bổ sung dưới lưới) 
                                                 </span>
@@ -185,59 +193,78 @@
                                         <div><b>Chọn đợt</b></div>
                                     </td>
                                     <td class="td_form2_td5">
-                                        <table  class="mGrid" style="width: 100%">
-                                            <tr>
-                                                <th align="center" style="width: 40px;"> 
-                                                    <input type="checkbox"  id="abc" onclick="CheckAll(this.checked)" /></th>
-                                                    <% for (int c = 0; c < columnCount * 2 - 1; c++)
-                                                    {%>
-                                                        <th></th>
-                                                    <% } %>
-                                            </tr>
-                                        <%
-                                        string strTen = "";
-                                        string strMa = "";
-                                        string strChecked = "";
-                                        for (int i = 0; i < dtChungTuTLTH.Rows.Count; i = i + 1)
-                                        {
-                                            for (int c = 0; c < columnCount; c++)
+                                        <div>
+                                            <table  class="mGrid" style="width: 100%">
+                                                <tr>
+                                                    <th align="center" style="width: 40px;"> 
+                                                        <input type="checkbox"  id="abc" onclick="CheckAll(this.checked)" /></th>
+                                                        <% for (int c = 0; c < columnCount * 2 - 1; c++)
+                                                        {%>
+                                                            <th></th>
+                                                        <% } %>
+                                                </tr>
+                                            <%
+                                            string strTen = "";
+                                            string strMa = "";
+                                            string strChecked = "";
+                                            for (int i = 0; i < dtChungTuTLTH.Rows.Count; i = i + 1)
                                             {
-                                                if (i + c < dtChungTuTLTH.Rows.Count)
+                                                for (int c = 0; c < columnCount; c++)
                                                 {
-                                                    strChecked = "";
-                                                    strTen = CommonFunction.LayXauNgay(
-                                                             Convert.ToDateTime(dtChungTuTLTH.Rows[i + c]["dNgayChungTu"])) + '-' +
-                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' + 
-                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sTenPhongBan"]) + '-' + 
-                                                             Convert.ToString(dtChungTuTLTH.Rows[i + c]["sNoiDung"]);
-                                                    strMa = Convert.ToString(dtChungTuTLTH.Rows[i + c]["iID_MaChungTu_TLTH"]);
-                                                    if (arrChungTu.Contains(strMa))
+                                                    if (i + c < dtChungTuTLTH.Rows.Count)
                                                     {
-                                                        strChecked = "checked=\"checked\"";
-                                                    }
-                                        %>
-                                        <tr>
-                                            <td align="center" style="width: 40px;">
-                                                <input type="checkbox" value="<%= strMa %>" <%= strChecked %> check-group="DonVi" id="iID_MaChungTu_TLTH" name="iID_MaChungTu_TLTH" />
-                                            </td>
-                                            <td align="left">
-                                                <%= strTen %>
-                                            </td>
-                                        <% } %>
-                                        <% } %>
-                                        </tr>
-                                    <% }%>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td_form2_td1">
-                                    <div><b>Ngày tháng</b></div>
-                                </td>
+                                                        strChecked = "";
+                                                        strTen = CommonFunction.LayXauNgay(
+                                                                 Convert.ToDateTime(dtChungTuTLTH.Rows[i + c]["dNgayChungTu"])) + '-' +
+                                                                 Convert.ToString(dtChungTuTLTH.Rows[i + c]["sID_MaNguoiDungtao"]) + '-' + 
+                                                                 Convert.ToString(dtChungTuTLTH.Rows[i + c]["sTenPhongBan"]) + '-' + 
+                                                                 Convert.ToString(dtChungTuTLTH.Rows[i + c]["sNoiDung"]);
+                                                        strMa = Convert.ToString(dtChungTuTLTH.Rows[i + c]["iID_MaChungTu_TLTH"]);
+                                                        if (arrChungTu.Contains(strMa))
+                                                        {
+                                                            strChecked = "checked=\"checked\"";
+                                                        }
+                                            %>
+                                            <tr>
+                                                <td align="center" style="width: 40px;">
+                                                    <input type="checkbox" value="<%= strMa %>" <%= strChecked %> check-group="DonVi" id="iID_MaChungTu_TLTH" name="iID_MaChungTu_TLTH" />
+                                                </td>
+                                                <td align="left">
+                                                    <%= strTen %>
+                                                </td>
+                                            <% } %>
+                                            <% } %>
+                                            </tr>
+                                        <% }%>
+                                        </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                            &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div><%= Html.ValidationMessage(ParentID + "_" + "err_ChungTu")%></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        <div><b>Ngày tháng</b></div>
+                                    </td>
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%= MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"") %>
-                                            <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
+                                            <div><%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %></div>
                                         </div>
                                     </td>
                                 </tr>
@@ -398,8 +425,9 @@
             $('.buttonDuyet').text('');
         });
         CheckThemMoi(false);
-        function CheckThemMoi(value) {
-            if (value == true) {
+        function CheckThemMoi() {
+            var isChecked = document.getElementById("<%= ParentID %>_iThemMoi").checked;
+            if (isChecked == true) {
                 document.getElementById('tb_DotNganSach').style.display = ''
             } else {
                 document.getElementById('tb_DotNganSach').style.display = 'none'

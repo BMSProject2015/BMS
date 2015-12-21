@@ -24,12 +24,20 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
     string iID_MaTrangThaiDuyet = Request.QueryString["iID_MaTrangThaiDuyet"];
     string page = Request.QueryString["page"];
     string sNguon = Convert.ToString(ViewData["sNguon"]);
-
+    string dNgayChungTu;
+    if (ViewData["dNgayChungTu"] != null)
+    {
+        dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+    }
+    else
+    { 
+        dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now); 
+    }
     if (String.IsNullOrEmpty(sLNS1))
     {
         sLNS1 = "-1";
     }
-
+    string sLNS = Convert.ToString(ViewData["sLNS"]);
     if (HamChung.isDate(sTuNgay) == false) sTuNgay = "";
     if (HamChung.isDate(sDenNgay) == false) sDenNgay = "";
     if (String.IsNullOrEmpty(iID_MaTrangThaiDuyet) || iID_MaTrangThaiDuyet == "-1") iID_MaTrangThaiDuyet = "";
@@ -41,7 +49,6 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
             iThemMoi = "on";
         }
     }
-    String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
 
     //Tất cả trạng thái
     DataTable dtTrangThai_All;
@@ -64,8 +71,8 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
     dtLoaiNganSach.Dispose();
 
     //Danh sách nguồn
-    DataTable dtNguon = DuToanBSChungTuModels.getNguon();
-    SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
+    //DataTable dtNguon = DuToanBSChungTuModels.getNguon();
+    //SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
     //dtNguon.Dispose();
 
     int CurrentPage = 1;
@@ -93,7 +100,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
     int TotalPages = (int) Math.Ceiling(nums/Globals.PageSize);
     String strPhanTrang = MyHtmlHelper.PageLinks(String.Format("Trang {0}/{1}:", CurrentPage, TotalPages), CurrentPage, TotalPages, x => Url.Action("Index", new {sLNS1 = sLNS1, SoChungTu = iSoChungTu, TuNgay = sTuNgay, DenNgay = sDenNgay, iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet, page = x}));
     int SoCot = 1;
-    String[] arrLNS = sLNS1.Split(',');
+    String[] arrLNS = sLNS.Split(',');
 %>
 <%--Lien Ket Nhanh--%>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">

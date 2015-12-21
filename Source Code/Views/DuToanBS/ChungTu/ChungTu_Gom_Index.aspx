@@ -38,9 +38,16 @@
                 iThemMoi = "on";
             }
         }
-        
-        //Ngay chung tu tao moi.
-        string dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+
+        string dNgayChungTu;
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
         DataTable dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(DuToanModels.iID_MaPhanHe);
 
         //dt Trang thai.
@@ -257,7 +264,7 @@
                                             &nbsp;
                                     </td>
                                     <td class="td_form2_td5">
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_ChungTu")%>
+                                        <div><%= Html.ValidationMessage(ParentID + "_" + "err_ChungTu")%></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -267,6 +274,16 @@
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%= MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"") %>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
                                             <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %>
                                         </div>
                                     </td>

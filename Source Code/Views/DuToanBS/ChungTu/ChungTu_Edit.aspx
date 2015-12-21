@@ -19,7 +19,12 @@
         DataTable dtChungTu = DuToanBSChungTuModels.LayChungTu(MaChungTu);
         string dNgayChungTu = "";
         string sNoiDung = "";
-        if (dtChungTu.Rows.Count > 0)
+        
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else if (dtChungTu.Rows.Count > 0)
         {
             dNgayChungTu = CommonFunction.LayXauNgay(Convert.ToDateTime(dtChungTu.Rows[0]["dNgayChungTu"]));
             sNoiDung = Convert.ToString(dtChungTu.Rows[0]["sNoiDung"]);
@@ -62,7 +67,7 @@
                             <td class="td_form2_td1">
                                 &nbsp;
                             </td>
-                            <td>
+                            <td class="td_form2_td5">
                                 <div>
                                     <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                 </div>

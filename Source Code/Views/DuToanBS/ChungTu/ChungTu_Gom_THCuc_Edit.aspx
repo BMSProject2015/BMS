@@ -26,7 +26,19 @@
         
         //Lấy thông tin chứng từ TLTHCuc
         NameValueCollection data = DuToanBSChungTuModels.LayThongTinChungTuTLTHCuc(maChungTuTLTHCuc);
-        
+        string dNgayChungTu = "";
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else if (data != null)
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(Convert.ToDateTime(data["dNgayChungTu"]));
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
         //Lấy danh sách chứng từ TLTH
         DataTable dtChungTuDuyet = DuToanBSChungTuModels.LayDanhSachChungTuDeSuaTLTHCuc(MaND, maChungTuTLTHCuc);
         int columnCount = 1;
@@ -123,7 +135,7 @@
                                             &nbsp;
                                     </td>
                                     <td class="td_form2_td5">
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_ChungTu")%>
+                                        <div><%= Html.ValidationMessage(ParentID + "_" + "err_ChungTu")%></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -133,8 +145,18 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
-                                            <%= MyHtmlHelper.DatePicker(ParentID,CommonFunction.LayXauNgay(Convert.ToDateTime(data["dNgayChungTu"])), "dNgayChungTu", "",
+                                            <%= MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "",
                                                                     "class=\"input1_2\"  style=\"width: 200px;\"") %>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        &nbsp;
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
                                             <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu") %>
                                         </div>
                                     </td>
