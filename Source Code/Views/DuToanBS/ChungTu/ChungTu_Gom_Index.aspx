@@ -426,7 +426,7 @@
                     <%=sTrangThai%>
                 </td>
                 <td align="center">
-                    <div onclick="OnInit_CT_NEW(800, 'Báo cáo in kiểm');">
+                    <div onclick="OnInit_CT_NEW(1000, 'Báo cáo in kiểm');">
                         <%= Ajax.ActionLink("Báo cáo", "Index", "NhapNhanh", new { id = "DUTOANBS_BAOCAOINKIEM_GOM", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = R["iID_MaChungTu_TLTH"], iID_MaChungTu_TLTHCuc = iID_MaChungTu_TLTHCuc }, new AjaxOptions { }, new { @class = "buttonReport" })%>
                     </div>
                 </td>
