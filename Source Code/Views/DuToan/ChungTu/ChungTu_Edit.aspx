@@ -21,7 +21,11 @@
     DataTable dtChungTu = DuToan_ChungTuModels.GetChungTu(MaChungTu);
     DataRow R;
     String iSoChungTu = "", dNgayChungTu = "", sNoiDung = "";
-    if (dtChungTu.Rows.Count > 0)
+    if (ViewData["dNgayChungTu"] != null)
+    {
+        dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+    }
+    else if (dtChungTu.Rows.Count > 0)
     {
         R = dtChungTu.Rows[0];
         dNgayChungTu = CommonFunction.LayXauNgay(Convert.ToDateTime(R["dNgayChungTu"]));
@@ -64,7 +68,7 @@
         <div id="form2">
             <div style="width: 50%; float: left;">
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                    <tr>
+                    <%--<tr>
                         <td class="td_form2_td1" style="width: 15%;">
                             <div>Số chứng từ</div>
                         </td>
@@ -73,13 +77,22 @@
                                 <%=iSoChungTu%>
                             </div>
                         </td>
-                    </tr>
+                    </tr>--%>
                     <tr>
                         <td class="td_form2_td1">
                             <div>Ngày chứng từ</div>
                         </td>
                         <td class="td_form2_td5">
-                            <div><%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"")%><br />
+                            <div><%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"")%>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td_form2_td1">
+                            <div></div>
+                        </td>
+                        <td class="td_form2_td5">
+                            <div>
                                 <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                             </div>
                         </td>

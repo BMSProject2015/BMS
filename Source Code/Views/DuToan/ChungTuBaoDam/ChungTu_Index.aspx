@@ -54,7 +54,15 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
-        String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        string dNgayChungTu;
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
 
         //dtTrangThai
         DataTable dtTrangThai_All;
@@ -266,18 +274,37 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, "1040100", "sLNS", "", "class=\"input1_2\"")%></div>
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, "", "sLNS", "", "class=\"input1_2\"")%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
+                                           <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="td_form2_td1">
                                         <div>
-                                            <b>Ngày tháng</b></div>
+                                            <b>Ngày chứng từ</b></div>
                                     </td>
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"")%>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        <div></div>
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
                                             <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                         </div>
                                     </td>
@@ -528,9 +555,10 @@
         function OnLoad_CT(v) {
             document.getElementById("idDialog").innerHTML = v;
         }
-        CheckThemMoi(false);
-        function CheckThemMoi(value) {
-            if (value == true) {
+        CheckThemMoi();
+        function CheckThemMoi() {
+            var isChecked = document.getElementById("<%= ParentID %>_iThemMoi").checked;
+            if (isChecked == true) {
                 document.getElementById('tb_DotNganSach').style.display = '';
             } else {
                 document.getElementById('tb_DotNganSach').style.display = 'none';

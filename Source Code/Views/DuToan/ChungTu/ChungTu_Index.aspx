@@ -51,7 +51,15 @@
             if (bThemMoi)
                 iThemMoi = "on";
         }
-        String dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        string dNgayChungTu;
+        if (ViewData["dNgayChungTu"] != null)
+        {
+            dNgayChungTu = Convert.ToString(ViewData["dNgayChungTu"]);
+        }
+        else
+        {
+            dNgayChungTu = CommonFunction.LayXauNgay(DateTime.Now);
+        }
         //neu la ngan sach bao dam
         if (sLNS == "1040100")
             dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(PhanHeModels.iID_MaPhanHeChiTieu);
@@ -226,8 +234,19 @@
                                     </td>
                                     <td class="td_form2_td5">
                                         <div>
-                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, sLNS, "sLNS", "", "class=\"input1_2\"")%></div>
-                                        <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                            <%=MyHtmlHelper.DropDownList(ParentID, slLoaiNganSach, sLNS, "sLNS", "", "class=\"input1_2\"")%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        <div>
+                                        </div>
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
+                                            <%= Html.ValidationMessage(ParentID + "_" + "err_sLNS")%>
+                                        </div>
                                     </td>
                                 </tr>
                                 <%} %>
@@ -239,6 +258,15 @@
                                     <td class="td_form2_td5">
                                         <div style="width: 200px; float: left;">
                                             <%=MyHtmlHelper.DatePicker(ParentID, dNgayChungTu, "dNgayChungTu", "", "class=\"input1_2\"  style=\"width: 200px;\"")%>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td_form2_td1">
+                                        <div></div>
+                                    </td>
+                                    <td class="td_form2_td5">
+                                        <div>
                                             <%= Html.ValidationMessage(ParentID + "_" + "err_dNgayChungTu")%>
                                         </div>
                                     </td>
