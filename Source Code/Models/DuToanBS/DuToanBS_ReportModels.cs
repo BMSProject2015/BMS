@@ -1247,7 +1247,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             SqlCommand cmd = new SqlCommand();
             int Dvt = 1000;
             DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
-
+            DKPhongBan = " AND 1=1 ";
             //Điều kiện đơn vị
             DataTable dtNĐonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
             for (int i = 0; i < dtNĐonVi.Rows.Count; i++)
