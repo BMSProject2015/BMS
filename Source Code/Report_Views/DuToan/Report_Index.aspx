@@ -140,7 +140,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            12
+                            10
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1020200_TongHop"), "Dự toán chi ngân sách quốc phòng (phần ngân sách tùy viên quốc phòng)")%>
@@ -151,7 +151,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            13
+                            11
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1030100_TongHop_XDCB"), "Dự toán chi ngân sách quốc phòng (phần ngân sách XDCB)")%>
@@ -162,7 +162,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            14
+                            12
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1030100_TongHop_3bC"), "Dự toán chi ngân sách quốc phòng (phần ngân sách XDCB biểu 2)")%>
@@ -173,7 +173,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            15
+                            13
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050000_TongHop_1"), "Dự toán chi ngân sách quốc phòng (phần chi cho Doanh Nghiệp)")%>
@@ -184,7 +184,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            16
+                            14
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050000_TongHop"), "Dự toán chi ngân sách quốc phòng (phần chi cho Doanh Nghiệp chọn tờ) ")%>
@@ -195,7 +195,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            17
+                            15
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050100_TongHop"), "Dự toán chi ngân sách quốc phòng (phần chi hỗ trợ doanh nghiệp làm nhiệm vụ C) ")%>
@@ -206,7 +206,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            18
+                            16
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_109_TongHop"), "Tổng hợp dự toán chi việc nhà nước giao tính vào NSQP")%>
@@ -217,7 +217,7 @@
                     </tr>
                      <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            19
+                            17
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_2_TongHop"), "Tổng hợp dự toán ngân sách nhà nước ")%>
@@ -228,7 +228,7 @@
                     </tr>
                     <tr class="alt">
                         <td align="center" style="padding: 3px 2px;">
-                            20
+                            18
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_TongHop_2060101"), "Tổng hợp ngân sách người có công")%>
@@ -270,7 +270,7 @@
                             3
                         </td>
                         <td style="padding: 3px 2px;">
-                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungDonVi"), "DỰ TOÁN CHI NGÂN SÁCH QUỐC PHÒNG - Phần ngân sách bảo đảm toàn quân")%>
+                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungDonVi"), "Dự toán chi ngân sách quốc phòng - Phần ngân sách bảo đảm toàn quân")%>
                         </td>
                         <td align="center" style="padding: 3px 2px;">
                             Phụ lục số 1a
@@ -281,7 +281,7 @@
                             4
                         </td>
                         <td style="padding: 3px 2px;">
-                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungNganh"), "DỰ TOÁN CHI NGÂN SÁCH QUỐC PHÒNG - Phần phân cấp ngân sách bảo đảm toàn quân")%>
+                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1040100_TungNganh"), "Dự toán chi ngân sách quốc phòng - Phần phân cấp ngân sách bảo đảm toàn quân")%>
                         </td>
                         <td align="center" style="padding: 3px 2px;">
                             Phụ lục số 1b
@@ -323,7 +323,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            7-1
+                            8
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1020100_KT_TungDonVi"), "Dự toán chi ngân sách sử dụng (Phần ngân sách nghiệp vụ ngành kỹ thuật)")%>
@@ -334,10 +334,10 @@
                     </tr>
                      <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            8
+                            9
                         </td>
                         <td style="padding: 3px 2px;">
-                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1020500_TungDonVi"), "DỰ TOÁN CHI NGÂN SÁCH QUỐC PHÒNG (Hỗ trợ các đoàn KTQP & Đơn vị sự nghiệp công lập)")%>
+                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1020500_TungDonVi"), "Dự toán chi ngân sách quốc phòng (Hỗ trợ các đoàn KTQP & Đơn vị sự nghiệp công lập)")%>
                         </td>
                         <td align="center" style="padding: 3px 2px;">
                             Phụ lục số 2e
@@ -345,10 +345,10 @@
                     </tr>
                      <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            9
+                            10
                         </td>
                         <td style="padding: 3px 2px;">
-                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050100_TungDonVi"), "DỰ TOÁN CHI NGÂN SÁCH QUỐC PHÒNG (Phần chi hỗ trợ doanh nghiệp làm nhiệm vụ C)")%>
+                            <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050100_TungDonVi"), "Dự toán chi ngân sách quốc phòng (Phần chi hỗ trợ doanh nghiệp làm nhiệm vụ C)")%>
                         </td>
                         <td align="center" style="padding: 3px 2px;">
                             Phụ lục số 2g
@@ -356,7 +356,7 @@
                     </tr>
                      <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            10
+                            11
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1030100_TungDonVi"), "Dự toán chi ngân sách xây dựng cơ bản (Nguồn ngân sách Quốc phòng)")%>
@@ -367,7 +367,7 @@
                     </tr>
                      <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            11
+                            12
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_1050000_TungDonVi"), "Dự toán chi ngân sách Quốc phòng (Ngân sách hỗ trợ Doanh nghiệp)")%>
@@ -379,7 +379,7 @@
                      
                     <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            12
+                            13
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_109_TungDonVi"), "Dự toán chi việc nhà nước giao tính vào NSQP")%>
@@ -390,7 +390,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            13
+                            14
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_2_TungDonVi"), "Dự toán chi ngân sách nhà nước giao")%>
@@ -401,7 +401,7 @@
                     </tr>
                      <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            14
+                            15
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_206_TungDonVi"), "Dự toán chi ngân sách nhà nước giao(Phần chi người có công)")%>
@@ -410,19 +410,9 @@
                             Phụ lục số 5d
                         </td>
                     </tr>
-
-                  
-                   
-                   
-                   
-                    
-                   
-                   
-                   
-                   
                     <tr>
                         <td align="center" style="padding: 3px 2px;">
-                            XX
+                            16
                         </td>
                         <td style="padding: 3px 2px;">
                             <%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptDuToan_DonVi"), "In tổng hợp báo cáo đơn vị")%>

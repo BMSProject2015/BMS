@@ -6,6 +6,7 @@
 <%@ Import Namespace="VIETTEL.Models" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.ThuNop" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="VIETTEL.Models.DuToan" %>
 <%@ Import Namespace="System.Data.SqlClient" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

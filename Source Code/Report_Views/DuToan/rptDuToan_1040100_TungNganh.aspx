@@ -5,6 +5,7 @@
 <%@ Import Namespace="DomainModel" %>
 <%@ Import Namespace="DomainModel.Controls" %>
 <%@ Import Namespace="VIETTEL.Models" %>
+<%@ Import Namespace="VIETTEL.Models.DuToan" %>
 <%@ Import Namespace="VIETTEL.Report_Controllers.DuToan" %>
 <%@ Import Namespace="FlexCel.Core" %>
 <%@ Import Namespace="FlexCel.Render" %>

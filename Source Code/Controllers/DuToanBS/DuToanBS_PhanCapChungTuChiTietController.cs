@@ -652,7 +652,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 }
             }
             #endregion
-            return RedirectToAction("ChungTuChiTiet_Frame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS });
+            return RedirectToAction("ChungTuChiTietFrame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS });
         } 
         #endregion
     }
