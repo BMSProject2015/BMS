@@ -63,8 +63,8 @@
         SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
         
         dtDonVi.Dispose();
-        
-        String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
+
+        String BackURL = Url.Action("Index", "DuToanBS_Report", new { Loai = 0 });
         
         // hungpx: tach xau ma don vi 
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
@@ -112,8 +112,8 @@
 
         //int SoCot = 1;
         String[] arrMaNS = sLNS.Split(',');
-        
-        using (Html.BeginForm("EditSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
+
+        using (Html.BeginForm("FormSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
         {
     %>
    

@@ -66,7 +66,7 @@
         
         dtDonVi.Dispose();
 
-        String BackURL = Url.Action("Index", "DuToan_Report", new { Loai = 0 });
+        String BackURL = Url.Action("Index", "DuToanBS_Report", new { Loai = 0 });
 
         String[] arrDonVi = iID_MaDonVi.Split(',');
         String[] arrView = new String[arrDonVi.Length];
