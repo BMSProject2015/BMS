@@ -110,16 +110,23 @@ namespace VIETTEL.Controllers.DuToan
             NameValueCollection arrLoi = new NameValueCollection();
             String sLNS = Convert.ToString(Request.Form[ParentID + "_sLNS"]);
             String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
-            if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
-            {
-                arrLoi.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
-            }
+            
             if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
             {
                 if (sLNS == string.Empty || sLNS == "" || sLNS == null)
                 {
-                    arrLoi.Add("err_sLNS", "Bạn chưa chọn LNS!");
+                    arrLoi.Add("err_sLNS", "Bạn chưa chọn loại ngân sách. Hãy chọn loại ngân sách!");
                 }
+            }
+
+            if (String.IsNullOrEmpty(NgayChungTu))
+            {
+                arrLoi.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+
+            else if (!HamChung.isDate(NgayChungTu))
+            {
+                arrLoi.Add("err_dNgayChungTu", "Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
             if (arrLoi.Count > 0)
@@ -127,6 +134,7 @@ namespace VIETTEL.Controllers.DuToan
                 for (i = 0; i <= arrLoi.Count - 1; i++)
                 {
                     ModelState.AddModelError(ParentID + "_" + arrLoi.GetKey(i), arrLoi[i]);
+                    break;
                 }
                 ViewData["MaChungTu"] = MaChungTu;
                 if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
@@ -134,6 +142,7 @@ namespace VIETTEL.Controllers.DuToan
                     ViewData["bThemMoi"] = "true";
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
+                    ViewData["dNgayChungTu"] = NgayChungTu;
                     return View(sViewPath + "ChungTu_index.aspx");
 
                 }
@@ -142,6 +151,7 @@ namespace VIETTEL.Controllers.DuToan
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
+                    ViewData["dNgayChungTu"] = NgayChungTu;
                     return View(sViewPath + "ChungTu_Edit.aspx");
                 }
             }
