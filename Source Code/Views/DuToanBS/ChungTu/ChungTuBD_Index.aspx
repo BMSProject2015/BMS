@@ -85,8 +85,8 @@
         if (iKyThuat == "1") sLNS = "1040100";
 
         string iID_MaNguon = Request.QueryString["iID_MaNguon"];
-        DataTable dtNguon = DuToanBSChungTuModels.getNguon();
-        SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
+        //DataTable dtNguon = DuToanBSChungTuModels.getNguon();
+        //SelectOptionList slNguon = new SelectOptionList(dtNguon, "iID_MaNguon", "TenHT");
         //dtNguon.Dispose();
 
         if (String.IsNullOrEmpty(page) == false)

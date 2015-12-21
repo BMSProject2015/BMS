@@ -65,8 +65,13 @@
         }
         //kiem tra nguoi dung co phan tro ly tong hop
         bool check = LuongCongViecModel.KiemTra_TroLyTongHop(MaND);
+        bool bTrolyTHCuc = LuongCongViecModel.KiemTra_TroLyTongHopCuc(MaND);
         bool CheckNDtao = false;
-        if (check)
+        if (bTrolyTHCuc)
+        {
+            CheckNDtao = false;
+        }
+        else if (check)
         {
             CheckNDtao = true;
         }
