@@ -84,7 +84,7 @@
             {
                 arrView[i] =
                     String.Format(
-                        @"/rptQuyetToan_TongHop_LNS/viewpdf?MaTo={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&iID_MaPhongBan={5}",
+                        @"/rptQuyetToanTongHopLNS/viewpdf?MaTo={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&iID_MaPhongBan={5}",
                         arrMaTo[i], sLNS, iThang_Quy, iID_MaNamNganSach, MaND, iID_MaPhongBan);
                 Chuoi += arrView[i];
                 if (i < arrMaTo.Length - 1)
@@ -93,8 +93,8 @@
         }
 
         int SoCot = 1;
-        
-        using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongHop_LNS",new {ParentID = ParentID}))
+
+        using (Html.BeginForm("FormSubmit", "rptQuyetToanTongHopLNS", new { ParentID = ParentID }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND","")%>
@@ -472,7 +472,7 @@
                 var iID_MaNamNganSach = document.getElementById("<%=ParentID %>_iID_MaNamNganSach").value;
                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&MaTo=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongHop_LNS") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&MaTo=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToanTongHopLNS") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2","<%= MaTo%>"));
