@@ -248,7 +248,7 @@
                         <td style="height: 20px" colspan="2">
                             <div style="color: red; font-size: medium">
                                 <%=MyHtmlHelper.Option(ParentID, "TongHop", LoaiBaoCao, "LoaiTongHop", "", "")%>
-                                Báo cáo tổng hợp
+                                Tổng hợp đơn vị
                             </div>
                         </td>
                         <td>

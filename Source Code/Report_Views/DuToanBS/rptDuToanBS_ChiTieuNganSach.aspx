@@ -29,21 +29,19 @@
         
         //cần thống nhất để lấy ra đợt dự toán từ 1 bảng trong DB
         //Hungpx : hard code
-        DataTable dtDot = new DataTable();
-        dtDot.Columns.Add("MaDot", typeof(string));
-        dtDot.Columns.Add("TenDot", typeof(string));
-        DataRow R1 = dtDot.NewRow();
-        R1["MaDot"] = "-1";
-        R1["TenDot"] = "--Chọn đợt--";
-        dtDot.Rows.Add(R1);
-        SelectOptionList slDot = new SelectOptionList(dtDot, "MaDot", "TenDot");
+        DataTable dtDot = DuToanBS_ReportModels.LayDSDot(iNamLamViec,MaND);
+        //DataRow R1 = dtDot.NewRow();
+        //R1["MaDot"] = "-1";
+        //R1["TenDot"] = "--Chọn đợt--";
+        //dtDot.Rows.Add(R1);
+        SelectOptionList slDot = new SelectOptionList(dtDot, "iDotCap", "iDotCap");
         String idDot = Convert.ToString(ViewData["iID_MaDot"]);
         if (String.IsNullOrEmpty(idDot))
         {
             if(dtDot.Rows.Count >0 )
-                idDot = Convert.ToString(dtDot.Rows[0]["MaDot"]);
+                idDot = Convert.ToString(dtDot.Rows[0]["iDotCap"]);
             else
-                idDot = Guid.Empty.ToString();
+                idDot= Guid.Empty.ToString();
         }
         dtDot.Dispose();
                 
@@ -114,8 +112,8 @@
 
         //int SoCot = 1;
         String[] arrMaNS = sLNS.Split(',');
-
-        using (Html.BeginForm("FormSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
+        
+        using (Html.BeginForm("EditSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
         {
     %>
    
@@ -124,7 +122,7 @@
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                     <td>
-                        <span>Báo cáo so sánh chỉ tiêu quyết toán năm
+                        <span>Báo cáo so sánh chỉ tiêu năm
                             <%=iNamLamViec%></span>
                     </td>
                     <td width="52%" style="text-align: left;">
@@ -459,9 +457,10 @@
                 url = unescape(url.replace("#1", iID_MaDot));
                 url = unescape(url.replace("#2", MaPhongBan));   
                 var pageLoad = <%=PageLoad %>;           
-                if(pageLoad=="1") {
-                    url = unescape(url.replace("#3", "<%=iID_MaDonVi %>"));
+                if(pageLoad) {
+                    url = unescape(url.replace("#3", iID_MaDonVi));
                     url = unescape(url.replace("#4", "<%=sLNS %>"));
+                    pageLoad = "0";
                 }
                 else{
                     url = unescape(url.replace("#4", sLNS));
