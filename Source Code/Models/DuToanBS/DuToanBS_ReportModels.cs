@@ -999,8 +999,9 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             SqlCommand cmd = new SqlCommand();
             String SQL = "";
             String DK = "";
-            String DKDot = "";
+            
             DK += " AND iID_MaDonVi NOT IN ('')";
+            String DKDot = "";
             if (!String.IsNullOrEmpty(iID_MaDot) && iID_MaDot != "-1")
             {
                 DKDot += " AND CONVERT(VARCHAR(24),dNgayChungTu,105)=@MaDot";
@@ -1023,7 +1024,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi, sTenDonVi 
             FROM DTBS_ChungTuChiTiet
             WHERE iTrangThai=1 AND iID_MaChungTu IN
-                        (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} 
+                        (SELECT iID_MaChungTu FROM DTBS_ChungTu WHERE iTrangThai=1 {0} ) {1} 
             ORDER BY iID_MaDonVi
             ", DKDot, DK);
             cmd.CommandText = SQL;
@@ -1074,6 +1075,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             SqlCommand cmd = new SqlCommand();
             String SQL = "";
             String DK = "", DKLNS = "", DKPhongBan = "", DKDonVi = "";
+            String DKDot = "";
             String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
             //dieu kien don vi
             if (String.IsNullOrEmpty(iID_MaDonVi)) iID_MaDonVi = "-100";
@@ -1092,6 +1094,11 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             DKLNS = ThuNopModels.DKLNS(MaND, cmd, MaPhongBan);
             DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
             DKDonVi = ThuNopModels.DKDonVi(MaND, cmd);
+            if (!String.IsNullOrEmpty(iID_MaDot) && iID_MaDot != "-1")
+            {
+                DKDot += " AND CONVERT(VARCHAR(24),dNgayChungTu,105)=@MaDot";
+                cmd.Parameters.AddWithValue("@MaDot", iID_MaDot);
+            }
             //dieu kien phong ban
             if (iID_MaPhongBan != "-1" && iID_MaPhongBan != null)
             {
@@ -1103,7 +1110,8 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                 SELECT DISTINCT  sLNS
                 FROM DTBS_ChungTuChiTiet
                 WHERE iNamLamViec=@iNamLamViec AND iTrangThai=1  AND rTuChi<>0 {0} {1} {2} {3}
-
+                AND iID_MaChungTu IN
+                        (SELECT iID_MaChungTu FROM DTBS_ChungTu WHERE iTrangThai=1 {4} )
                 ) as a
 
                 INNER JOIN 
@@ -1112,7 +1120,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                 ON a.sLNS=b.sLNS
                 ORDER BY sLNS
 
-                 ", DK, DKLNS, DKPhongBan, DKDonVi);
+                 ", DK, DKLNS, DKPhongBan, DKDonVi,DKDot);
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
             DataTable dt = Connection.GetDataTable(cmd);
@@ -1549,7 +1557,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                                         SUBSTRING(b.sLNS,1,3) as sLNS3,
                                         SUBSTRING(b.sLNS,1,5) as sLNS5,
                                         b.sLNS,b.sL,b.sK,b.sM,b.sTM,b.sTTM,b.sNG,b.sMoTa,b.iID_MaDonVi,b.sTenDonVi,b.iID_MaPhongBan,b.sTenPhongBan
-                                        ,SUM(b.rTuChi/{1}) as rTuChi, SUM(b.rHienVat/{1}) as rHienVat
+                                        ,SUM(b.rTuChi/{1}) as rTuChi, SUM(b.rHienVat/{1}) as rHienVat, SUM(b.rDuPhong/{1}) as rDuPhong
                                  FROM DTBS_ChungTu a, DTBS_ChungTuChiTiet b
                                  WHERE a.iID_MaChungTu = b.iID_MaChungTu and b.iTrangThai=1 AND b.iNamLamViec=@iNamLamViec {0} {2} {3}
                                  GROUP BY b.sLNS,b.sL,b.sK,b.sM,b.sTM,b.sTTM,b.sNG,b.sMoTa,b.iID_MaDonVi,b.sTenDonVi,b.iID_MaPhongBan,b.sTenPhongBan
@@ -1733,7 +1741,12 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                 DK += " AND iID_MaPhongBan=@MaPhongBan ";
                 cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
             }
-
+            String DKDot = "";
+            if (!String.IsNullOrEmpty(iID_MaDot) && iID_MaDot != "-1")
+            {
+                DKDot += " AND CONVERT(VARCHAR(24),dNgayChungTu,105)=@MaDot";
+                cmd.Parameters.AddWithValue("@MaDot", iID_MaDot);
+            }
             DKDonVi = ThuNopModels.DKDonVi(MaND, cmd);
             DKPhongBan = ThuNopModels.DKPhongBan_QuyetToan(MaND, cmd);
 
@@ -1744,10 +1757,11 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
                                 sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                                 ,SUM(rTuChi/@donvitinh) as rTuChi,SUM(rHienVat/@donvitinh) as rHienVat
                         FROM DTBS_ChungTuChiTiet
-                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
+                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND iID_MaChungTu IN
+                        (SELECT iID_MaChungTu FROM DTBS_ChungTu WHERE iTrangThai=1 {3} ) {0} {1} {2}
                         GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                         HAVING SUM(rTuChi)<>0 OR SUM(rHienVat) <>0
-                        ", DK, DKDonVi, DKPhongBan);
+                        ", DK, DKDonVi, DKPhongBan,DKDot);
 
             cmd.CommandText = Sql;
             cmd.Parameters.AddWithValue("@donvitinh", "1000");
