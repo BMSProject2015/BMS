@@ -118,7 +118,7 @@
                 for (int i = 0; i < arrMaDonVi.Length; i++ )
                 {
                     arrView[i] = String.Format(
-                        @"/rptQuyetToan_ThongTri/viewpdf?iID_MaDonVi={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&LoaiTongHop={5}&DenMuc={6}&LoaiCapPhat={7}&LoaiThongTri={8}",
+                        @"/rptQuyetToanThongTri/viewpdf?iID_MaDonVi={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&LoaiTongHop={5}&DenMuc={6}&LoaiCapPhat={7}&LoaiThongTri={8}",
                         arrMaDonVi[i], sLNS, iThang_Quy, iID_MaNamNganSach, MaND, LoaiTongHop, DenMuc, LoaiCapPhat, LoaiThongTri);
                     Chuoi +=arrView[i];
                    if (i < arrMaDonVi.Length - 1)
@@ -132,7 +132,7 @@
             else {
                 arrView = new string[1];
                 arrView[0] = String.Format(
-                        @"/rptQuyetToan_ThongTri/viewpdf?iID_MaDonVi={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&LoaiTongHop={5}&DenMuc={6}&LoaiCapPhat={7}&LoaiThongTri={8}",
+                        @"/rptQuyetToanThongTri/viewpdf?iID_MaDonVi={0}&sLNS={1}&iThang_Quy={2}&iID_MaNamNganSach={3}&MaND={4}&LoaiTongHop={5}&DenMuc={6}&LoaiCapPhat={7}&LoaiThongTri={8}",
                         iID_MaDonVi, sLNS, iThang_Quy, iID_MaNamNganSach, MaND, LoaiTongHop, DenMuc, LoaiCapPhat, LoaiThongTri);
                 Chuoi += arrView[0];
             }  
@@ -141,7 +141,7 @@
         String sGhiChu = Convert.ToString(ViewData["sGhiChu"]);
         int SoCot = 1;
 
-    using (Html.BeginForm("EditSubmit", "rptQuyetToan_ThongTri", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptQuyetToanThongTri", new { ParentID = ParentID }))
     {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
@@ -344,7 +344,7 @@
                
                 //VungNV: 2015/09/30 Lấy giá trị loại quyết toán
                     jQuery.ajaxSetup({cache: false});
-                    var url2 = unescape('<%= Url.Action("LayLoaiQuyetToan?ParentID=#0&MaND=#1","rptQuyetToan_ThongTri") %>');
+                    var url2 = unescape('<%= Url.Action("LayLoaiQuyetToan?ParentID=#0&MaND=#1","rptQuyetToanThongTri") %>');
                     url2 = unescape(url2.replace("#0", "<%= ParentID %>"));
                     url2 = unescape(url2.replace("#1", "<%= MaND %>"));
 
@@ -363,7 +363,7 @@
                     sGhiChu += arrGhiChu[i] + '^';
                 }
                 
-                var url = unescape('<%= Url.Action("CapNhatGhiChuQuyetToan?sGhiChu=#0&MaND=#1&iID_MaDonVi=#2", "rptQuyetToan_ThongTri") %>');
+                var url = unescape('<%= Url.Action("CapNhatGhiChuQuyetToan?sGhiChu=#0&MaND=#1&iID_MaDonVi=#2", "rptQuyetToanThongTri") %>');
                 url = unescape(url.replace("#0",sGhiChu));
                 url = unescape(url.replace("#1","<%=MaND %>"));
                 url = unescape(url.replace("#2", iID_MaDonVi));
@@ -379,7 +379,7 @@
                 var sLoaiQuyetToan = document.getElementById("<%= ParentID %>_LoaiCapPhat").value.trim();
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("CapNhatLoaiQuyetToan?sLoaiQuyetToan=#0&MaND=#1", "rptQuyetToan_ThongTri") %>');
+                var url = unescape('<%= Url.Action("CapNhatLoaiQuyetToan?sLoaiQuyetToan=#0&MaND=#1", "rptQuyetToanThongTri") %>');
                 url = unescape(url.replace("#0",sLoaiQuyetToan));
                 url = unescape(url.replace("#1","<%=MaND %>"));
 
@@ -398,7 +398,7 @@
 
                 jQuery.ajaxSetup({ cache: false });
                
-                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&Thang_Quy=#1&LoaiThongTri=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachLNS?ParentID=#0&Thang_Quy=#1&LoaiThongTri=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToanThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2",LoaiThongTri));
@@ -427,7 +427,7 @@
                 var MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&LoaiThongTri=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaDonVi=#5&iID_MaPhongBan=#6", "rptQuyetToan_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&LoaiThongTri=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaDonVi=#5&iID_MaPhongBan=#6", "rptQuyetToanThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2",LoaiThongTri));
@@ -452,7 +452,7 @@
                   }
                  //VungNV: Lấy giá trị ghi chú
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("LayGhiChuQuyetToan?ParentID=#0&MaND=#1&iID_MaDonVi=#2", "rptQuyetToan_ThongTri") %>');
+                var url = unescape('<%= Url.Action("LayGhiChuQuyetToan?ParentID=#0&MaND=#1&iID_MaDonVi=#2", "rptQuyetToanThongTri") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", "<%= MaND %>"));
                 url = unescape(url.replace("#2",iID_MaDonVi));

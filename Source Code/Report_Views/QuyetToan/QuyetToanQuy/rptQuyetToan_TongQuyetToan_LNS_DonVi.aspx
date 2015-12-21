@@ -90,7 +90,7 @@
         {
             for (int i = 0; i < arrMaDonVi.Length; i++)
             {
-                arrView[i] = String.Format(@"/rptQuyetToan_TongQuyetToan_LNS_DonVi/viewpdf?iID_MaDonVi={0} &sLNS={1} &iThang_Quy={2} &iID_MaNamNganSach={3} &iID_MaPhongBan={4} &MaND={5}", arrMaDonVi[i], sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan, MaND);
+                arrView[i] = String.Format(@"/rptQuyetToanTongQuyetToanLNSDonVi/viewpdf?iID_MaDonVi={0} &sLNS={1} &iThang_Quy={2} &iID_MaNamNganSach={3} &iID_MaPhongBan={4} &MaND={5}", arrMaDonVi[i], sLNS, iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan, MaND);
                 Chuoi += arrView[i];
                 if (i < arrMaDonVi.Length - 1)
                     Chuoi += "+";
@@ -98,7 +98,7 @@
         }
 
         int SoCot = 1;
-        using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongQuyetToan_LNS_DonVi", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptQuyetToanTongQuyetToanLNSDonVi", new { ParentID = ParentID }))
         {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
@@ -476,7 +476,7 @@
                  var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
                 jQuery.ajaxSetup({ cache: false });
-                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToan_TongQuyetToan_LNS_DonVi") %>');
+                var url = unescape('<%= Url.Action("LayDanhSachDonVi?ParentID=#0&Thang_Quy=#1&iID_MaDonVi=#2&sLNS=#3&iID_MaNamNganSach=#4&iID_MaPhongBan=#5", "rptQuyetToanTongQuyetToanLNSDonVi") %>');
                 url = unescape(url.replace("#0", "<%= ParentID %>"));
                 url = unescape(url.replace("#1", Thang));
                 url = unescape(url.replace("#2","<%= iID_MaDonVi %>"));

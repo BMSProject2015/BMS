@@ -65,14 +65,14 @@
         
         if (PageLoad == "1")
         {
-            View = String.Format(@"/rptQuyetToan_TongHop_NhapSoLieu/viewpdf?iThang_Quy={0}&iID_MaNamNganSach={1}&iID_MaPhongBan={2}&MaND={3}",
+            View = String.Format(@"/rptQuyetToanTongHopNhapSoLieu/viewpdf?iThang_Quy={0}&iID_MaNamNganSach={1}&iID_MaPhongBan={2}&MaND={3}",
                                             iThang_Quy, iID_MaNamNganSach, iID_MaPhongBan, MaND);
             Chuoi += View;
         }
         
         String BackURL = Url.Action("Index", "QuyetToan_Report", new { Loai = 0 });
-        
-        using (Html.BeginForm("EditSubmit", "rptQuyetToan_TongHop_NhapSoLieu", new { ParentID = ParentID }))
+
+        using (Html.BeginForm("FormSubmit", "rptQuyetToanTongHopNhapSoLieu", new { ParentID = ParentID }))
         {
         %>
         <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
