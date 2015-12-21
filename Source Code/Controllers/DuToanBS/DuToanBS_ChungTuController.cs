@@ -220,7 +220,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 sLNS = Convert.ToString(Request.Form[ParentID + "_sLNS"]);
             }
-
+            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
             // Khởi tạo và gán giá trị cho bảng dữ liệu
             Bang bang = new Bang("DTBS_ChungTu");
             bang.MaNguoiDungSua = maND;
@@ -230,7 +230,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    string maChungTuAddNew = DuToanBSChungTuModels.ThemChungTu(bang, maND, sLNS, iKyThuat);
+                    string maChungTuAddNew = DuToanBSChungTuModels.ThemChungTu(bang, maND, sLNS, iKyThuat,dNgayChungTu);
                     return RedirectToAction("Index", "DuToanBSChungTuChiTiet", new {iID_MaChungTu = maChungTuAddNew});
                 }
                 catch (Exception ex)
@@ -238,7 +238,9 @@ namespace VIETTEL.Controllers.DuToanBS
                     string er = ex.Message;
                     string[] ers = er.Split('|');
                     ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ViewData["sLNS"] = sLNS;
                     ViewData["bThemMoi"] = "true";
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     if (sLNS1 == "104")
                     {
                         return View(VIEW_ROOTPATH + VIEW_CHUNGTUBD_INDEX);
@@ -250,7 +252,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTu(bang, MaChungTu);
+                    DuToanBSChungTuModels.SuaChungTu(bang, MaChungTu,dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -261,6 +263,8 @@ namespace VIETTEL.Controllers.DuToanBS
 
                     ViewData["MaChungTu"] = MaChungTu;
                     ViewData["sLNS1"] = sLNS1;
+                    ViewData["sLNS"] = sLNS;
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_EDIT);
                 }
             }
@@ -292,6 +296,7 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             string dsMaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
+            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
 
             Bang bang = new Bang("DTBS_ChungTu_TLTH");
             bang.MaNguoiDungSua = User.Identity.Name;
@@ -301,7 +306,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu);
+                    DuToanBSChungTuModels.ThemChungTuTLTH(bang, MaND, dsMaChungTu, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -310,6 +315,7 @@ namespace VIETTEL.Controllers.DuToanBS
                     string[] ers = er.Split('|');
                     ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
                 }
             }
@@ -317,7 +323,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu);
+                    DuToanBSChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -328,6 +334,7 @@ namespace VIETTEL.Controllers.DuToanBS
 
                     ViewData["iID_MaChungTu"] = MaChungTu;
                     ViewData["sLNS"] = sLNS1;
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_EDIT);
                 }
             }
@@ -357,6 +364,7 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             string dsMaChungTuTLTH = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
+            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
 
             Bang bang = new Bang("DTBS_ChungTu_TLTHCuc");
             bang.MaNguoiDungSua = User.Identity.Name;
@@ -366,7 +374,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH);
+                    DuToanBSChungTuModels.ThemChungTuTLTHCuc(bang, MaND, dsMaChungTuTLTH, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -375,6 +383,7 @@ namespace VIETTEL.Controllers.DuToanBS
                     string[] ers = er.Split('|');
                     ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
                 }
             }
@@ -382,7 +391,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH);
+                    DuToanBSChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
@@ -392,6 +401,7 @@ namespace VIETTEL.Controllers.DuToanBS
                     ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
                     ViewData["iID_MaChungTu"] = MaChungTu;
                     ViewData["sLNS"] = sLNS1;
+                    ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_EDIT);
                 }
             }
