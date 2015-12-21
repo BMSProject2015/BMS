@@ -156,6 +156,7 @@ namespace VIETTEL.Models.DuToanBS
                                             ) AS B
                                             ON A.iID_MaTrangThaiDuyet=B.iID_MaTrangThaiDuyet ", dk);
             cmd.CommandText = SQL;
+            cmd.Parameters.AddWithValue("@iID_MaPhanHe", PhanHeModels.iID_MaPhanHeDuToan);
             //Danh sách các trạng thái
             DataTable dtTrangThai = Connection.GetDataTable(cmd);
 
@@ -632,12 +633,12 @@ namespace VIETTEL.Models.DuToanBS
             //Lấy điều kiện phòng ban
             DataTable dtPhongBan = NganSach_HamChungModels.DSBQLCuaNguoiDung(maND);
             string maPhongBan = "";
-            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0)
+            if (dtPhongBan != null && dtPhongBan.Rows.Count > 0 )
             {
                 maPhongBan = Convert.ToString(dtPhongBan.Rows[0]["sKyHieu"]);
                 dtPhongBan.Dispose();
             }
-            if (maPhongBan != Convert.ToString(Guid.Empty) && !String.IsNullOrEmpty(maPhongBan))
+            if (maPhongBan != Convert.ToString(Guid.Empty) && !String.IsNullOrEmpty(maPhongBan) && String.IsNullOrEmpty(maChungTuTLTHCuc))
             {
                 dk += " AND iID_MaPhongBan = @iID_MaPhongBan";
                 cmd.Parameters.AddWithValue("@iID_MaPhongBan", maPhongBan);
