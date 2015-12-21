@@ -73,8 +73,11 @@
     dtTinhChatCapThu.Rows.InsertAt(R2, 0);
     dtTinhChatCapThu.Dispose();
      
-     DataTable dtLoaiCapPhat=CommonFunction.Lay_dtDanhMuc("LoaiCapPhat");         
-     SelectOptionList slLoaiCapPhat= new SelectOptionList(dtLoaiCapPhat,"iID_MaDanhMuc","sTen");
+    DataTable dtLoaiCapPhat=CommonFunction.Lay_dtDanhMuc("LoaiCapPhat");         
+    SelectOptionList slLoaiCapPhat= new SelectOptionList(dtLoaiCapPhat,"iID_MaDanhMuc","sTen");
+
+    String BackURL = Url.Action("Index", "CapPhat_ChungTu", new { Loai = Loai });
+     
      using (Html.BeginForm("LuuChungTu", "CapPhat_ChungTu", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, sLNS = sLNS, DonVi = DonVi, Loai = Loai }))
     {
  %>
@@ -209,7 +212,7 @@
                                         </td>          
                                             <td width="5px">&nbsp;</td>          
                                         <td class="td_form2_td5">
-                                            <input class="button" type="button" value="Hủy" onclick="history.go(-1)" />
+                                            <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                         </td>
                                     </tr>
                                 </table>
@@ -226,4 +229,9 @@
     if(dtCapPhat!=null) dtCapPhat.Dispose();
     dtLoaiCapPhat.Dispose();    
 %>
+<script type="text/javascript">
+    function Huy() {
+        window.parent.location.href = '<%=BackURL%>';
+    }
+</script>
 </asp:Content>

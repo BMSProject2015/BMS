@@ -179,7 +179,7 @@ namespace VIETTEL.Models
                     {
                         if (count == 0)
                         {
-                            for (int k = 0; k < vR.Columns.Count - 1; k++)
+                            for (int k = 0; k < vR.Columns.Count; k++)
                             {
                                 vR.Rows[i][k] = dtChungTuChiTiet.Rows[j][vR.Columns[k].ColumnName];
                             }
@@ -188,7 +188,7 @@ namespace VIETTEL.Models
                         else
                         {
                             DataRow row = vR.NewRow();
-                            for (int k = 0; k < vR.Columns.Count - 1; k++)
+                            for (int k = 0; k < vR.Columns.Count; k++)
                             {
                                 row[k] = dtChungTuChiTiet.Rows[j][vR.Columns[k].ColumnName];
                             }
@@ -408,5 +408,6 @@ namespace VIETTEL.Models
             cmd.Dispose();
             dtChungTu.Dispose();
         }
+
     }
 }

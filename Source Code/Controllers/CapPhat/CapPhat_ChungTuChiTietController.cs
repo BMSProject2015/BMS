@@ -23,6 +23,10 @@ namespace VIETTEL.Controllers.CapPhat
         [Authorize]
         public ActionResult Index(String DonVi,String iID_MaCapPhat)
         {
+            int opt = 0;
+            if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["HienThiOpt"])))
+                opt = Convert.ToInt32(Request.QueryString["HienThiOpt"]);
+            CapPhat_BangDuLieu.ThietLapHienThi(opt);
             if (String.IsNullOrEmpty(DonVi) == false)
             {
                 return View(VIEW_ROOTPATH + VIEW_CAPPHATCHITIET_INDEX_DONVI);
@@ -32,6 +36,8 @@ namespace VIETTEL.Controllers.CapPhat
         [Authorize]
         public ActionResult CapPhatChiTiet_Frame(String iID_MaCapPhat)
         {
+            string MaLoai = Request.Form["CapPhat_MaLoai"];
+            ViewData["MaLoai"] = MaLoai;
             return View(VIEW_ROOTPATH + VIEW_CAPPHATCHITIET_DANHSACH_FRAME);
         }
         /// <summary>
@@ -96,10 +102,22 @@ namespace VIETTEL.Controllers.CapPhat
                         bool dk = false;
                         for (int j = 0; j < arrMaCot.Length; j++)
                         {
-                            if (arrMaCot[j] == "iID_MaDonVi" )
+                            if (arrMaCot[j] == "iID_MaDonVi")
                             {
-                                if(string.IsNullOrEmpty(arrGiaTri[j]))
-                                    dk = true;
+                                // nếu mã đơn vị không hợp lệ
+                                if (string.IsNullOrEmpty(arrGiaTri[j]))
+                                {
+                                    // người dùng nhập chứng từ chi tiết mới mà không nhập mã đơn vị
+                                    if (iID_MaCapPhatChiTiet == "")
+                                        dk = true;
+                                    else
+                                    {
+                                        // người dùng sửa chứng từ chi tiết mà xóa mất mã đơn vị của chứng từ chi tiết
+                                        if (arrThayDoi[j] == "1")
+                                            dk = true;
+                                    }
+                                }
+                                
                                 break;
                             }
                         }

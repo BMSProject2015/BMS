@@ -56,6 +56,10 @@
     String iID_MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
     DataTable dtLNSQuocPhong = DanhMucModels.NS_LoaiNganSachQuocPhong(iID_MaPhongBan);
     SelectOptionList slLNSQuocPhong = new SelectOptionList(dtLNSQuocPhong, "sLNS", "TenHT");
+    DataRow R1 = dtLNSQuocPhong.NewRow();
+    R1["sLNS"] = "-1";
+    R1["TenHT"] = "--Chọn loại ngân sách--";
+    dtLNSQuocPhong.Rows.InsertAt(R1, 0);
     //END
     
     //START Lấy danh sách tính chất cấp thu
@@ -189,7 +193,7 @@
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
         	<tr>
             	<td>
-                	<span>Danh sách cấp phát</span>
+                	<span>Danh sách cấp phát cục</span>
                 </td>
             </tr>
         </table>
@@ -290,7 +294,7 @@
             <tr <%=strColor %>>
                 <td align="center"><%=R["rownum"]%></td>            
                 <td align="center"><%=NgayChungTu %></td>
-                <td align="center"><b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b></td>
+                <td align="center"><b><%=MyHtmlHelper.ActionLink(Url.Action("Index", "CapPhat_ChungTuChiTiet", new { iID_MaCapPhat = R["iID_MaCapPhat"], Loai = Loai, HienThiOpt = 0 }).ToString(), Convert.ToString(R["sTienToChungTu"]) + Convert.ToString(R["iSoCapPhat"]), "Detail", "")%></b></td>
                 <td><%=LoaiCapPhat %></td>
                 <td><%=tinhChatCapThu %></td>
                 <td><%=LoaiNganSach%></td>

@@ -27,8 +27,12 @@
     {
         arrGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
     }
-
-    CapPhat_BangDuLieu bang = new CapPhat_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem, MaND, IPSua);
+    String MaLoai = Convert.ToString(ViewData["MaLoai"]);
+    if (String.IsNullOrEmpty(MaLoai))
+        MaLoai = CapPhat_BangDuLieu.MALOAI;
+    else
+        CapPhat_BangDuLieu.MALOAI = MaLoai;
+    CapPhat_BangDuLieu bang = new CapPhat_BangDuLieu(iID_MaCapPhat, arrGiaTriTimKiem, MaLoai,MaND, IPSua);
 
     String BangID = "BangDuLieu";
     int Bang_Height = 470;
@@ -41,7 +45,7 @@
     DataTable dtCapPhat = CapPhat_ChungTuModels.LayToanBoThongTinChungTu(iID_MaCapPhat);
     String Loai = Convert.ToString(dtCapPhat.Rows[0]["iLoai"]);
     String BackURL = Url.Action("Index", "CapPhat_ChungTu", new { Loai = Loai });
-
+    
    %>
             
 <%Html.RenderPartial("~/Views/Shared/BangDuLieu/BangDuLieu.ascx", new { BangID = BangID, bang = bang, Bang_Height = Bang_Height, Bang_FixedRow_Height = Bang_FixedRow_Height }); %>    
@@ -94,7 +98,13 @@ if (bang.ChiDoc == false)
     <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td align="right" style="padding-right:10px;width:30%">
+            <td align="left" style="padding-left:10px;width:40%" ></td>
+            <td align="right" style="padding-right:10px;width:6%">
+                <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
+                    <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "CAPPHATCUC_TUYCHINH", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                </div>
+            </td>
+            <td align="right" style="padding-right:10px;width:6%">
                 <input type="button" id="btnLuu" class="button" onclick="javascript:return Bang_HamTruocKhiKetThuc();" value="<%=NgonNgu.LayXau("Lưu")%>"/>
             </td>
             <td align="center" style="width:1%">
@@ -129,7 +139,7 @@ if (bang.ChiDoc == false)
                     <button class='button' style="float: left;" onclick="javascript:return Bang_HamTruocKhiKetThuc(2);">
                         <%=TrinhDuyet %></button>
                 </div>--%>
-                <td align="left" style="padding-left:10px;width:30%">
+                <td align="left" style="padding-left:10px;width:6%">
                     <div onclick="OnInit_CT_NEW(500, 'Duyệt chứng từ');">
                         <%= Ajax.ActionLink(trinhDuyet, "Index", "NhapNhanh", new { id = "CapPhat_TrinhDuyetChiTiet", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
                     </div>
@@ -137,6 +147,7 @@ if (bang.ChiDoc == false)
                 <%
                     }
                 %>
+                <td align="left" style="padding-left:10px;width:40%" ></td>
         </tr>
         <tr><td>&nbsp;</td></tr>
     </table>                    
@@ -150,9 +161,16 @@ if (bang.ChiDoc == true)
     <table width="100%" cellpadding="0" cellspacing="0" border="0"  class="table_form2">
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td align="center">
+            <td align="left" style="padding-left:10px;width:40%" ></td>
+            <td align="right" style="padding-right:10px;width:6%">
+                <div onclick="OnInit_CT_NEW(500, 'Tùy chỉnh');">
+                    <%= Ajax.ActionLink("Tùy chỉnh", "Index", "NhapNhanh", new { id = "CAPPHATCUC_TUYCHINH", OnLoad = "OnLoad_CT", OnSuccess = "CallSuccess_CT", iID_MaChungTu = iID_MaCapPhat }, new AjaxOptions { }, new { @class = "button" })%>
+                </div>
+            </td>
+            <td align="left" style="padding-right:10px;width:6%">
                 <input class="button" type="button" value="<%=NgonNgu.LayXau("Quay lại")%>" onclick="Huy()" />
             </td>
+            <td align="left" style="padding-left:10px;width:40%" ></td>
         </tr>
         <tr><td>&nbsp;</td></tr>
     </table>                    
@@ -193,9 +211,9 @@ if (bang.ChiDoc == true)
     });
 </script>
 <script type="text/javascript">
-         function Huy() {
-        window.parent.location.href = '<%=BackURL%>';
-    }
+        function Huy() {
+             window.parent.location.href = '<%=BackURL%>';
+        }
         
         function OnInit_CT_NEW(value, title) {
             $("#idDialog").dialog("destroy");

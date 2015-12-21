@@ -98,6 +98,8 @@
           
      }
 
+     String BackURL = Url.Action("Index", "CapPhat_ChungTu_DonVi", new { Loai = Loai });
+     
      using (Html.BeginForm("LuuChungTu", "CapPhat_ChungTu_DonVi", new { ParentID = ParentID, iID_MaCapPhat = iID_MaCapPhat, Loai = Loai }))
     {
 %>
@@ -230,7 +232,7 @@
                                         </td>          
                                             <td width="5px">&nbsp;</td>          
                                         <td class="td_form2_td5">
-                                            <input class="button" type="button" value="Hủy" onclick="history.go(-1)" />
+                                            <input class="button" type="button" value="Hủy" onclick="Huy()" />
                                         </td>
                                     </tr>
                                 </table>
@@ -245,5 +247,10 @@
 <%
     }
 %>
+<script type="text/javascript">
+        function Huy() {
+             window.parent.location.href = '<%=BackURL%>';
+        }
+</script>
 </asp:Content>
 
