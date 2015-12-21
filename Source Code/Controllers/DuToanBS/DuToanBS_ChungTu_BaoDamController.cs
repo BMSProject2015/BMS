@@ -377,7 +377,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 return RedirectToAction("Index", "PermitionMessage");
             }
             int iXoa = 0;
-            iXoa = DuToanBS_ChungTuModels.XoaChungTu(iID_MaChungTu);
+            iXoa = DuToanBSChungTuModels.XoaChungTu(iID_MaChungTu);
             return RedirectToAction("Index", "DuToanBS_ChungTu_BaoDam", new { MaDotNganSach = MaDotNganSach, ChiNganSach = ChiNganSach, sLNS = sLNS, iKyThuat = iKyThuat });
         }
         

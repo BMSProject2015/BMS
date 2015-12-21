@@ -35,7 +35,7 @@ namespace VIETTEL.Report_Controllers.CapPhat
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             //Lấy giá trị từ Form
             String sLNS = Request.Form["sLNS"];

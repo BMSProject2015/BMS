@@ -30,7 +30,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             //Lấy giá trị từ Form
             String idDot = Request.Form[ParentID+"_iID_MaDot"];

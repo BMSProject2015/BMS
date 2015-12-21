@@ -117,7 +117,7 @@
 
     String sGhiChu = Convert.ToString(ViewData["sGhiChu"]);
 
-    using (Html.BeginForm("EditSubmit", "rptCapPhat_ThongTri", new { ParentID = ParentID }))
+    using (Html.BeginForm("FormSubmit", "rptCapPhat_ThongTri", new { ParentID = ParentID }))
     {
     %>
     <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>

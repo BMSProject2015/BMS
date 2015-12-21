@@ -85,7 +85,7 @@
         }
 
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = "1" });
-        using (Html.BeginForm("EditSubmit", "rptDuToan_NganSachBaoDam_TungDot", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptDuToan_NganSachBaoDam_TungDot", new { ParentID = ParentID }))
         {
     %>
     <div class="box_tong">

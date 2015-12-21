@@ -29,7 +29,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             String sLNS = Request.Form["sLNS"];
             String iID_MaPhongBan = Request.Form["DuToanBS" + "_iID_MaPhongBan"];

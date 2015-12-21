@@ -117,8 +117,8 @@
         }
 
         int SoCot = 1;
-        
-        using (Html.BeginForm("EditSubmit", "rptDuToanBS_TongHop_ChiNganSach", new { ParentID = ParentID }))
+
+        using (Html.BeginForm("FormSubmit", "rptDuToanBS_TongHop_ChiNganSach", new { ParentID = ParentID }))
         {
     %>
    

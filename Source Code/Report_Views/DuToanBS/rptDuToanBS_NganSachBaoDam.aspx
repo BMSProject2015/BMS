@@ -92,7 +92,7 @@
         
         String BackURL = Url.Action("Index", "DuToan_Report", new { sLoai = 1 });
 
-        using (Html.BeginForm("EditSubmit", "rptDuToanBS_NganSachBaoDam", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptDuToanBS_NganSachBaoDam", new { ParentID = ParentID }))
         {
          %>
          <%=MyHtmlHelper.Hidden(ParentID, MaND, "MaND", "")%>
