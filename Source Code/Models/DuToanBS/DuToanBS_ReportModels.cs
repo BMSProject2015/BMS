@@ -1192,7 +1192,7 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             // hungpx: neu khong co ma phong ban thi chon tat ca phong ban
             if (!String.IsNullOrEmpty(iID_MaPhongBan) && iID_MaPhongBan != "-1")
             {
-                DK += "AND iID_MaPhongBan = @iID_MaPhongBan";
+                DK += " AND b.iID_MaPhongBan = @iID_MaPhongBan ";
                 cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
             }
             SQL = String.Format(@"SELECT DISTINCT a1.sLNS,a1.sLNS+' - '+b1.sMoTa as TenHT
