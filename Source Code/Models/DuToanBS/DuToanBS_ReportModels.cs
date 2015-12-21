@@ -1021,11 +1021,11 @@ WHERE sTenBang='Nganh' AND iTrangThai=1) AND sTenKhoa=@sTenKhoa");
             }
 
             SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi, sTenDonVi 
-FROM DT_ChungTuChiTiet
-WHERE iTrangThai=1 AND iID_MaChungTu IN
+            FROM DTBS_ChungTuChiTiet
+            WHERE iTrangThai=1 AND iID_MaChungTu IN
                         (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} 
-ORDER BY iID_MaDonVi
-", DKDot, DK);
+            ORDER BY iID_MaDonVi
+            ", DKDot, DK);
             cmd.CommandText = SQL;
             DataTable dt = Connection.GetDataTable(cmd);
             cmd.Dispose();
@@ -1057,11 +1057,11 @@ ORDER BY iID_MaDonVi
             }
 
             SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi, sTenDonVi 
-FROM DT_ChungTuChiTiet
-WHERE iTrangThai=1 AND iID_MaChungTu IN
-                        (SELECT iID_MaChungTu FROM DT_ChungTu WHERE iTrangThai=1 {0} ) {1} 
-ORDER BY iID_MaDonVi
-",DKDOT, DK);
+            FROM DTBS_ChungTuChiTiet
+            WHERE iTrangThai=1 AND iID_MaChungTu IN
+                        (SELECT iID_MaChungTu FROM DTBS_ChungTu WHERE iTrangThai=1 {0} ) {1} 
+            ORDER BY iID_MaDonVi
+            ",DKDOT, DK);
             cmd.CommandText = SQL;
             DataTable dt = Connection.GetDataTable(cmd);
             cmd.Dispose();
@@ -1099,20 +1099,20 @@ ORDER BY iID_MaDonVi
                 cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
             }
             SQL = String.Format(@"SELECT a.sLNS,a.sLNS+' - '+sMoTa as TenHT
-FROM( 
-SELECT DISTINCT  sLNS
-FROM DT_ChungTuChiTiet
-WHERE iNamLamViec=@iNamLamViec AND iTrangThai=1  AND rTuChi<>0 {0} {1} {2} {3}
+                FROM( 
+                SELECT DISTINCT  sLNS
+                FROM DTBS_ChungTuChiTiet
+                WHERE iNamLamViec=@iNamLamViec AND iTrangThai=1  AND rTuChi<>0 {0} {1} {2} {3}
 
-) as a
+                ) as a
 
-INNER JOIN 
+                INNER JOIN 
 
-(SELECT sLNS,sMoTa FROM NS_MucLucNganSach WHERE iTrangThai=1 AND sL='' AND LEN(sLNS)=7) as b
-ON a.sLNS=b.sLNS
-ORDER BY sLNS
+                (SELECT sLNS,sMoTa FROM NS_MucLucNganSach WHERE iTrangThai=1 AND sL='' AND LEN(sLNS)=7) as b
+                ON a.sLNS=b.sLNS
+                ORDER BY sLNS
 
- ", DK, DKLNS, DKPhongBan, DKDonVi);
+                 ", DK, DKLNS, DKPhongBan, DKDonVi);
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
             DataTable dt = Connection.GetDataTable(cmd);
@@ -1145,9 +1145,10 @@ ORDER BY sLNS
             }
             
             SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi, sTenDonVi as TenHT
-FROM DT_ChungTuChiTiet
-WHERE iID_MaDonVi NOT IN ('') AND iTrangThai=1 AND iNamLamViec=@iNamLamViec  {0} {1} {2}
-", DK,DKDonVi,DKPhongBan);
+            FROM DTBS_ChungTuChiTiet
+            WHERE iID_MaDonVi NOT IN ('') AND iTrangThai=1 AND iNamLamViec=@iNamLamViec  {0} {1} {2}
+            ", DK,DKDonVi,DKPhongBan);
+
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
             DataTable dt = Connection.GetDataTable(cmd);
@@ -1196,19 +1197,20 @@ WHERE iID_MaDonVi NOT IN ('') AND iTrangThai=1 AND iNamLamViec=@iNamLamViec  {0}
                 cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
             }
           //  cmd.Parameters.AddWithValue("@iID_MaPhongBan", iID_MaPhongBan);
-            SQL = String.Format(@"SELECT DISTINCT a.sLNS,a.sLNS+' - '+sMoTa as TenHT
-FROM(
-SELECT DISTINCT sLNS,sLNS+' - '+sMoTa as TenHT
-FROM DT_ChungTuChiTiet
-WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2} {3}
-) as a
-INNER JOIN 
+            SQL = String.Format(
+                    @"SELECT DISTINCT a.sLNS,a.sLNS+' - '+sMoTa as TenHT
+                    FROM(
+                        SELECT DISTINCT sLNS,sLNS+' - '+sMoTa as TenHT
+                        FROM DTBS_ChungTuChiTiet
+                        WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2} {3}
+                    ) as a
 
-(SELECT sLNS,sMoTa FROM NS_MucLucNganSach WHERE iTrangThai=1 AND sL='' AND LEN(sLNS)=7) as b
-ON a.sLNS=b.sLNS
-ORDER BY sLNS
+                    INNER JOIN 
 
-", DK,DKDonVi,DKLNS,DKPhongBan);
+                    (SELECT sLNS,sMoTa FROM NS_MucLucNganSach WHERE iTrangThai=1 AND sL='' AND LEN(sLNS)=7) as b
+                    ON a.sLNS=b.sLNS
+                    ORDER BY sLNS", DK,DKDonVi,DKLNS,DKPhongBan);
+
             cmd.CommandText = SQL;
             cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
             DataTable dt = Connection.GetDataTable(cmd);
@@ -1306,7 +1308,7 @@ ORDER BY sLNS
                                                 SUM(rHienVat/{4}) as rHienVat,
                                                 SUM(rPhanCap/{4}) as rPhanCap,
                                                 SUM(rDuPhong/{4}) as rDuPhong
-                                        FROM DT_ChungTuChiTiet as A INNER JOIn DT_ChungTu as B
+                                        FROM DTBS_ChungTuChiTiet as A INNER JOIn DTBS_ChungTu as B
                                                 ON A.iID_MaChungTu = B.iID_MaChungTu
                                              WHERE A.iTrangThai=1 AND A.iNamLamViec=@iNamLamViec {0} {1} {2} {3}
                                              GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,A.sMoTa,A.iID_MaDonVi,sTenDonVi,CONVERT(VARCHAR(24),B.dNgayChungTu,105) 
@@ -1345,7 +1347,7 @@ ORDER BY sLNS
 
             String SQL = String.Format(@"
                                         SELECT DISTINCT iID_MaPhongBan,sTenPhongBan
-                                        FROM DT_ChungTuChiTiet
+                                        FROM DTBS_ChungTuChiTiet
                                         WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} AND iID_MaPhongBan NOT IN (02)", DK);
 
             cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
@@ -1377,12 +1379,12 @@ ORDER BY sLNS
 
             String SQL = String.Format(@"
                     Select DISTINCT CONVERT(VARCHAR(24),dNgayChungTu,105) as iDotCap, dNgayChungTu
-                    FROM DT_ChungTu
+                    FROM DTBS_ChungTu
                     WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec
                             AND iID_MaChungTu 
                             IN (
                                     SELECT iID_MaChungTu 
-                                    FROM DT_ChungTuChiTiet 
+                                    FROM DTBS_ChungTuChiTiet 
                                     WHERE iTrangThai=1 AND rTuChi<>0 AND iID_MaDonVi<>''    
                                 ) 
                     ORDER BY dNgayChungTu");
@@ -1551,7 +1553,7 @@ ORDER BY sLNS
                                         SUBSTRING(sLNS,1,5) as sLNS5,
                                         sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                                         ,SUM(rTuChi/{1}) as rTuChi, SUM(rHienVat/{1}) as rHienVat
-                                 FROM DT_ChungTuChiTiet
+                                 FROM DTBS_ChungTuChiTiet
                                  WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {2} {3}
                                  GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                                  HAVING SUM(rTuChi)<>0 ", DK, donvitinh, DKDonVi, DKPhongBan);
@@ -1632,7 +1634,7 @@ ORDER BY sLNS
                                         ,rHangMua=SUM(rHangMua)/{3}
                                         ,rPhanCap=SUM(rPhanCap)/{3}
                                         ,rDuPhong=SUM(rDuPhong)/{3}
-                                FROM DT_ChungTuChiTiet where sLNS='1040100' AND iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
+                                FROM DTBS_ChungTuChiTiet where sLNS='1040100' AND iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
                                 GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi
                                 HAVING SUM(rTuChi)<>0 
                                         OR SUM(rHangNhap)<>0 
@@ -1646,6 +1648,43 @@ ORDER BY sLNS
             DataTable dtAll = Connection.GetDataTable(cmd);
 
             return dtAll;
+        }
+
+        //HungPH: them dt lay dsDonVi tu dieu kien phong ban va Dot
+        public static DataTable getdtPhongBan_DonVi(String iID_Dot, String iID_MaPhongBan)
+        {
+            String DKPhongBan = "";
+            String DKDot = "";
+            SqlCommand cmd = new SqlCommand();
+            String SQL = "";
+            if (!String.IsNullOrEmpty(iID_Dot) && iID_Dot != "-1")
+            {
+                //DKDot += "AND iID_MaDotNganSach=@MaDot";
+                //cmd.Parameters.AddWithValue("@MaDot", iID_Dot);
+            }
+            if (!String.IsNullOrEmpty(iID_MaPhongBan) && iID_MaPhongBan != "-1")
+            {
+                DKPhongBan += "AND iID_MaPhongBan=@MaPhongBan";
+                cmd.Parameters.AddWithValue("@MaPhongBan", iID_MaPhongBan);
+            }
+            SQL = String.Format(@"SELECT DISTINCT iID_MaDonVi,sTenDonVi as TenHT
+                                        FROM DTBS_ChungTuChiTiet
+                                        WHERE iTrangThai=1 AND sLNS='1040100' AND sTenDonVi<>'' AND iID_MaDonVi<>'' {0} {1}
+                                        GROUP BY iID_MaDonVi,sTenDonVi
+                                        HAVING SUM(rTuChi)<>0 
+										OR SUM(rHangNhap)<>0 
+										OR SUM(rTonKho)<>0  
+										OR SUM(rHangMua)<>0  
+										OR SUM(rPhanCap)<>0 
+										OR SUM(rDuPhong)<>0
+                                        ORDER BY iID_MaDonVi
+                                        ", DKDot, DKPhongBan);
+
+            cmd.CommandText = SQL;
+            DataTable dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            return dt;
+
         }
         #endregion
 
@@ -1707,7 +1746,7 @@ ORDER BY sLNS
                                 SUBSTRING(sLNS,1,5) as sLNS5,
                                 sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                                 ,SUM(rTuChi/@donvitinh) as rTuChi,SUM(rHienVat/@donvitinh) as rHienVat
-                        FROM DT_ChungTuChiTiet
+                        FROM DTBS_ChungTuChiTiet
                         WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec {0} {1} {2}
                         GROUP BY sLNS,sL,sK,sM,sTM,sTTM,sNG,sMoTa,iID_MaDonVi,sTenDonVi,iID_MaPhongBan,sTenPhongBan
                         HAVING SUM(rTuChi)<>0 OR SUM(rHienVat) <>0

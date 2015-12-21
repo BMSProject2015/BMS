@@ -114,8 +114,8 @@
 
         //int SoCot = 1;
         String[] arrMaNS = sLNS.Split(',');
-        
-        using (Html.BeginForm("EditSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
+
+        using (Html.BeginForm("FormSubmit", "rptDuToanBS_ChiTieuNganSach", new { ParentID = ParentID, }))
         {
     %>
    

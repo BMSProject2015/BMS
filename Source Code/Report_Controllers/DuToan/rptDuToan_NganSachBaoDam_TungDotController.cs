@@ -34,7 +34,7 @@ namespace VIETTEL.Report_Controllers.DuToan
             }
         }
 
-        public ActionResult EditSubmit(String ParentID)
+        public ActionResult FormSubmit(String ParentID)
         {
             String MaTo = Request.Form["MaTo"];
             String Nganh = Request.Form[ParentID + "_Nganh"];

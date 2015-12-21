@@ -30,7 +30,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public ActionResult EditSubmit(String ParentID) 
+        public ActionResult FormSubmit(String ParentID) 
         {
             //Lấy giá trị từ Form
             String iID_MaDonVi = Request.Form["iID_MaDonVi"];
@@ -182,7 +182,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
             String MaND = User.Identity.Name;
             String ViewNam = "~/Views/DungChung/DonVi/DonVi_DanhSach.ascx";
 
-            DataTable dt = DuToan_ReportModels.getdtPhongBan_DonVi(iID_Dot, iID_MaPhongBan);
+            DataTable dt = DuToanBS_ReportModels.getdtPhongBan_DonVi(iID_Dot, iID_MaPhongBan);
 
             if (String.IsNullOrEmpty(iID_MaDonVi))
             {

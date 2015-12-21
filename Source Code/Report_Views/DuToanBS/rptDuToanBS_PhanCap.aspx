@@ -43,7 +43,7 @@
                 
         //dt Danh sách phòng ban
         String iID_MaPhongBan = Convert.ToString(ViewData["iID_MaPhongBan"]);
-        DataTable dtPhongBan = DuToanBSModels.getDSPhongBan(iNamLamViec, MaND);
+        DataTable dtPhongBan = DuToanBS_ReportModels.LayDSPhongBan(iNamLamViec, MaND); 
         SelectOptionList slPhongBan = new SelectOptionList(dtPhongBan, "iID_MaPhongBan", "sTenPhongBan");
         dtPhongBan.Dispose();
         
@@ -87,7 +87,7 @@
         }
 
 
-        using (Html.BeginForm("EditSubmit", "rptDuToanBS_PhanCap", new { ParentID = ParentID }))
+        using (Html.BeginForm("FormSubmit", "rptDuToanBS_PhanCap", new { ParentID = ParentID }))
         {
     %>
    
