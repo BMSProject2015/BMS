@@ -39,46 +39,33 @@
                 </tr>
                 <tr class="alt">
                     <td align="center" style="padding: 3px 2px;">2</td>
-                    <td align="center" style="padding: 3px 2px;">Biểu kiểm</td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToan_BieuKiemAll"), "Biểu kiểm")%></td>                        
-                    <td></td>
+                    <td align="center" style="padding: 3px 2px;">Phụ lục số 2a</td>
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanLNSDonVi"), "Quyết toán theo loại ngân sách - đơn vị")%></td>                        
+                    <td align="center" style="padding: 3px 2px;">VungNV</td>
                 </tr>
                 <tr class="alt">
                     <td align="center" style="padding: 3px 2px;">3</td>
                     <td align="center" style="padding: 3px 2px;">Phụ lục số 2a</td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanLNSDonVi"), "Quyết toán chọn LNS_DonVi")%></td>                        
-                    <td align="center" style="padding: 3px 2px;">VungNV</td>
-                </tr>
-                <tr class="alt">
-                    <td align="center" style="padding: 3px 2px;">4</td>
-                    <td align="center" style="padding: 3px 2px;">Phụ lục số 2a</td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanDonViLNS"), "Quyết toán chọn DonVi_LNS")%></td>                        
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanDonViLNS"), "Quyết toán chọn đơn vị - loại ngân sách")%></td>                        
                      <td align="center" style="padding: 3px 2px;">HungPX</td>
                     <td></td>
                 </tr>
                  <tr class="alt">
-                    <td align="center" style="padding: 3px 2px;">5</td>
+                    <td align="center" style="padding: 3px 2px;">4</td>
                     <td align="center" style="padding: 3px 2px;"></td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanTongHopLNS"), "Quyết toán Tổng hợp chọn LNS")%></td>                        
+                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanTongHopLNS"), "Quyết toán Tổng hợp chọn loại ngân sách")%></td>                        
                     <td align="center" style="padding: 3px 2px;">TuNB</td>
-                </tr>
-                 <tr class="alt">
-                    <td align="center" style="padding: 3px 2px;">6</td>
-                    <td align="center" style="padding: 3px 2px;"></td>
-                    <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanTongHopNamQuy"), "Quyết toán Tổng hợp Năm-Quý")%></td>                        
-                    <td align="center" style="padding: 3px 2px;">TuNB</td>
-                </tr>
 
                 <%--quydq: 2015/09/21 --%>
                  <tr class="alt">
-                    <td align="center" style="padding: 3px 2px;">7</td>
+                    <td align="center" style="padding: 3px 2px;">5</td>
                     <td align="center" style="padding: 3px 2px;"></td>
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanPhongBan"), "Quyết toán Phòng Ban")%></td>                        
                     <td align="center" style="padding: 3px 2px;">QuyDQ</td>
                 </tr>
                 <%--hungph: 2015/09/21 --%>
                  <tr class="alt">
-                    <td align="center" style="padding: 3px 2px;">7</td>
+                    <td align="center" style="padding: 3px 2px;">6</td>
                     <td align="center" style="padding: 3px 2px;"></td>
                     <td style="padding: 3px 2px;"><%=MyHtmlHelper.ActionLink(Url.Action("Index", "rptQuyetToanTongQuyetToanLNSDonVi"), "Quyết toán Tổng hợp")%></td>                        
                     <td align="center" style="padding: 3px 2px;">hungph</td>
