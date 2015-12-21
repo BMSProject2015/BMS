@@ -46,21 +46,6 @@
         //dt Loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
-        SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
-        if (String.IsNullOrEmpty(iID_MaDonVi))
-        {
-            if (dtDonVi.Rows.Count > 0)
-            {
-                iID_MaDonVi = Convert.ToString(dtDonVi.Rows[0]["iID_MaDonVi"]);
-            }
-            else
-            {
-                iID_MaDonVi = Guid.Empty.ToString();
-            }
-        }
-        
-        dtDonVi.Dispose();
         
         //loai bao cao
         String LoaiBaoCao = Convert.ToString(ViewData["LoaiTongHop"]);
@@ -146,22 +131,22 @@
                             <div>
                                 <b>Chọn Đợt Từ :</b></div>
                         </td>
-                        <td class="style1">
+                        <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slDot, iID_MaDotTu, "iID_MaDotTu", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width :10% ; height : 20px">
-                            <b>Chọn Đơn vị : </b>
+                            <div><b>Chọn Đơn vị : </b></div>
                         </td>
-                         <td rowspan="25" style="width: 20%;">
+                         <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                              <div id="<%= ParentID %>_tdDonVi" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
                         <td class="td_form2_td1" style="width : 10%; height:20px">
-                            <b>Loại Ngân Sách:</b>
+                            <div><b>Loại Ngân Sách:</b></div>
                         </td>
-                       <td rowspan="25" style="width: 20%;">
+                       <td class="td_form2_td5" rowspan="25" style="width: 20%;">
                             <div id="<%= ParentID %>_tdLNS" style="overflow: scroll; height: 400px">
                             </div>
                         </td>
@@ -176,7 +161,7 @@
                             <div>
                                 <b>Đến Ngày :</b></div>
                         </td>
-                        <td>
+                        <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slDot, iID_MaDotDen, "iID_MaDotDen", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon()")%>
                             </div>
@@ -188,7 +173,7 @@
                                 <b>Chọn phòng ban :</b>
                          </div>
                         </td>
-                        <td>
+                        <td class="td_form2_td5" style="width: 14%; height: 20px">
                             <div>
                                 <%=MyHtmlHelper.DropDownList(ParentID, slPhongBan, iID_MaPhongBan, "iID_MaPhongBan", "", "class=\"input1_2\" style=\"width:100%;\"onchange=Chon() ")%>
                             </div>
@@ -442,7 +427,6 @@
                 $("input:checkbox[check-group='LNS']").each(function (i) {
                     this.checked = value;
                 });
-                Chon();
             }                                            
         </script>
         
@@ -476,7 +460,7 @@
             Chon();
 
             function Chon() {
-                var iID_MaDonVi = "";
+                var iID_MaDonVi = '<%=iID_MaDonVi %>';
                 $("input:checkbox[check-group='DV']").each(function (i) {
                     if (this.checked) {
                         if (iID_MaDonVi != "") iID_MaDonVi += ",";
@@ -497,6 +481,7 @@
                 url = unescape(url.replace("#4", MaPhongBan));
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
+                    ChonDonVi();
                 });
             }                           
         </script>

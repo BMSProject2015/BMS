@@ -50,21 +50,21 @@
         //dt Loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
-        SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
-        if (String.IsNullOrEmpty(iID_MaDonVi))
-        {
-            if (dtDonVi.Rows.Count > 0)
-            {
-                iID_MaDonVi = Convert.ToString(dtDonVi.Rows[0]["iID_MaDonVi"]);
-            }
-            else
-            {
-                iID_MaDonVi = Guid.Empty.ToString();
-            }
-        }
+        //DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
+        //SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
+        //if (String.IsNullOrEmpty(iID_MaDonVi))
+        //{
+        //    if (dtDonVi.Rows.Count > 0)
+        //    {
+        //        iID_MaDonVi = Convert.ToString(dtDonVi.Rows[0]["iID_MaDonVi"]);
+        //    }
+        //    else
+        //    {
+        //        iID_MaDonVi = Guid.Empty.ToString();
+        //    }
+        //}
         
-        dtDonVi.Dispose();
+        //dtDonVi.Dispose();
 
         String BackURL = Url.Action("Index", "DuToanBS_Report", new { Loai = 0 });
 
@@ -378,7 +378,6 @@
                 $("input:checkbox[check-group='LNS']").each(function (i) {
                     this.checked = value;
                 });
-                Chon();
             }                                            
         </script>
 
@@ -409,13 +408,7 @@
             //don vi
             Chon();
             function Chon() {
-                var iID_MaDonVi = "";
-                $("input:checkbox[check-group='DV']").each(function (i) {
-                    if (this.checked) {
-                        if (iID_MaDonVi != "") iID_MaDonVi += ",";
-                        iID_MaDonVi += this.value;
-                    }
-                });
+                var iID_MaDonVi = '<%=iID_MaDonVi %>';
                 var iID_MaDot = document.getElementById("<%=ParentID %>_iID_MaDot").value;
                 var iID_MaPhongBan = document.getElementById("<%=ParentID %>_iID_MaPhongBan").value;
 
@@ -429,8 +422,9 @@
 
                 $.getJSON(url, function (data) {
                     document.getElementById("<%= ParentID %>_tdDonVi").innerHTML = data;
-                    //ChonDonVi();
+                    ChonDonVi();
                 });
+                //ChonDonVi();
             }
                                                    
         </script>
