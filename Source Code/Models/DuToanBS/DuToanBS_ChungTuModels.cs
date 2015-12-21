@@ -1137,7 +1137,7 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maND">Mã người dùng</param>
         /// <param name="sLNS">Loại ngân sách</param>
         /// <returns>Mã chứng từ mới</returns>
-        public static string ThemChungTu(Bang bang, string maND, string sLNS, string iKyThuat)
+        public static string ThemChungTu(Bang bang, string maND, string sLNS, string iKyThuat,string dNgayChungTu)
         {
             String iNamLamViec = ReportModels.LayNamLamViec(maND);
             DataTable dtCauHinh = NguoiDungCauHinhModels.LayCauHinh(maND);
@@ -1147,10 +1147,13 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
             {
                 throw new Exception("err_sLNS|Bạn chưa chọn loại ngân sách. Hãy chọn loại ngân sách!");
             }
-
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
             string iID_MaNguonNganSach = "", iID_MaNamNganSach = "", iID_MaPhongBan = "", sTenPhongBan = "";
@@ -1199,18 +1202,22 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maND">Mã Người dùng</param>
         /// <param name="dsMaChungTu">Danh sách mã chứng từ</param>
         /// <returns></returns>
-        public static string ThemChungTuTLTH(Bang bang, string maND, string dsMaChungTu)
+        public static string ThemChungTuTLTH(Bang bang, string maND, string dsMaChungTu,string dNgayChungTu)
         {
 
             //Kiểm tra dữ liệu
             if (String.IsNullOrEmpty(dsMaChungTu))
             {
-                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+                throw new Exception("err_ChungTu|Bạn chưa chọn đợt ngân sách nào. Hãy chọn đợt ngân sách!");
             }
 
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
             string iNamLamViec = ReportModels.LayNamLamViec(maND);
@@ -1280,16 +1287,21 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maND">Mã người dùng</param>
         /// <param name="dsMaChungTuTLTH">Danh sách mã chứng từ TLTH</param>
         /// <returns>Mã chứng từ TLTHCuc mới tạo</returns>
-        public static string ThemChungTuTLTHCuc(Bang bang, string maND, string dsMaChungTuTLTH)
+        public static string ThemChungTuTLTHCuc(Bang bang, string maND, string dsMaChungTuTLTH,string dNgayChungTu)
         {
             if (String.IsNullOrEmpty(dsMaChungTuTLTH))
             {
-                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+                throw new Exception("err_ChungTu|Bạn chưa chọn đợt ngân sách nào. Hãy chọn đợt ngân sách!");
             }
 
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
 
@@ -1361,12 +1373,16 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="bang">Bảng dữ liệu</param>
         /// <param name="MaChungTu">Mã chứng từ</param>
         /// <returns>kết quả</returns>
-        public static int SuaChungTu(Bang bang, string MaChungTu)
+        public static int SuaChungTu(Bang bang, string MaChungTu, string dNgayChungTu)
         {
             //Kiểm tra dữ liệu
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
             bang.GiaTriKhoa = MaChungTu;
             bang.DuLieuMoi = false;
@@ -1383,16 +1399,21 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maChungTuTLTH">Mã chứng từ TLTH</param>
         /// <param name="dsMaChungTu">Danh sách mã chứng từ</param>
         /// <returns></returns>
-        public static int SuaChungTuTLTH(Bang bang, string maChungTuTLTH, string dsMaChungTu)
+        public static int SuaChungTuTLTH(Bang bang, string maChungTuTLTH, string dsMaChungTu,string dNgayChungTu)
         {
             if (String.IsNullOrEmpty(dsMaChungTu))
             {
-                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+                throw new Exception("err_ChungTu|Bạn chưa chọn đợt ngân sách nào. Hãy chọn đợt ngân sách!");
             }
 
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
             string SQL = "";
@@ -1454,17 +1475,22 @@ ORDER BY iID_MaDonVi,sM,sTM,sTTM,sNG", maND, dk);
         /// <param name="maChungTuTLTHCuc">Mã chứng từ TLTH Cục</param>
         /// <param name="dsMaChungTuTLTH">Danh sách chứng từ TLTH</param>
         /// <returns></returns>
-        public static int SuaChungTuTLTHCuc(Bang bang, string maChungTuTLTHCuc, string dsMaChungTuTLTH)
+        public static int SuaChungTuTLTHCuc(Bang bang, string maChungTuTLTHCuc, string dsMaChungTuTLTH, string dNgayChungTu)
         {
             //Kiểm tra dữ liệu
             if (String.IsNullOrEmpty(dsMaChungTuTLTH))
             {
-                throw new Exception("err_ChungTu|bạn chưa chọn đợt chứng từ nào. Hãy chọn đợt chứng từ!");
+                throw new Exception("err_ChungTu|Bạn chưa chọn đợt ngân sách nào. Hãy chọn đợt ngân sách!");
             }
 
-            if (bang.CmdParams.Parameters["@dNgayChungTu"].Value == null)
+            if (String.IsNullOrEmpty(dNgayChungTu))
             {
-                throw new Exception("err_dNgayChungTu|Ngày chứng từ không hợp lệ. Hãy nhập lại ngày chứng từ!");
+                throw new Exception("err_dNgayChungTu|Bạn chưa nhập ngày chứng từ. Hãy nhập ngày chứng từ!");
+            }
+
+            if (!HamChung.isDate(dNgayChungTu))
+            {
+                throw new Exception("err_dNgayChungTu|Ngày chứng từ chưa đúng định dạng. Hãy nhập lại theo định dạng dd/MM/YYYY!");
             }
 
             string SQL = "";
