@@ -147,7 +147,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
             DataRow r;
             DataTable data = new DataTable();
             
-            data = DuToanBS_ReportModels.rptDuToanBS_ChiTieuNganSach2(MaND, sLNS, iID_MaDot, iID_MaDonVi, iID_MaPhongBan);
+            data = DuToanBS_ReportModels.rptDuToanBS_ChiTieuNganSach(MaND, sLNS, iID_MaDot, iID_MaDonVi, iID_MaPhongBan);
             
             data.TableName = "ChiTiet";
             fr.AddTable("ChiTiet", data);
@@ -246,7 +246,7 @@ namespace VIETTEL.Report_Controllers.DuToanBS
         public JsonResult LayDanhSachLNS(String ParentID, String iID_MaDot, String iID_MaPhongBan, String iID_MaDonVi, String sLNS)
         {
             String MaND = User.Identity.Name;
-            String ViewNam = "~/Views/DungChung/DonVi/DonVi_DanhSach.ascx";
+            String ViewNam = "~/Views/DungChung/DonVi/LNS_DanhSach_1.ascx";
 
             DataTable dt = DuToanBS_ReportModels.dtLNS_Dot(iID_MaDot, iID_MaPhongBan, iID_MaDonVi, MaND);
             
