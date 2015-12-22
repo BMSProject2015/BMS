@@ -65,7 +65,7 @@
         </tr>
     </table>
     <%
-        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { ParentID = ParentID, MaChungTu = maChungTuTLTH }))
+        using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { parentID = ParentID, maChungTu = maChungTuTLTH }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

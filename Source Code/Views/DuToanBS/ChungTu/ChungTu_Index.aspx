@@ -137,7 +137,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
     <div id="nhapform">
         <div id="form2">
             <%
-                using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new {ParentID = ParentID, sLNS1 = sLNS1, iID_MaChungTu_TLTH = iID_MaChungTu_TLTH}))
+                using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new {parentID = ParentID, sLNS1 = sLNS1, maChungTu = iID_MaChungTu_TLTH}))
                 {
             %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -211,7 +211,7 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new {ParentID = ParentID, sLNS1 = sLNS1}))
+                    using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new {parentID = ParentID, sLNS1 = sLNS1}))
                     {
                 %>
                     <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>
@@ -372,7 +372,6 @@ Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
         </div>
     </div>
 <% } %>
-<br/>
 
 <%--Box Danh Sach--%>
 <div class="box_tong">

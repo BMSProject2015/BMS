@@ -123,7 +123,7 @@
         <div id="nhapform">
             <div id="form2">
                 <%
-                    using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new { ParentID = ParentID, iLoai = iLoai }))
+                    using (Html.BeginForm("TimKiemChungTu", "DuToanBSChungTu", new { parentID = ParentID, iLoai = iLoai }))
                     {       
                 %>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -149,7 +149,7 @@
                         </td>
                         <td class="td_form2_td5" style="width: 10%">
                             <div>
-                                <%=MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "iID_MaTrangThaiDuyet", "", "class=\"input1_2\"")%>
+                                <%=MyHtmlHelper.DropDownList(ParentID, slTrangThai, iID_MaTrangThaiDuyet, "ddlIDMaTrangThai", "", "class=\"input1_2\"")%>
                             </div>
                         </td>
                         <td class="td_form2_td5" style="width: 20%">
@@ -179,7 +179,7 @@
         <div id="Div1">
             <div id="Div2">
                 <%
-                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { ParentID = ParentID }))
+                    using (Html.BeginForm("ThemSuaChungTuTLTH", "DuToanBSChungTu", new { parentID = ParentID }))
                     {
                 %>
                 <%= Html.Hidden(ParentID + "_DuLieuMoi", 1) %>

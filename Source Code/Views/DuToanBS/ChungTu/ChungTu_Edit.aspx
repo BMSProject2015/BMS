@@ -35,7 +35,7 @@
         }
         string BackURL = Url.Action("Index", "DuToanBSChungTu", new { sLNS1 = sLNS1 });
 
-        using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new { ParentID = ParentID, MaChungTu = MaChungTu, sLNS1 = sLNS1 }))
+        using (Html.BeginForm("ThemSuaChungTu", "DuToanBSChungTu", new { parentID = ParentID, maChungTu = MaChungTu, sLNS1 = sLNS1 }))
         {
     %>
     <%= Html.Hidden(ParentID + "_DuLieuMoi", 0)%>

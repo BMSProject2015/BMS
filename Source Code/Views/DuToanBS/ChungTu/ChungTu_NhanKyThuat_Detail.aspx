@@ -246,8 +246,8 @@
                         DaDuyet = true;
                     }
                     if (DaDuyet == false)
-                        strduyet = MyHtmlHelper.ActionLink(Url.Action("TrinhDuyet", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = "1040100", iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_up.png' alt='' />", "", "", "title=\"Duyệt chứng từ\"");
-                    strTuChoi = MyHtmlHelper.ActionLink(Url.Action("TuChoi", "DuToanBSChungTuChiTiet", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = "1040100", iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_down.png' alt='' />", "", "", "title=\"Từ chối chứng từ\"");
+                        strduyet = MyHtmlHelper.ActionLink(Url.Action("TrinhDuyet", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = "1040100", iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_up.png' alt='' />", "", "", "title=\"Duyệt chứng từ\"");
+                    strTuChoi = MyHtmlHelper.ActionLink(Url.Action("TuChoi", "DuToanBSChungTu", new { iID_MaChungTu = R["iID_MaChungTu"], sLNS = "1040100", iLoai = 1 }).ToString(), "<img src='../Content/Themes/images/arrow_down.png' alt='' />", "", "", "title=\"Từ chối chứng từ\"");
                     String rTuChi = String.Format("{0:0,0}", R["rTuChi"]);
                     if(rTuChi=="00") rTuChi="";
                     String rHienVat = String.Format("{0:0,0}", R["rHienVat"]);
