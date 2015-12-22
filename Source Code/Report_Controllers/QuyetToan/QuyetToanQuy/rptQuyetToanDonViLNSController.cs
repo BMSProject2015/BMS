@@ -192,7 +192,7 @@ namespace VIETTEL.Report_Controllers.QuyetToan.QuyetToanQuy
         }
      
         /// <summary>
-        /// Lấy danh sách đơn vị dựa vào quý, năm ngân sách, mã người dùng, mã phòng ban
+        /// Lấy danh sách loại ngân sách dựa vào quý, năm ngân sách, mã người dùng, mã phòng ban và mã đơn vị
         /// </summary>
         /// <param name="ParentID"></param>
         /// <param name="Thang_Quy">Quý</param>
