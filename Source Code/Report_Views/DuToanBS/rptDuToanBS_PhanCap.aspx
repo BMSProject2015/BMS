@@ -50,21 +50,6 @@
         //dt Loại ngân sách
         String sLNS = Convert.ToString(ViewData["sLNS"]);
         String iID_MaDonVi = Convert.ToString(ViewData["iID_MaDonVi"]);
-        //DataTable dtDonVi = NganSach_HamChungModels.DSDonViCuaNguoiDung(MaND);
-        //SelectOptionList slDonVi = new SelectOptionList(dtDonVi, "iID_MaDonVi", "TenHT");
-        //if (String.IsNullOrEmpty(iID_MaDonVi))
-        //{
-        //    if (dtDonVi.Rows.Count > 0)
-        //    {
-        //        iID_MaDonVi = Convert.ToString(dtDonVi.Rows[0]["iID_MaDonVi"]);
-        //    }
-        //    else
-        //    {
-        //        iID_MaDonVi = Guid.Empty.ToString();
-        //    }
-        //}
-        
-        //dtDonVi.Dispose();
 
         String BackURL = Url.Action("Index", "DuToanBS_Report", new { Loai = 0 });
 
