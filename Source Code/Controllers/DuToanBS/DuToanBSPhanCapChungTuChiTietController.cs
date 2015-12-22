@@ -655,5 +655,31 @@ namespace VIETTEL.Controllers.DuToanBS
             return RedirectToAction("ChungTuChiTietFrame", new { iID_MaChungTu = iID_MaChungTu, sLNS = sLNS });
         } 
         #endregion
+
+        #region Tìm kiếm chứng từ
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <param name="iID_MaChungTu"></param>
+        /// <param name="iLoai"></param>
+        /// <returns></returns>
+        [Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult SearchSubmit(String ParentID, String iID_MaChungTu, string iLoai)
+        {
+            String iID_MaDonVi = Request.Form[ParentID + "_iID_MaDonVi"];
+            String sLNS = Request.Form[ParentID + "_sLNS"];
+            String sL = Request.Form[ParentID + "_sL"];
+            String sK = Request.Form[ParentID + "_sK"];
+            String sM = Request.Form[ParentID + "_sM"];
+            String sTM = Request.Form[ParentID + "_sTM"];
+            String sTTM = Request.Form[ParentID + "_sTTM"];
+            String sNG = Request.Form[ParentID + "_sNG"];
+            String sTNG = Request.Form[ParentID + "_sTNG"];
+
+            return RedirectToAction("Index", "DuToanBS_ChungTu", new { iID_MaChungTu = iID_MaChungTu, iLoai = iLoai, iID_MaDonVi = iID_MaDonVi, sLNS = sLNS, sL = sL, sK = sK, sM = sM, sTM = sTM, sTTM = sTTM, sNG = sNG, sTNG = sTNG });
+        } 
+        #endregion
     }
 }

@@ -79,19 +79,19 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <summary>
         /// Tìm kiếm chứng từ
         /// </summary>
-        /// <param name="ParentID">Parent ID</param>
+        /// <param name="parentID">Parent ID</param>
         /// <param name="sLNS1">LNS 1</param>
         /// <param name="iLoai">Loại xử lý</param>
-        /// <param name="iID_MaChungTu_TLTH">Mã chứng từ TLTH</param>
+        /// <param name="maChungTu">Mã chứng từ TLTH</param>
         /// <returns>RedirectToAction</returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TimKiemChungTu(string ParentID, string sLNS1, string iLoai, string iID_MaChungTu_TLTH)
+        public ActionResult TimKiemChungTu(string parentID, string sLNS1, string iLoai, string maChungTu)
         {
-            string TuNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dTuNgay"];
-            string DenNgay = Request.Form[ParentID + "_" + NgonNgu.MaDate + "dDenNgay"];
-            string sLNS_TK = Request.Form[ParentID + "_ddlLNStk"];
-            string iID_MaTrangThaiDuyet = Request.Form[ParentID + "_ddlIDMaTrangThai"];
+            string TuNgay = Request.Form[parentID + "_" + NgonNgu.MaDate + "dTuNgay"];
+            string DenNgay = Request.Form[parentID + "_" + NgonNgu.MaDate + "dDenNgay"];
+            string sLNS_TK = Request.Form[parentID + "_ddlLNStk"];
+            string iID_MaTrangThaiDuyet = Request.Form[parentID + "_ddlIDMaTrangThai"];
             return RedirectToAction("Index", CONTROLLER_NAME,
                 new
                 {
@@ -101,7 +101,7 @@ namespace VIETTEL.Controllers.DuToanBS
                     DenNgay = DenNgay,
                     iID_MaTrangThaiDuyet = iID_MaTrangThaiDuyet,
                     sLNS_TK = sLNS_TK,
-                    iID_MaChungTu = iID_MaChungTu_TLTH
+                    iID_MaChungTu = maChungTu
                 });
         }
 
@@ -192,19 +192,19 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <summary>
         /// Thêm/Sửa Chứng từ
         /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="MaChungTu"></param>
+        /// <param name="parentID"></param>
+        /// <param name="maChungTu"></param>
         /// <param name="sLNS1"></param>
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ThemSuaChungTu(string ParentID, string MaChungTu, string sLNS1, string iKyThuat)
+        public ActionResult ThemSuaChungTu(string parentID, string maChungTu, string sLNS1, string iKyThuat)
         {
             string maND = User.Identity.Name;
             string sChucNang = EDIT;
 
             //Xác định trường hợp thêm hay xóa.
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+            if (Request.Form[parentID + "_DuLieuMoi"] == "1")
             {
                 sChucNang = CREATE;
             }
@@ -218,14 +218,14 @@ namespace VIETTEL.Controllers.DuToanBS
             string sLNS = Convert.ToString(Request.Form["sLNS"]);
             if (sLNS1 == "104")
             {
-                sLNS = Convert.ToString(Request.Form[ParentID + "_sLNS"]);
+                sLNS = Convert.ToString(Request.Form[parentID + "_sLNS"]);
             }
-            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
+            string dNgayChungTu = Convert.ToString(Request.Form[parentID + "_vidNgayChungTu"]);
             // Khởi tạo và gán giá trị cho bảng dữ liệu
             Bang bang = new Bang("DTBS_ChungTu");
             bang.MaNguoiDungSua = maND;
             bang.IPSua = Request.UserHostAddress;
-            bang.TruyenGiaTri(ParentID, Request.Form);
+            bang.TruyenGiaTri(parentID, Request.Form);
             if (sChucNang == CREATE)
             {
                 try
@@ -237,7 +237,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
                     ViewData["sLNS"] = sLNS;
                     ViewData["bThemMoi"] = "true";
                     ViewData["dNgayChungTu"] = dNgayChungTu;
@@ -252,16 +252,16 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTu(bang, MaChungTu,dNgayChungTu);
+                    DuToanBSChungTuModels.SuaChungTu(bang, maChungTu,dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
 
-                    ViewData["MaChungTu"] = MaChungTu;
+                    ViewData["MaChungTu"] = maChungTu;
                     ViewData["sLNS1"] = sLNS1;
                     ViewData["sLNS"] = sLNS;
                     ViewData["dNgayChungTu"] = dNgayChungTu;
@@ -273,18 +273,18 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="MaChungTu"></param>
+        /// <param name="parentID"></param>
+        /// <param name="maChungTu"></param>
         /// <param name="sLNS1"></param>
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ThemSuaChungTuTLTH(string ParentID, string MaChungTu, string sLNS1)
+        public ActionResult ThemSuaChungTuTLTH(string parentID, string maChungTu, string sLNS1)
         {
             string MaND = User.Identity.Name;
             string sChucNang = EDIT;
             //Xác định thêm hay xóa
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+            if (Request.Form[parentID + "_DuLieuMoi"] == "1")
             {
                 sChucNang = CREATE;
             }
@@ -296,12 +296,12 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             string dsMaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
-            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
+            string dNgayChungTu = Convert.ToString(Request.Form[parentID + "_vidNgayChungTu"]);
 
             Bang bang = new Bang("DTBS_ChungTu_TLTH");
             bang.MaNguoiDungSua = User.Identity.Name;
             bang.IPSua = Request.UserHostAddress;
-            bang.TruyenGiaTri(ParentID, Request.Form);
+            bang.TruyenGiaTri(parentID, Request.Form);
             if (sChucNang == CREATE)
             {
                 try
@@ -313,7 +313,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
                     ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_INDEX);
@@ -323,16 +323,16 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTuTLTH(bang, MaChungTu, dsMaChungTu, dNgayChungTu);
+                    DuToanBSChungTuModels.SuaChungTuTLTH(bang, maChungTu, dsMaChungTu, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 1, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
 
-                    ViewData["iID_MaChungTu"] = MaChungTu;
+                    ViewData["iID_MaChungTu"] = maChungTu;
                     ViewData["sLNS"] = sLNS1;
                     ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_EDIT);
@@ -343,17 +343,17 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ParentID"></param>
-        /// <param name="MaChungTu"></param>
+        /// <param name="parentID"></param>
+        /// <param name="maChungTu"></param>
         /// <param name="sLNS1"></param>
         /// <returns></returns>
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ThemSuaChungTuTLTHCuc(String ParentID, String MaChungTu, String sLNS1)
+        public ActionResult ThemSuaChungTuTLTHCuc(string parentID, string maChungTu, string sLNS1)
         {
             String MaND = User.Identity.Name;
             string sChucNang = EDIT;
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+            if (Request.Form[parentID + "_DuLieuMoi"] == "1")
             {
                 sChucNang = CREATE;
             }
@@ -364,12 +364,12 @@ namespace VIETTEL.Controllers.DuToanBS
             }
 
             string dsMaChungTuTLTH = Convert.ToString(Request.Form["iID_MaChungTu_TLTH"]);
-            string dNgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
+            string dNgayChungTu = Convert.ToString(Request.Form[parentID + "_vidNgayChungTu"]);
 
             Bang bang = new Bang("DTBS_ChungTu_TLTHCuc");
             bang.MaNguoiDungSua = User.Identity.Name;
             bang.IPSua = Request.UserHostAddress;
-            bang.TruyenGiaTri(ParentID, Request.Form);
+            bang.TruyenGiaTri(parentID, Request.Form);
             if (sChucNang == CREATE)
             {
                 try
@@ -381,7 +381,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
                     ViewData["bThemMoi"] = "true";
                     ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_INDEX);
@@ -391,15 +391,15 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 try
                 {
-                    DuToanBSChungTuModels.SuaChungTuTLTHCuc(bang, MaChungTu, dsMaChungTuTLTH, dNgayChungTu);
+                    DuToanBSChungTuModels.SuaChungTuTLTHCuc(bang, maChungTu, dsMaChungTuTLTH, dNgayChungTu);
                     return RedirectToAction("Index", CONTROLLER_NAME, new {iLoai = 2, sLNS1 = sLNS1});
                 }
                 catch (Exception ex)
                 {
                     string er = ex.Message;
                     string[] ers = er.Split('|');
-                    ModelState.AddModelError(ParentID + "_" + ers[0], ers[1]);
-                    ViewData["iID_MaChungTu"] = MaChungTu;
+                    ModelState.AddModelError(parentID + "_" + ers[0], ers[1]);
+                    ViewData["iID_MaChungTu"] = maChungTu;
                     ViewData["sLNS"] = sLNS1;
                     ViewData["dNgayChungTu"] = dNgayChungTu;
                     return View(VIEW_ROOTPATH + VIEW_CHUNGTU_GOM_THCUC_EDIT);
@@ -410,11 +410,11 @@ namespace VIETTEL.Controllers.DuToanBS
 
         [Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditSubmit_GomNhanBKhac(String ParentID, String MaChungTu, String sLNS1, String iLan2)
+        public ActionResult EditSubmit_GomNhanBKhac(string parentID, string maChungTu, string sLNS1, string iLan2)
         {
             String MaND = User.Identity.Name;
             string sChucNang = "Edit";
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+            if (Request.Form[parentID + "_DuLieuMoi"] == "1")
             {
                 sChucNang = "Create";
             }
@@ -427,7 +427,7 @@ namespace VIETTEL.Controllers.DuToanBS
             int i;
             NameValueCollection arrLoi = new NameValueCollection();
             String iID_MaChungTu = Convert.ToString(Request.Form["iID_MaChungTu"]);
-            String NgayChungTu = Convert.ToString(Request.Form[ParentID + "_vidNgayChungTu"]);
+            String NgayChungTu = Convert.ToString(Request.Form[parentID + "_vidNgayChungTu"]);
             if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
             {
                 arrLoi.Add("err_dNgayChungTu", "Bạn chưa nhập ngày chứng từ!");
@@ -436,7 +436,7 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 arrLoi.Add("err_iID_MaChungTu", "Không có đợt được chọn!");
             }
-            if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+            if (Request.Form[parentID + "_DuLieuMoi"] == "1")
             {
                 if (NgayChungTu == string.Empty || NgayChungTu == "" || NgayChungTu == null)
                 {
@@ -448,10 +448,10 @@ namespace VIETTEL.Controllers.DuToanBS
             {
                 for (i = 0; i <= arrLoi.Count - 1; i++)
                 {
-                    ModelState.AddModelError(ParentID + "_" + arrLoi.GetKey(i), arrLoi[i]);
+                    ModelState.AddModelError(parentID + "_" + arrLoi.GetKey(i), arrLoi[i]);
                 }
-                ViewData["MaChungTu"] = MaChungTu;
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+                ViewData["MaChungTu"] = maChungTu;
+                if (Request.Form[parentID + "_DuLieuMoi"] == "1")
                 {
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
@@ -460,7 +460,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 }
                 else
                 {
-                    ViewData["MaChungTu"] = MaChungTu;
+                    ViewData["MaChungTu"] = maChungTu;
                     ViewData["DuLieuMoi"] = "0";
                     ViewData["sLNS"] = sLNS1;
                     return View(VIEW_ROOTPATH + "ChungTu_Edit.aspx");
@@ -471,8 +471,8 @@ namespace VIETTEL.Controllers.DuToanBS
 
                 bang.MaNguoiDungSua = User.Identity.Name;
                 bang.IPSua = Request.UserHostAddress;
-                bang.TruyenGiaTri(ParentID, Request.Form);
-                if (Request.Form[ParentID + "_DuLieuMoi"] == "1")
+                bang.TruyenGiaTri(parentID, Request.Form);
+                if (Request.Form[parentID + "_DuLieuMoi"] == "1")
                 {
                     //lay soChungtuTheoLamLamViec
                     int iSoChungTu = 0;
@@ -536,7 +536,7 @@ namespace VIETTEL.Controllers.DuToanBS
                 }
                 else
                 {
-                    bang.GiaTriKhoa = MaChungTu;
+                    bang.GiaTriKhoa = maChungTu;
                     bang.DuLieuMoi = false;
                     bang.Save();
                     return RedirectToAction("Index", "DuToanBSChungTu", new { iLoai = 3, sLNS = sLNS1 });
@@ -557,7 +557,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="sLNS1">LNS 1</param>
         /// <returns>RedirectToAction</returns>
         [Authorize]
-        public ActionResult XoaChungTu(String iID_MaChungTu, String MaDotNganSach, String ChiNganSach, String sLNS1)
+        public ActionResult XoaChungTu(string iID_MaChungTu, string MaDotNganSach, string ChiNganSach, string sLNS1)
         {
             //Kiểm tra quyền
             if (BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu", DELETE) == false)
@@ -576,7 +576,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="sLNS1"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult XoaChungTuTLTH(String iID_MaChungTu, String sLNS1)
+        public ActionResult XoaChungTuTLTH(string iID_MaChungTu, string sLNS1)
         {
             if (!BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu_TLTH", DELETE))
             {
@@ -593,7 +593,7 @@ namespace VIETTEL.Controllers.DuToanBS
         /// <param name="sLNS1"></param>
         /// <returns></returns>
         [Authorize]
-        public ActionResult XoaChungTuTLTHCuc(String iID_MaChungTu, String sLNS1)
+        public ActionResult XoaChungTuTLTHCuc(string iID_MaChungTu, string sLNS1)
         {
             if (!BaoMat.ChoPhepLamViec(User.Identity.Name, "DTBS_ChungTu_TLTHCuc", DELETE))
             {
